@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Capacitor.cs" />
     <Compile Include="Circuit.cs" />
-    <Compile Include="EventDrivenList.cs" />
+    <Compile Include="Element.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Inductor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

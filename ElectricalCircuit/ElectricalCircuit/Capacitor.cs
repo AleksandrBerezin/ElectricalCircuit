@@ -1,49 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace ElectricalCircuit
 {
-    public class Capacitor : IElement
+    /// <summary>
+    /// Класс <see cref="Capacitor"/>, хранящий информацию о конденсаторе
+    /// </summary>
+    public class Capacitor : Element
     {
-        public event ValueChangeEventHandler ValueChanged;
-
-        private double _value;
-
-        public string Name { get; set; }
-        public double Value
+        /// <summary>
+        /// Метод для расчета импеданса элемента
+        /// </summary>
+        /// <param name="frequency"></param>
+        /// <returns></returns>
+        public override Complex CalculateZ(double frequency)
         {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        public Complex CalculateZ(double frequence)
-        {
-            var impedance = 1 / (2 * Math.PI * frequence * Value * Complex.ImaginaryOne);
+            var impedance = 1 / (2 * Math.PI * frequency * Value * Complex.ImaginaryOne);
             return impedance;
         }
 
-        public Capacitor(string name, double value, Circuit circuit)
+        /// <summary>
+        /// Создает экземпляр <see cref="Capacitor"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public Capacitor(string name, double value)
         {
             Name = name;
             Value = value;
-            ValueChanged += DisplayCapacitor;
-            ValueChanged += circuit.InvokeCircuitChange;
         }
 
-        private void DisplayCapacitor(object sender, object e)
+        /// <inheritdoc/>
+        public override string ToString()
         {
-            Console.WriteLine($"Конденсатор {Name} изменил номинал на {Value}");
+            return $"{nameof(Capacitor)} {Name}, номинал = {Value} Ф";
         }
     }
 }

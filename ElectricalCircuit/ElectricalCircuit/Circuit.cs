@@ -2,55 +2,78 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ElectricalCircuit
 {
+    /// <summary>
+    /// Класс <see cref="Circuit"/>, хранящий список элементов цепи
+    /// </summary>
     public class Circuit
     {
-        public event ValueChangeEventHandler CircuitChanged;
+        /// <summary>
+        /// Список элеентов цепи
+        /// </summary>
+        public ObservableCollection<IElement> Elements;
 
-        public EventDrivenList<IElement> Elements;
-
+        /// <summary>
+        /// Метод для расчета импеданса цепи
+        /// </summary>
+        /// <param name="frequencies"></param>
+        /// <returns></returns>
         public Complex[] CalculateZ(List<double> frequencies)
         {
             var impedances = new List<Complex>();
-
-            foreach (var frequence in frequencies)
+            foreach (var frequency in frequencies)
             {
-                var newImpedance = new Complex();
-
+                var impedance = new Complex();
                 foreach (var element in Elements)
                 {
-                    newImpedance += element.CalculateZ(frequence);
+                    impedance += element.CalculateZ(frequency);
                 }
 
-                impedances.Add(newImpedance);
+                impedances.Add(impedance);
             }
 
             return impedances.ToArray();
         }
 
+        /// <summary>
+        /// Создает экземпляр <see cref="Circuit"/>
+        /// </summary>
         public Circuit()
         {
-            Elements = new EventDrivenList<IElement>();
-            CircuitChanged += DisplayCircuit;
-            Elements.ItemAdded += CircuitChanged;
-            Elements.ItemRemoved += CircuitChanged;
+            Elements = new ObservableCollection<IElement>();
+            Elements.CollectionChanged += Elements_CollectionChanged;
         }
 
-        private void DisplayCircuit(object sender, object e)
+        /// <summary>
+        /// Подписывает и отписывает элементы на событие изменения цепи
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Elements_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Console.WriteLine("Схема изменена");
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                {
+                    Element element = e.NewItems[0] as Element;
+                    element.ValueChanged += this.CircuitChanged;
+                    break;
+                }
+                case NotifyCollectionChangedAction.Remove:
+                {
+                    Element element = e.OldItems[0] as Element;
+                    element.ValueChanged -= this.CircuitChanged;
+                    break;
+                }
+            }
         }
 
-        public void InvokeCircuitChange(object sender, object e)
-        {
-            CircuitChanged?.Invoke(sender, e);
-        }
+        /// <summary>
+        /// Сообщает об изменении цепи
+        /// </summary>
+        public event EventHandler CircuitChanged;
     }
 }

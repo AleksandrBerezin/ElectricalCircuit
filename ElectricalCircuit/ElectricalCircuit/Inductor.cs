@@ -1,49 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace ElectricalCircuit
 {
-    public class Inductor : IElement
+    /// <summary>
+    /// Класс <see cref="Inductor"/>, хранящий информацию о катушке индуктивности
+    /// </summary>
+    public class Inductor : Element
     {
-        public event ValueChangeEventHandler ValueChanged;
-
-        private double _value;
-
-        public string Name { get; set; }
-        public double Value
+        /// <summary>
+        /// Метод для расчета импеданса элемента
+        /// </summary>
+        /// <param name="frequency"></param>
+        /// <returns></returns>
+        public override Complex CalculateZ(double frequency)
         {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        public Complex CalculateZ(double frequence)
-        {
-            var impedance = 2 * Math.PI * frequence * Value * Complex.ImaginaryOne;
+            var impedance = 2 * Math.PI * frequency * Value * Complex.ImaginaryOne;
             return impedance;
         }
 
-        public Inductor(string name, double value, Circuit circuit)
+        /// <summary>
+        /// Создает экземпляр <see cref="Inductor"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public Inductor(string name, double value)
         {
             Name = name;
             Value = value;
-            ValueChanged += DisplayInductor;
-            ValueChanged += circuit.InvokeCircuitChange;
         }
 
-        private void DisplayInductor(object sender, object e)
+        /// <inheritdoc/>
+        public override string ToString()
         {
-            Console.WriteLine($"Катушка индуктивности {Name} изменила номинал на {Value}");
+            return $"{nameof(Inductor)} {Name}, номинал = {Value} Гн";
         }
     }
 }
