@@ -8,11 +8,7 @@ namespace ElectricalCircuit
     /// </summary>
     public class Inductor : Element
     {
-        /// <summary>
-        /// Метод для расчета импеданса элемента
-        /// </summary>
-        /// <param name="frequency"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override Complex CalculateZ(double frequency)
         {
             var impedance = 2 * Math.PI * frequency * Value * Complex.ImaginaryOne;
@@ -33,7 +29,7 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{nameof(Inductor)} {Name}, номинал = {Value} Гн";
+            return $"Катушка {Name}, номинал = {Value} Гн";
         }
     }
 }

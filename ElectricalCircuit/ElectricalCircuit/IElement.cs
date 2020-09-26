@@ -6,7 +6,7 @@ namespace ElectricalCircuit
     /// <summary>
     /// Интерфейс <see cref="IElement"/> определяет поля и методы для работы с элементами
     /// </summary>
-    public interface IElement
+    public interface IElement : ISegment
     {
         /// <summary>
         /// Возвращает и задает название элемента
@@ -17,17 +17,5 @@ namespace ElectricalCircuit
         /// Возвращает и задает номинал элемента
         /// </summary>
         double Value { get; set; }
-
-        /// <summary>
-        /// Метод для расчета импеданса элемента
-        /// </summary>
-        /// <param name="frequency"></param>
-        /// <returns></returns>
-        Complex CalculateZ(double frequency);
-
-        /// <summary>
-        /// Сообщает об изменении номинала элемента
-        /// </summary>
-        event EventHandler ValueChanged;
     }
 }

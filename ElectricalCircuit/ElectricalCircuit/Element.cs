@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Numerics;
+using System.Collections.ObjectModel;
 
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Абстрактный класс <see cref="Element"/>, предоставляющий для реализации метод расчета импеданса
+    /// Абстрактный класс <see cref="Element"/>, предоставляющий для реализации 
+    /// метод расчета импеданса элемента
     /// </summary>
     public abstract class Element : IElement
     {
@@ -18,9 +20,10 @@ namespace ElectricalCircuit
         /// </summary>
         private double _value;
 
-        /// <summary>
-        /// Возвращает и задает название элемента
-        /// </summary>
+        /// <inheritdoc/>
+        public ObservableCollection<ISegment> SubSegments { get; private set; } = null;
+
+        /// <inheritdoc/>
         public string Name
         {
             get
@@ -38,9 +41,7 @@ namespace ElectricalCircuit
             }
         }
 
-        /// <summary>
-        /// Возвращает и задает номинал элемента
-        /// </summary>
+        /// <inheritdoc/>
         public double Value
         {
             get
@@ -57,7 +58,7 @@ namespace ElectricalCircuit
                 if (value != _value)
                 {
                     _value = value;
-                    ValueChanged?.Invoke(this, EventArgs.Empty);
+                    SegmentChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -69,9 +70,7 @@ namespace ElectricalCircuit
         /// <returns></returns>
         public abstract Complex CalculateZ(double frequency);
 
-        /// <summary>
-        /// Сообщает об изменении номинала элемента
-        /// </summary>
-        public event EventHandler ValueChanged;
+        /// <inheritdoc/>
+        public event EventHandler SegmentChanged;
     }
 }

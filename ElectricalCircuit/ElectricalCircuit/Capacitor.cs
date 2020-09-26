@@ -8,11 +8,7 @@ namespace ElectricalCircuit
     /// </summary>
     public class Capacitor : Element
     {
-        /// <summary>
-        /// Метод для расчета импеданса элемента
-        /// </summary>
-        /// <param name="frequency"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override Complex CalculateZ(double frequency)
         {
             var impedance = 1 / (2 * Math.PI * frequency * Value * Complex.ImaginaryOne);
@@ -33,7 +29,7 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{nameof(Capacitor)} {Name}, номинал = {Value} Ф";
+            return $"Конденсатор {Name}, номинал = {Value} Ф";
         }
     }
 }

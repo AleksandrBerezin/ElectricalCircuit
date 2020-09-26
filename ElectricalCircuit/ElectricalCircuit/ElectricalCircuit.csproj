@@ -47,8 +47,12 @@
     <Compile Include="Element.cs" />
     <Compile Include="IElement.cs" />
     <Compile Include="Inductor.cs" />
+    <Compile Include="ISegment.cs" />
+    <Compile Include="ParallelSegment.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resistor.cs" />
+    <Compile Include="SerialSegment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

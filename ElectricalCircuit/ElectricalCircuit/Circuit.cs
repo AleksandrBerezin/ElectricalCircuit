@@ -12,24 +12,49 @@ namespace ElectricalCircuit
     public class Circuit
     {
         /// <summary>
-        /// Список элеентов цепи
+        /// Название цепи. Название не должно быть пустым
         /// </summary>
-        public ObservableCollection<IElement> Elements;
+        private string _name;
+
+        /// <summary>
+        /// Возвращает и задает название цепи
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                if (value == "" || value == null)
+                {
+                    throw new ArgumentException("Название цепи не должно быть пустым");
+                }
+
+                _name = value;
+            }
+        }
+
+        /// <summary>
+        /// Возвращает и задает список внутренних элементов
+        /// </summary>
+        public ObservableCollection<ISegment> Segments { get; set; }
 
         /// <summary>
         /// Метод для расчета импеданса цепи
         /// </summary>
         /// <param name="frequencies"></param>
         /// <returns></returns>
-        public Complex[] CalculateZ(List<double> frequencies)
+        public virtual Complex[] CalculateZ(List<double> frequencies)
         {
             var impedances = new List<Complex>();
             foreach (var frequency in frequencies)
             {
                 var impedance = new Complex();
-                foreach (var element in Elements)
+                foreach (var segment in Segments)
                 {
-                    impedance += element.CalculateZ(frequency);
+                    impedance += segment.CalculateZ(frequency);
                 }
 
                 impedances.Add(impedance);
@@ -38,13 +63,11 @@ namespace ElectricalCircuit
             return impedances.ToArray();
         }
 
-        /// <summary>
-        /// Создает экземпляр <see cref="Circuit"/>
-        /// </summary>
-        public Circuit()
+        public Circuit(string name)
         {
-            Elements = new ObservableCollection<IElement>();
-            Elements.CollectionChanged += Elements_CollectionChanged;
+            Name = name;
+            Segments = new ObservableCollection<ISegment>();
+            Segments.CollectionChanged += Segments_CollectionChanged;
         }
 
         /// <summary>
@@ -52,20 +75,21 @@ namespace ElectricalCircuit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Elements_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected void Segments_CollectionChanged(object sender, 
+            NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                 {
-                    Element element = e.NewItems[0] as Element;
-                    element.ValueChanged += this.CircuitChanged;
+                    ISegment segment = e.NewItems[0] as ISegment;
+                    segment.SegmentChanged += this.CircuitChanged;
                     break;
                 }
                 case NotifyCollectionChangedAction.Remove:
                 {
-                    Element element = e.OldItems[0] as Element;
-                    element.ValueChanged -= this.CircuitChanged;
+                    ISegment segment = e.OldItems[0] as ISegment;
+                    segment.SegmentChanged -= this.CircuitChanged;
                     break;
                 }
             }
