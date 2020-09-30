@@ -4,22 +4,23 @@ using System.Numerics;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Resistor"/>, хранящий информацию о резисторе
+    /// Класс <see cref="Capacitor"/>, хранящий информацию о конденсаторе
     /// </summary>
-    public class Resistor : Element
+    public class Capacitor : ElementBase
     {
         /// <inheritdoc/>
         public override Complex CalculateZ(double frequency)
         {
-            return new Complex(Value, 0);
+            var impedance = 1 / (2 * Math.PI * frequency * Value * Complex.ImaginaryOne);
+            return impedance;
         }
 
         /// <summary>
-        /// Создает экземпляр <see cref="Resistor"/>
+        /// Создает экземпляр <see cref="Capacitor"/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public Resistor(string name, double value)
+        public Capacitor(string name, double value)
         {
             Name = name;
             Value = value;
@@ -28,7 +29,7 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Резистор {Name}, номинал = {Value} Ом";
+            return $"Конденсатор {Name} = {Value} Ф";
         }
     }
 }

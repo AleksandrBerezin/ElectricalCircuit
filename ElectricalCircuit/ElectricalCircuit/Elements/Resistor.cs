@@ -4,23 +4,22 @@ using System.Numerics;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Inductor"/>, хранящий информацию о катушке индуктивности
+    /// Класс <see cref="Resistor"/>, хранящий информацию о резисторе
     /// </summary>
-    public class Inductor : Element
+    public class Resistor : ElementBase
     {
         /// <inheritdoc/>
         public override Complex CalculateZ(double frequency)
         {
-            var impedance = 2 * Math.PI * frequency * Value * Complex.ImaginaryOne;
-            return impedance;
+            return new Complex(Value, 0);
         }
 
         /// <summary>
-        /// Создает экземпляр <see cref="Inductor"/>
+        /// Создает экземпляр <see cref="Resistor"/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        public Inductor(string name, double value)
+        public Resistor(string name, double value)
         {
             Name = name;
             Value = value;
@@ -29,7 +28,7 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Катушка {Name}, номинал = {Value} Гн";
+            return $"Резистор {Name} = {Value} Ом";
         }
     }
 }

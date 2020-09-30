@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -29,6 +30,7 @@ namespace ElectricalCircuitUI
         public MainForm()
         {
             _project = new Project();
+
             _frequencies = new List<double>();
             _frequencies.Add(100);
             _frequencies.Add(200);
@@ -70,6 +72,7 @@ namespace ElectricalCircuitUI
             }
 
             ElementsListBox.DataSource = _elements;
+            CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
         }
 
         /// <summary>
@@ -107,8 +110,15 @@ namespace ElectricalCircuitUI
             FrequenciesListBox.SelectedIndex = ImpedancesListBox.SelectedIndex;
         }
 
-        // TODO
-        //private void DrawElement(Graphics graphics, string )
+        /// <summary>
+        /// Метод для отрисовки элемента
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name=""></param>
+        private void DrawElement(Graphics graphics, string name)
+        {
+
+        }
 
         /// <summary>
         /// Метод для отрисовки резистора
@@ -195,6 +205,40 @@ namespace ElectricalCircuitUI
         }
 
         private void DrawParallelConnection()
+        {
+
+        }
+
+        private void ElementsListBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
+        }
+
+        private void SaveValueButton_Click(object sender, System.EventArgs e)
+        {
+            if (double.TryParse(NewValueTexBox.Text, out var newValue))
+            {
+                try
+                {
+                    ((IElement)ElementsListBox.SelectedItem).Value = newValue;
+                }
+                catch (ArgumentException)
+                {
+                    NewValueTexBox.BackColor = Color.LightCoral;
+                }
+            }
+            else
+            {
+                NewValueTexBox.BackColor = Color.LightCoral;
+            }
+        }
+
+        /// <summary>
+        /// При изменении сегмента идет пересчет импедансов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Segment_SegmentChanged(object sender, EventArgs e)
         {
 
         }

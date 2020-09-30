@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
 
@@ -11,7 +10,7 @@ namespace ElectricalCircuit
     public interface ISegment
     {
         /// <summary>
-        /// Возвращает и задает список внутренних сегментов
+        /// Возвращает список внутренних сегментов
         /// </summary>
         ObservableCollection<ISegment> SubSegments { get; }
 

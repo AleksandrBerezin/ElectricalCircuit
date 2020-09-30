@@ -27,7 +27,7 @@ namespace ElectricalCircuit
             }
             set
             {
-                if (value == "" || value == null)
+                if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("Название цепи не должно быть пустым");
                 }
@@ -46,7 +46,7 @@ namespace ElectricalCircuit
         /// </summary>
         /// <param name="frequencies"></param>
         /// <returns></returns>
-        public virtual Complex[] CalculateZ(List<double> frequencies)
+        public Complex[] CalculateZ(List<double> frequencies)
         {
             var impedances = new List<Complex>();
             foreach (var frequency in frequencies)
@@ -63,6 +63,10 @@ namespace ElectricalCircuit
             return impedances.ToArray();
         }
 
+        /// <summary>
+        /// Создает экземпляр <see cref="Circuit"/>
+        /// </summary>
+        /// <param name="name"></param>
         public Circuit(string name)
         {
             Name = name;
@@ -75,7 +79,7 @@ namespace ElectricalCircuit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Segments_CollectionChanged(object sender, 
+        private void Segments_CollectionChanged(object sender, 
             NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)

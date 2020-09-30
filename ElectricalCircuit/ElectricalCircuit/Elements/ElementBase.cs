@@ -5,10 +5,10 @@ using System.Collections.ObjectModel;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Абстрактный класс <see cref="Element"/>, предоставляющий для реализации 
+    /// Абстрактный класс <see cref="ElementBase"/>, предоставляющий для реализации 
     /// метод расчета импеданса элемента
     /// </summary>
-    public abstract class Element : IElement
+    public abstract class ElementBase : IElement
     {
         /// <summary>
         /// Название элемента. Название не должно быть пустым
@@ -32,7 +32,7 @@ namespace ElectricalCircuit
             }
             set
             {
-                if (value == "" || value == null)
+                if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentException("Название элемента не должно быть пустым");
                 }

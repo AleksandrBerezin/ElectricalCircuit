@@ -40,6 +40,12 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.ElementsListBox = new System.Windows.Forms.ListBox();
             this.CircuitPictureBox = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.CurrentValueTextBox = new System.Windows.Forms.TextBox();
+            this.NewValueTexBox = new System.Windows.Forms.TextBox();
+            this.SaveValueButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -47,6 +53,7 @@
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CircuitPictureBox)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -169,6 +176,7 @@
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.Controls.Add(this.ElementsListBox, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.panel1, 0, 1);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(272, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -188,6 +196,7 @@
             this.ElementsListBox.Size = new System.Drawing.Size(257, 113);
             this.ElementsListBox.Sorted = true;
             this.ElementsListBox.TabIndex = 0;
+            this.ElementsListBox.SelectedIndexChanged += new System.EventHandler(this.ElementsListBox_SelectedIndexChanged);
             // 
             // CircuitPictureBox
             // 
@@ -198,6 +207,66 @@
             this.CircuitPictureBox.Size = new System.Drawing.Size(1076, 290);
             this.CircuitPictureBox.TabIndex = 2;
             this.CircuitPictureBox.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.SaveValueButton);
+            this.panel1.Controls.Add(this.NewValueTexBox);
+            this.panel1.Controls.Add(this.CurrentValueTextBox);
+            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 119);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(263, 119);
+            this.panel1.TabIndex = 1;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(100, 15);
+            this.textBox1.TabIndex = 0;
+            this.textBox1.Text = "Current value:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Location = new System.Drawing.Point(3, 40);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(100, 15);
+            this.textBox2.TabIndex = 1;
+            this.textBox2.Text = "New value:";
+            // 
+            // CurrentValueTextBox
+            // 
+            this.CurrentValueTextBox.Location = new System.Drawing.Point(109, 3);
+            this.CurrentValueTextBox.Name = "CurrentValueTextBox";
+            this.CurrentValueTextBox.ReadOnly = true;
+            this.CurrentValueTextBox.Size = new System.Drawing.Size(151, 22);
+            this.CurrentValueTextBox.TabIndex = 2;
+            // 
+            // NewValueTexBox
+            // 
+            this.NewValueTexBox.Location = new System.Drawing.Point(109, 37);
+            this.NewValueTexBox.Name = "NewValueTexBox";
+            this.NewValueTexBox.Size = new System.Drawing.Size(151, 22);
+            this.NewValueTexBox.TabIndex = 3;
+            // 
+            // SaveValueButton
+            // 
+            this.SaveValueButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SaveValueButton.Location = new System.Drawing.Point(88, 77);
+            this.SaveValueButton.Name = "SaveValueButton";
+            this.SaveValueButton.Size = new System.Drawing.Size(75, 36);
+            this.SaveValueButton.TabIndex = 4;
+            this.SaveValueButton.Text = "Save";
+            this.SaveValueButton.UseVisualStyleBackColor = true;
+            this.SaveValueButton.Click += new System.EventHandler(this.SaveValueButton_Click);
             // 
             // MainForm
             // 
@@ -218,6 +287,8 @@
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CircuitPictureBox)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -236,6 +307,12 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.ListBox ElementsListBox;
         private System.Windows.Forms.PictureBox CircuitPictureBox;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button SaveValueButton;
+        private System.Windows.Forms.TextBox NewValueTexBox;
+        private System.Windows.Forms.TextBox CurrentValueTextBox;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

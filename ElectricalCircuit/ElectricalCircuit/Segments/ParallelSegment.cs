@@ -23,7 +23,15 @@ namespace ElectricalCircuit
             {
                 var impedance = segment.CalculateZ(frequency);
                 impedancesSum += impedance;
-                impedancesMultiplication *= impedance;
+
+                if (impedancesMultiplication == 0)
+                {
+                    impedancesMultiplication = impedance;
+                }
+                else
+                {
+                    impedancesMultiplication *= impedance;
+                }
             }
 
             return impedancesMultiplication / impedancesSum;

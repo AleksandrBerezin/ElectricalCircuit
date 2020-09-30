@@ -17,12 +17,14 @@ namespace ElectricalCircuit
         /// </summary>
         public Project()
         {
-            Circuits = new List<Circuit>();
-            Circuits.Add(Circuit0());
-            Circuits.Add(Circuit1());
-            Circuits.Add(Circuit2());
-            Circuits.Add(Circuit3());
-            Circuits.Add(Circuit4());
+            Circuits = new List<Circuit>
+            {
+                Circuit0(),
+                Circuit1(),
+                Circuit2(),
+                Circuit3(),
+                Circuit4()
+            };
         }
 
         /// <summary>
@@ -32,13 +34,18 @@ namespace ElectricalCircuit
         private Circuit Circuit0()
         {
             var circuit = new Circuit("Цепь 0");
-            circuit.Segments.Add(new Resistor("R1", 15));
-            circuit.Segments.Add(new Inductor("L1", 0.01));
-            circuit.Segments.Add(new Inductor("L2", 0.02));
-            circuit.Segments.Add(new Resistor("R2", 20));
-            circuit.Segments.Add(new Capacitor("C1", 15e-6));
-            circuit.Segments.Add(new Resistor("R3", 40));
-            circuit.Segments.Add(new Capacitor("C2", 40e-6));
+            //circuit.Segments.Add(new Resistor("R1", 15));
+            //circuit.Segments.Add(new Inductor("L1", 0.01));
+            //circuit.Segments.Add(new Inductor("L2", 0.02));
+            //circuit.Segments.Add(new Resistor("R2", 20));
+            //circuit.Segments.Add(new Capacitor("C1", 15e-6));
+            //circuit.Segments.Add(new Resistor("R3", 40));
+            //circuit.Segments.Add(new Capacitor("C2", 40e-6));
+            var parallelSegment = new ParallelSegment();
+            parallelSegment.SubSegments.Add(new Capacitor("C1", 2e-6));
+            parallelSegment.SubSegments.Add(new Capacitor("C2", 6e-6));
+
+            circuit.Segments.Add(parallelSegment);
 
             return circuit;
         }
