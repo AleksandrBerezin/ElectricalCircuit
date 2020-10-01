@@ -104,6 +104,15 @@ namespace ElectricalCircuit
                     CircuitChanged?.Invoke(sender, e);
                     break;
                 }
+                case NotifyCollectionChangedAction.Replace:
+                {
+                    ISegment replacedSegment = e.OldItems[0] as ISegment;
+                    ISegment replacingSegment = e.NewItems[0] as ISegment;
+                    replacedSegment.SegmentChanged -= CircuitChanged;
+                    replacingSegment.SegmentChanged += CircuitChanged;
+                    CircuitChanged?.Invoke(sender, e);
+                    break;
+                }
             }
         }
     }

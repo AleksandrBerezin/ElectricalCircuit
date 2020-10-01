@@ -125,6 +125,20 @@ namespace ElectricalCircuit.UnitTests
                 "При удалении элемента из цепи должно вызываться событие CircuitChanged");
         }
 
+        [Test(Description = "Вызов события CircuitChanged при замене элемента в цепи")]
+        public void TestCircuitChangedInvoke_ReplaceElement()
+        {
+            var wasCalled = false;
+            var circuit = new Circuit("Цепь 1");
+            circuit.Segments.Add(new Inductor("L1", 2e-4));
+
+            circuit.CircuitChanged += (o, e) => wasCalled = true;
+            circuit.Segments[0] = new Capacitor("C1", 2e-6);
+
+            Assert.IsTrue(wasCalled,
+                "При замене элемента в цепи должно вызываться событие CircuitChanged");
+        }
+
         [Test(Description = "Вызов события CircuitChanged изменении номинала элемента цепи")]
         public void TestCircuitChangedInvoke_ChangeElementValue()
         {

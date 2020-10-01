@@ -42,6 +42,20 @@ namespace ElectricalCircuit.UnitTests.Segments
                 "При удалении элемента из сегмента должно вызываться событие SegmentChanged");
         }
 
+        [Test(Description = "Вызов события SegmentChanged при замене элемента в сегменте")]
+        public void TestSegmentChangedInvoke_ReplaceElement()
+        {
+            var wasCalled = false;
+            var segment = new SerialSegment();
+            segment.SubSegments.Add(new Inductor("L1", 2e-4));
+
+            segment.SegmentChanged += (o, e) => wasCalled = true;
+            segment.SubSegments[0] = new Capacitor("C1", 2e-6);
+
+            Assert.IsTrue(wasCalled,
+                "При замене элемента в сегменте должно вызываться событие SegmentChanged");
+        }
+
         [Test(Description = "Позитивный тест метода расчета импеданса")]
         public void TestCalculateZ_CorrectValue()
         {
