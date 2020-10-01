@@ -8,12 +8,6 @@ namespace ElectricalCircuit
     /// </summary>
     public class Resistor : ElementBase
     {
-        /// <inheritdoc/>
-        public override Complex CalculateZ(double frequency)
-        {
-            return new Complex(Value, 0);
-        }
-
         /// <summary>
         /// Создает экземпляр <see cref="Resistor"/>
         /// </summary>
@@ -23,6 +17,12 @@ namespace ElectricalCircuit
         {
             Name = name;
             Value = value;
+        }
+
+        /// <inheritdoc/>
+        public override Complex CalculateZ(double frequency)
+        {
+            return new Complex(Value, 0);
         }
 
         /// <inheritdoc/>

@@ -62,6 +62,9 @@ namespace ElectricalCircuit
                 }
             }
         }
+        
+        /// <inheritdoc/>
+        public event EventHandler SegmentChanged;
 
         /// <summary>
         /// Метод для расчета импеданса элемента
@@ -69,8 +72,5 @@ namespace ElectricalCircuit
         /// <param name="frequency"></param>
         /// <returns></returns>
         public abstract Complex CalculateZ(double frequency);
-
-        /// <inheritdoc/>
-        public event EventHandler SegmentChanged;
     }
 }

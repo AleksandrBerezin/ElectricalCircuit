@@ -13,6 +13,11 @@ namespace ElectricalCircuit
         /// Возвращает список внутренних сегментов
         /// </summary>
         ObservableCollection<ISegment> SubSegments { get; }
+        
+        /// <summary>
+        /// Сообщает об изменении сегмента цепи
+        /// </summary>
+        event EventHandler SegmentChanged;
 
         /// <summary>
         /// Метод для расчета импеданса участка цепи
@@ -20,10 +25,5 @@ namespace ElectricalCircuit
         /// <param name="frequency"></param>
         /// <returns></returns>
         Complex CalculateZ(double frequency);
-
-        /// <summary>
-        /// Сообщает об изменении сегмента цепи
-        /// </summary>
-        event EventHandler SegmentChanged;
     }
 }

@@ -42,6 +42,23 @@ namespace ElectricalCircuit
         public ObservableCollection<ISegment> Segments { get; set; }
 
         /// <summary>
+        /// Создает экземпляр <see cref="Circuit"/>
+        /// </summary>
+        /// <param name="name"></param>
+        public Circuit(string name)
+        {
+            Name = name;
+            CircuitChanged += (o, e) => { };
+            Segments = new ObservableCollection<ISegment>();
+            Segments.CollectionChanged += Segments_CollectionChanged;
+        }
+
+        /// <summary>
+        /// Сообщает об изменении цепи
+        /// </summary>
+        public event EventHandler CircuitChanged;
+
+        /// <summary>
         /// Метод для расчета импеданса цепи
         /// </summary>
         /// <param name="frequencies"></param>
@@ -61,18 +78,6 @@ namespace ElectricalCircuit
             }
 
             return impedances.ToArray();
-        }
-
-        /// <summary>
-        /// Создает экземпляр <see cref="Circuit"/>
-        /// </summary>
-        /// <param name="name"></param>
-        public Circuit(string name)
-        {
-            Name = name;
-            CircuitChanged += (o, e) => { };
-            Segments = new ObservableCollection<ISegment>();
-            Segments.CollectionChanged += Segments_CollectionChanged;
         }
 
         /// <summary>
@@ -101,10 +106,5 @@ namespace ElectricalCircuit
                 }
             }
         }
-
-        /// <summary>
-        /// Сообщает об изменении цепи
-        /// </summary>
-        public event EventHandler CircuitChanged;
     }
 }

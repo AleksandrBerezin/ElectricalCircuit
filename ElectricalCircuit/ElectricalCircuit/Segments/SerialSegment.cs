@@ -13,6 +13,18 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public ObservableCollection<ISegment> SubSegments { get; private set; }
 
+        /// <summary>
+        /// Создает экземпляр <see cref="SerialSegment"/>
+        /// </summary>
+        public SerialSegment()
+        {
+            SubSegments = new ObservableCollection<ISegment>();
+            SubSegments.CollectionChanged += SubSegments_CollectionChanged;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler SegmentChanged;
+
         /// <inheritdoc/>
         public Complex CalculateZ(double frequency)
         {
@@ -23,15 +35,6 @@ namespace ElectricalCircuit
             }
 
             return impedance;
-        }
-        
-        /// <summary>
-        /// Создает экземпляр <see cref="SerialSegment"/>
-        /// </summary>
-        public SerialSegment()
-        {
-            SubSegments = new ObservableCollection<ISegment>();
-            SubSegments.CollectionChanged += SubSegments_CollectionChanged;
         }
 
         /// <summary>
@@ -60,8 +63,5 @@ namespace ElectricalCircuit
                 }
             }
         }
-
-        /// <inheritdoc/>
-        public event EventHandler SegmentChanged;
     }
 }

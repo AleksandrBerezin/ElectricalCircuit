@@ -8,13 +8,6 @@ namespace ElectricalCircuit
     /// </summary>
     public class Inductor : ElementBase
     {
-        /// <inheritdoc/>
-        public override Complex CalculateZ(double frequency)
-        {
-            var impedance = 2 * Math.PI * frequency * Value * Complex.ImaginaryOne;
-            return impedance;
-        }
-
         /// <summary>
         /// Создает экземпляр <see cref="Inductor"/>
         /// </summary>
@@ -24,6 +17,13 @@ namespace ElectricalCircuit
         {
             Name = name;
             Value = value;
+        }
+
+        /// <inheritdoc/>
+        public override Complex CalculateZ(double frequency)
+        {
+            var impedance = 2 * Math.PI * frequency * Value * Complex.ImaginaryOne;
+            return impedance;
         }
 
         /// <inheritdoc/>
