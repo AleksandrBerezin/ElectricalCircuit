@@ -39,7 +39,7 @@ namespace ElectricalCircuit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void SubSegments_CollectionChanged(object sender,
+        private void SubSegments_CollectionChanged(object sender,
             NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -47,13 +47,15 @@ namespace ElectricalCircuit
                 case NotifyCollectionChangedAction.Add:
                 {
                     ISegment segment = e.NewItems[0] as ISegment;
-                    segment.SegmentChanged += this.SegmentChanged;
+                    segment.SegmentChanged += SegmentChanged;
+                    SegmentChanged?.Invoke(sender, e);
                     break;
                 }
                 case NotifyCollectionChangedAction.Remove:
                 {
                     ISegment segment = e.OldItems[0] as ISegment;
-                    segment.SegmentChanged -= this.SegmentChanged;
+                    segment.SegmentChanged -= SegmentChanged;
+                    SegmentChanged?.Invoke(sender, e);
                     break;
                 }
             }

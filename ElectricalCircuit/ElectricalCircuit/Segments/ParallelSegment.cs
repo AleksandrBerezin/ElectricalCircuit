@@ -8,7 +8,7 @@ namespace ElectricalCircuit
     /// <summary>
     /// Класс <see cref="ParallelSegment"/>, хранящий информацию о последовательном участке цепи
     /// </summary>
-    class ParallelSegment : ISegment
+    public class ParallelSegment : ISegment
     {
         /// <inheritdoc/>
         public ObservableCollection<ISegment> SubSegments { get; private set; }
@@ -16,25 +16,14 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public Complex CalculateZ(double frequency)
         {
-            var impedancesSum = new Complex();
-            var impedancesMultiplication = new Complex();
-
+            var result = new Complex();
             foreach (var segment in SubSegments)
             {
                 var impedance = segment.CalculateZ(frequency);
-                impedancesSum += impedance;
-
-                if (impedancesMultiplication == 0)
-                {
-                    impedancesMultiplication = impedance;
-                }
-                else
-                {
-                    impedancesMultiplication *= impedance;
-                }
+                result += 1 / impedance;
             }
 
-            return impedancesMultiplication / impedancesSum;
+            return 1 / result;
         }
 
         /// <summary>
@@ -51,7 +40,7 @@ namespace ElectricalCircuit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void SubSegments_CollectionChanged(object sender, 
+        private void SubSegments_CollectionChanged(object sender, 
             NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -59,13 +48,15 @@ namespace ElectricalCircuit
                 case NotifyCollectionChangedAction.Add:
                 {
                     ISegment segment = e.NewItems[0] as ISegment;
-                    segment.SegmentChanged += this.SegmentChanged;
+                    segment.SegmentChanged += SegmentChanged;
+                    SegmentChanged?.Invoke(sender, e);
                     break;
                 }
                 case NotifyCollectionChangedAction.Remove:
                 {
                     ISegment segment = e.OldItems[0] as ISegment;
-                    segment.SegmentChanged -= this.SegmentChanged;
+                    segment.SegmentChanged -= SegmentChanged;
+                    SegmentChanged?.Invoke(sender, e);
                     break;
                 }
             }

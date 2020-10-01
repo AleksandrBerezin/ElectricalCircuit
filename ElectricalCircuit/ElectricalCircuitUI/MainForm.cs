@@ -72,7 +72,7 @@ namespace ElectricalCircuitUI
             }
 
             ElementsListBox.DataSource = _elements;
-            CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
+            //TODO CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
         }
 
         /// <summary>
@@ -211,27 +211,27 @@ namespace ElectricalCircuitUI
 
         private void ElementsListBox_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
+            //TODO CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
         }
 
-        private void SaveValueButton_Click(object sender, System.EventArgs e)
-        {
-            if (double.TryParse(NewValueTexBox.Text, out var newValue))
-            {
-                try
-                {
-                    ((IElement)ElementsListBox.SelectedItem).Value = newValue;
-                }
-                catch (ArgumentException)
-                {
-                    NewValueTexBox.BackColor = Color.LightCoral;
-                }
-            }
-            else
-            {
-                NewValueTexBox.BackColor = Color.LightCoral;
-            }
-        }
+        //TODO private void SaveValueButton_Click(object sender, System.EventArgs e)
+        //{
+        //    if (double.TryParse(NewValueTexBox.Text, out var newValue))
+        //    {
+        //        try
+        //        {
+        //            ((IElement)ElementsListBox.SelectedItem).Value = newValue;
+        //        }
+        //        catch (ArgumentException)
+        //        {
+        //            NewValueTexBox.BackColor = Color.LightCoral;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        NewValueTexBox.BackColor = Color.LightCoral;
+        //    }
+        //}
 
         /// <summary>
         /// При изменении сегмента идет пересчет импедансов

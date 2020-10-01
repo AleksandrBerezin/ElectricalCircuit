@@ -1,7 +1,4 @@
-﻿using System;
-using System.Numerics;
-
-namespace ElectricalCircuit
+﻿namespace ElectricalCircuit
 {
     /// <summary>
     /// Интерфейс <see cref="IElement"/> определяет поля и методы для работы с элементами

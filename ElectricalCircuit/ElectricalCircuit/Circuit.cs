@@ -70,6 +70,7 @@ namespace ElectricalCircuit
         public Circuit(string name)
         {
             Name = name;
+            CircuitChanged += (o, e) => { };
             Segments = new ObservableCollection<ISegment>();
             Segments.CollectionChanged += Segments_CollectionChanged;
         }
@@ -87,13 +88,15 @@ namespace ElectricalCircuit
                 case NotifyCollectionChangedAction.Add:
                 {
                     ISegment segment = e.NewItems[0] as ISegment;
-                    segment.SegmentChanged += this.CircuitChanged;
+                    segment.SegmentChanged += CircuitChanged;
+                    CircuitChanged?.Invoke(sender, e);
                     break;
                 }
                 case NotifyCollectionChangedAction.Remove:
                 {
                     ISegment segment = e.OldItems[0] as ISegment;
-                    segment.SegmentChanged -= this.CircuitChanged;
+                    segment.SegmentChanged -= CircuitChanged;
+                    CircuitChanged?.Invoke(sender, e);
                     break;
                 }
             }
