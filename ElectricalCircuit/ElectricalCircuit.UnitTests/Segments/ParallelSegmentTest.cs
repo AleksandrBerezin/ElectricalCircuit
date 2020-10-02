@@ -75,5 +75,15 @@ namespace ElectricalCircuit.UnitTests.Segments
 
             Assert.AreEqual(expected, actual, "Метод CalculateZ считает импеданс неправильно");
         }
+
+        [Test(Description = "Позитивный тест метода ToString")]
+        public void TestToString_CorrectValue()
+        {
+            var expected = "Parallel segment";
+            var segment = new ParallelSegment();
+            var actual = segment.ToString();
+
+            Assert.AreEqual(expected, actual, "Метод ToString возвращает неправильную строку");
+        }
     }
 }

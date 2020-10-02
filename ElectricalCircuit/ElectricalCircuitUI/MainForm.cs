@@ -18,12 +18,7 @@ namespace ElectricalCircuitUI
         /// Список частот
         /// </summary>
         private List<double> _frequencies;
-
-        /// <summary>
-        /// Список элементов цепи
-        /// </summary>
-        private List<IElement> _elements;
-
+        
         private int _x = 50;
         private int _y = 150;
 
@@ -37,18 +32,18 @@ namespace ElectricalCircuitUI
             _frequencies.Add(300);
 
             InitializeComponent();
+
+            tableLayoutPanel3.BorderStyle = BorderStyle.FixedSingle;
+            tableLayoutPanel5.BorderStyle = BorderStyle.FixedSingle;
+            tableLayoutPanel6.BorderStyle = BorderStyle.FixedSingle;
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            CircuitsListBox.DataSource = _project.Circuits;
-            CircuitsListBox.DisplayMember = "Name";
-
-            FrequenciesListBox.DataSource = _frequencies;
-
+            CircuitsComboBox.DataSource = _project.Circuits;
+            FillFrequenciesListBox();
+            FillCircuitTreeView();
             FillImpedancesListBox();
-
-            FillElementsListBox();
         }
 
         /// <summary>
@@ -57,47 +52,50 @@ namespace ElectricalCircuitUI
         private void FillImpedancesListBox()
         {
             ImpedancesListBox.DataSource =
-                ((Circuit)CircuitsListBox.SelectedItem).CalculateZ(_frequencies);
+                ((Circuit)CircuitsComboBox.SelectedItem).CalculateZ(_frequencies);
         }
 
         /// <summary>
-        /// Метод, заполняющий список элементов
+        /// Метод, заполняющий список частот
         /// </summary>
-        private void FillElementsListBox()
+        private void FillFrequenciesListBox()
         {
-            _elements = new List<IElement>();
-            foreach (var segment in ((Circuit)CircuitsListBox.SelectedItem).Segments)
-            {
-                FindAllElements(segment);
-            }
-
-            ElementsListBox.DataSource = _elements;
-            //TODO CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
+            _frequencies.Sort();
+            FrequenciesListBox.DataSource = null;
+            FrequenciesListBox.DataSource = _frequencies;
         }
 
         /// <summary>
-        /// Метод поиска всех элементов в цепи
+        /// Метод, заполняющий дерево элементов цепи
+        /// </summary>
+        private void FillCircuitTreeView()
+        {
+            CircuitTreeView.Nodes.Clear();
+            var newNode = CircuitTreeView.Nodes.Add(CircuitsComboBox.SelectedItem.ToString());
+            var circuit = (Circuit)CircuitsComboBox.SelectedItem;
+
+            foreach (var segment in circuit.Segments)
+            {
+                FindAllSegments(segment, ref newNode);
+            }
+        }
+
+        /// <summary>
+        /// Метод поиска всех сегментов в цепи
         /// </summary>
         /// <param name="segment"></param>
-        private void FindAllElements(ISegment segment)
+        private void FindAllSegments(ISegment segment, ref TreeNode node)
         {
-            if (segment is IElement)
+            var newNode = node.Nodes.Add(segment.ToString());
+            if (segment.SubSegments == null)
             {
-                _elements.Add((IElement)segment);
+                return;
             }
-            else
-            {
-                foreach (var element in segment.SubSegments)
-                {
-                    FindAllElements(element);
-                }
-            }
-        }
 
-        private void CircuitsListBox_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            FillImpedancesListBox();
-            FillElementsListBox();
+            foreach (var subSegment in segment.SubSegments)
+            {
+                FindAllSegments(subSegment, ref newNode);
+            }
         }
 
         private void FrequenciesListBox_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -209,30 +207,6 @@ namespace ElectricalCircuitUI
 
         }
 
-        private void ElementsListBox_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            //TODO CurrentValueTextBox.Text = ((IElement)ElementsListBox.SelectedItem).Value.ToString();
-        }
-
-        //TODO private void SaveValueButton_Click(object sender, System.EventArgs e)
-        //{
-        //    if (double.TryParse(NewValueTexBox.Text, out var newValue))
-        //    {
-        //        try
-        //        {
-        //            ((IElement)ElementsListBox.SelectedItem).Value = newValue;
-        //        }
-        //        catch (ArgumentException)
-        //        {
-        //            NewValueTexBox.BackColor = Color.LightCoral;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        NewValueTexBox.BackColor = Color.LightCoral;
-        //    }
-        //}
-
         /// <summary>
         /// При изменении сегмента идет пересчет импедансов
         /// </summary>
@@ -241,6 +215,54 @@ namespace ElectricalCircuitUI
         private void Segment_SegmentChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillCircuitTreeView();
+            FillImpedancesListBox();
+        }
+
+        private void CalculateImpedanceButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(NewFrequencyTextBox.Text))
+                {
+                    return;
+                }
+
+                var frequency = Convert.ToDouble(NewFrequencyTextBox.Text);
+                if (_frequencies.Contains(frequency))
+                {
+                    throw new FormatException();
+                }
+
+                _frequencies.Add(frequency);
+                NewFrequencyTextBox.Clear();
+                NewFrequencyTextBox.BackColor = Color.White;
+                FillFrequenciesListBox();
+                FillImpedancesListBox();
+            }
+            catch (FormatException)
+            {
+                NewFrequencyTextBox.BackColor = Color.LightCoral;
+            }
+        }
+
+        private void RemoveFrequencyButton_Click(object sender, EventArgs e)
+        {
+            if (_frequencies.Count == 0)
+            {
+                return;
+            }
+
+            _frequencies.RemoveAt(FrequenciesListBox.SelectedIndex);
+            FillFrequenciesListBox();
+            FillImpedancesListBox();
+
+            NewFrequencyTextBox.Clear();
+            NewFrequencyTextBox.BackColor = Color.White;
         }
     }
 }

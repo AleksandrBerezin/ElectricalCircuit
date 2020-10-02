@@ -115,5 +115,11 @@ namespace ElectricalCircuit
                 }
             }
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

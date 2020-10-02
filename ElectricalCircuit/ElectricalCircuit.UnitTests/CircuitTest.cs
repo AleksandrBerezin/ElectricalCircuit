@@ -195,5 +195,15 @@ namespace ElectricalCircuit.UnitTests
 
             Assert.AreEqual(expected, actual, "Метод CalculateZ считает импеданс неправильно");
         }
+
+        [Test(Description = "Позитивный тест метода ToString")]
+        public void TestToString_CorrectValue()
+        {
+            var expected = "Цепь 1";
+            var circuit = new Circuit("Цепь 1");
+            var actual = circuit.ToString();
+
+            Assert.AreEqual(expected, actual, "Метод ToString возвращает неправильную строку");
+        }
     }
 }
