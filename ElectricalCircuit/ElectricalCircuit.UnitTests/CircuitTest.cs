@@ -89,10 +89,19 @@ namespace ElectricalCircuit.UnitTests
                 "Сеттер Segments присваивает направильный список сегментов");
         }
 
+        [Test(Description = "Тест конструктора Circuit с именем")]
+        public void TestCircuitConstructor_WithName()
+        {
+            var circuit = new Circuit("Новая цепь");
+            var isNull = circuit == null;
+
+            Assert.IsFalse(isNull, "Конструктор не создал экземпляр класса Circuit");
+        }
+
         [Test(Description = "Позитивный тест конструктора Circuit")]
         public void TestCircuitConstructor_CorrectValue()
         {
-            var circuit = new Circuit("Новая цепь");
+            var circuit = new Circuit();
             var isNull = circuit == null;
 
             Assert.IsFalse(isNull, "Конструктор не создал экземпляр класса Circuit");

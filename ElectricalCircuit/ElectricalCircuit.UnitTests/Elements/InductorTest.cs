@@ -30,7 +30,7 @@ namespace ElectricalCircuit.UnitTests.Elements
         [Test(Description = "Позитивный тест метода ToString")]
         public void TestToString_CorrectValue()
         {
-            var expected = "Катушка L1 = 0,002 Гн";
+            var expected = "L1";
             var inductor = new Inductor("L1", 0.002);
             var actual = inductor.ToString();
 

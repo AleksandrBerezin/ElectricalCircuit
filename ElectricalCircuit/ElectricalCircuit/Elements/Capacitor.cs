@@ -29,7 +29,7 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Конденсатор {Name} = {Value} Ф";
+            return Name;
         }
     }
 }

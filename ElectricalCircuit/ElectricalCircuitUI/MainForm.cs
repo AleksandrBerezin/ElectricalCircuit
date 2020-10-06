@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using ElectricalCircuit;
+using ElectricalCircuit.Elements;
 
 namespace ElectricalCircuitUI
 {
@@ -40,10 +41,17 @@ namespace ElectricalCircuitUI
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            CircuitsComboBox.DataSource = _project.Circuits;
+            FillCircuitsComboBox();
             FillFrequenciesListBox();
-            FillCircuitTreeView();
-            FillImpedancesListBox();
+        }
+
+        /// <summary>
+        /// Метод, заполняющий выпадающий список цепей
+        /// </summary>
+        private void FillCircuitsComboBox()
+        {
+            CircuitsComboBox.DataSource = null;
+            CircuitsComboBox.DataSource = _project.Circuits;
         }
 
         /// <summary>
@@ -51,8 +59,16 @@ namespace ElectricalCircuitUI
         /// </summary>
         private void FillImpedancesListBox()
         {
+            var selectedItem = (Circuit) CircuitsComboBox.SelectedItem;
+
+            if (selectedItem == null || selectedItem.Segments.Count == 0)
+            {
+                ImpedancesListBox.DataSource = null;
+                return;
+            }
+
             ImpedancesListBox.DataSource =
-                ((Circuit)CircuitsComboBox.SelectedItem).CalculateZ(_frequencies);
+                selectedItem.CalculateZ(_frequencies);
         }
 
         /// <summary>
@@ -71,12 +87,18 @@ namespace ElectricalCircuitUI
         private void FillCircuitTreeView()
         {
             CircuitTreeView.Nodes.Clear();
+
+            if (CircuitsComboBox.SelectedItem == null)
+            {
+                return;
+            }
+
             var newNode = CircuitTreeView.Nodes.Add(CircuitsComboBox.SelectedItem.ToString());
             var circuit = (Circuit)CircuitsComboBox.SelectedItem;
 
             foreach (var segment in circuit.Segments)
             {
-                FindAllSegments(segment, ref newNode);
+                FindAllSegments(segment, newNode);
             }
         }
 
@@ -84,7 +106,7 @@ namespace ElectricalCircuitUI
         /// Метод поиска всех сегментов в цепи
         /// </summary>
         /// <param name="segment"></param>
-        private void FindAllSegments(ISegment segment, ref TreeNode node)
+        private void FindAllSegments(ISegment segment, TreeNode node)
         {
             var newNode = node.Nodes.Add(segment.ToString());
             if (segment.SubSegments == null)
@@ -94,7 +116,7 @@ namespace ElectricalCircuitUI
 
             foreach (var subSegment in segment.SubSegments)
             {
-                FindAllSegments(subSegment, ref newNode);
+                FindAllSegments(subSegment, newNode);
             }
         }
 
@@ -207,20 +229,11 @@ namespace ElectricalCircuitUI
 
         }
 
-        /// <summary>
-        /// При изменении сегмента идет пересчет импедансов
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Segment_SegmentChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillCircuitTreeView();
             FillImpedancesListBox();
+            ClearElementInfoFields();
         }
 
         private void CalculateImpedanceButton_Click(object sender, EventArgs e)
@@ -263,6 +276,138 @@ namespace ElectricalCircuitUI
 
             NewFrequencyTextBox.Clear();
             NewFrequencyTextBox.BackColor = Color.White;
+        }
+
+        private void NewCircuitButton_Click(object sender, EventArgs e)
+        {
+            var inner = new CircuitForm();
+            inner.Circuit = new Circuit();
+            var result = inner.ShowDialog();
+
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var newCircuit = inner.Circuit;
+            _project.Circuits.Add(newCircuit);
+            FillCircuitsComboBox();
+            CircuitsComboBox.SelectedItem = newCircuit;
+        }
+
+        private void EditCircuitButton_Click(object sender, EventArgs e)
+        {
+            if (CircuitsComboBox.SelectedItem == null)
+            {
+                return;
+            }
+        }
+
+        private void RemoveCircuitButton_Click(object sender, EventArgs e)
+        {
+            if (CircuitsComboBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                $"Do you really want to remove this circuit: {CircuitsComboBox.SelectedItem}",
+                "Remove Circuit",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.OK)
+            {
+                _project.Circuits.RemoveAt(CircuitsComboBox.SelectedIndex);
+                FillCircuitsComboBox();
+
+                if (CircuitsComboBox.SelectedItem == null && CircuitsComboBox.Items.Count != 0)
+                {
+                    CircuitsComboBox.SelectedItem = CircuitsComboBox.Items[0];
+                }
+            }
+        }
+
+        private void CircuitTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            ClearElementInfoFields();
+
+            var currentSegment = FindSelectedSegment();
+            NameTextBox.Text = CircuitTreeView.SelectedNode.Text;
+
+            if (currentSegment is IElement)
+            {
+                var element = (IElement)currentSegment;
+                ValueTextBox.Text = element.Value.ToString();
+                TypeTextBox.Text = GetElementType(element).ToString();
+            }
+        }
+
+        /// <summary>
+        /// Метод поиска сегмента в списке подсегментов, используя данные из CircuitTreeView
+        /// </summary>
+        /// <returns></returns>
+        private ISegment FindSelectedSegment()
+        {
+            var currentNode = CircuitTreeView.SelectedNode;
+
+            // Каждый элемент показывает индекс, который элемент занимает в
+            // соответствующем списке сегментов
+            var path = new List<int>();
+
+            while (currentNode.Parent != null)
+            {
+                path.Insert(0, currentNode.Index);
+                currentNode = currentNode.Parent;
+            }
+
+            // Цепь пустая
+            if (path.Count == 0)
+            {
+                return null;
+            }
+
+            var currentSegment = ((Circuit)CircuitsComboBox.SelectedItem).Segments[path[0]];
+            path.RemoveAt(0);
+
+            foreach (var index in path)
+            {
+                currentSegment = currentSegment.SubSegments[index];
+            }
+
+            return currentSegment;
+        }
+
+        /// <summary>
+        /// Метод получения типа элемента
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private ElementType GetElementType(IElement element)
+        {
+            if (element is Resistor)
+            {
+                return ElementType.Resistor;
+            }
+            else if (element is Inductor)
+            {
+                return ElementType.Inductor;
+            }
+            else
+            {
+                return ElementType.Capacitor;
+            }
+        }
+
+        /// <summary>
+        /// Метод очистки полей с информацией об элементе
+        /// </summary>
+        private void ClearElementInfoFields()
+        {
+            NameTextBox.Text = "";
+            ValueTextBox.Text = "";
+            TypeTextBox.Text = "";
         }
     }
 }

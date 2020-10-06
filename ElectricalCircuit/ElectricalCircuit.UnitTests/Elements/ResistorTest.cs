@@ -9,6 +9,15 @@ namespace ElectricalCircuit.UnitTests.Elements
         [Test(Description = "Позитивный тест конструктора Resistor")]
         public void TestResistorConstructor_CorrectValue()
         {
+            var resistor = new Resistor();
+            var isNull = resistor == null;
+
+            Assert.IsFalse(isNull, "Конструктор не создал экземпляр класса Resistor");
+        }
+
+        [Test(Description = "Тест конструктора Resistor с именем и значением")]
+        public void TestResistorConstructor_WithNameAndValue()
+        {
             var resistor = new Resistor("R1", 20);
             var isNull = resistor == null;
 
@@ -29,7 +38,7 @@ namespace ElectricalCircuit.UnitTests.Elements
         [Test(Description = "Позитивный тест метода ToString")]
         public void TestToString_CorrectValue()
         {
-            var expected = "Резистор R1 = 20 Ом";
+            var expected = "R1";
             var resistor = new Resistor("R1", 20);
             var actual = resistor.ToString();
 

@@ -19,6 +19,14 @@ namespace ElectricalCircuit
             Value = value;
         }
 
+        /// <summary>
+        /// Создает экземпляр <see cref="Resistor"/>
+        /// </summary>
+        public Resistor()
+        {
+
+        }
+
         /// <inheritdoc/>
         public override Complex CalculateZ(double frequency)
         {
@@ -28,7 +36,7 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"Резистор {Name} = {Value} Ом";
+            return Name;
         }
     }
 }

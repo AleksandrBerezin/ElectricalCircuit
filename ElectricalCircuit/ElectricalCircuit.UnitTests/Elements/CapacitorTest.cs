@@ -30,7 +30,7 @@ namespace ElectricalCircuit.UnitTests.Elements
         [Test(Description = "Позитивный тест метода ToString")]
         public void TestToString_CorrectValue()
         {
-            var expected = "Конденсатор C1 = 2E-06 Ф";
+            var expected = "C1";
             var capacitor = new Capacitor("C1", 2e-6);
             var actual = capacitor.ToString();
 

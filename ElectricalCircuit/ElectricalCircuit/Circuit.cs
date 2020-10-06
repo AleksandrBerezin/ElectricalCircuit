@@ -52,6 +52,14 @@ namespace ElectricalCircuit
             Segments = new ObservableCollection<ISegment>();
             Segments.CollectionChanged += Segments_CollectionChanged;
         }
+        
+        /// <summary>
+        /// Создает экземпляр <see cref="Circuit"/>
+        /// </summary>
+        public Circuit()
+        {
+            Segments = new ObservableCollection<ISegment>();
+        }
 
         /// <summary>
         /// Сообщает об изменении цепи

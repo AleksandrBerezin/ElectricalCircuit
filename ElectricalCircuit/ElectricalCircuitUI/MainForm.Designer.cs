@@ -32,6 +32,7 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.EditCircuitButton = new System.Windows.Forms.Button();
             this.RemoveCircuitButton = new System.Windows.Forms.Button();
             this.NewCircuitButton = new System.Windows.Forms.Button();
             this.CircuitsComboBox = new System.Windows.Forms.ComboBox();
@@ -46,6 +47,8 @@
             this.ImpedancesListBox = new System.Windows.Forms.ListBox();
             this.textBox11 = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.RemoveElementButton = new System.Windows.Forms.Button();
+            this.EditElementButton = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.AddSerialButton = new System.Windows.Forms.Button();
             this.AddParallelButton = new System.Windows.Forms.Button();
@@ -123,6 +126,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.EditCircuitButton);
             this.panel2.Controls.Add(this.RemoveCircuitButton);
             this.panel2.Controls.Add(this.NewCircuitButton);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -130,6 +134,18 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(288, 34);
             this.panel2.TabIndex = 0;
+            // 
+            // EditCircuitButton
+            // 
+            this.EditCircuitButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.EditCircuitButton.Location = new System.Drawing.Point(97, 3);
+            this.EditCircuitButton.Name = "EditCircuitButton";
+            this.EditCircuitButton.Size = new System.Drawing.Size(55, 28);
+            this.EditCircuitButton.TabIndex = 2;
+            this.EditCircuitButton.Text = "Edit";
+            this.EditCircuitButton.UseVisualStyleBackColor = true;
+            this.EditCircuitButton.Click += new System.EventHandler(this.EditCircuitButton_Click);
             // 
             // RemoveCircuitButton
             // 
@@ -141,6 +157,7 @@
             this.RemoveCircuitButton.TabIndex = 1;
             this.RemoveCircuitButton.Text = "Remove circuit";
             this.RemoveCircuitButton.UseVisualStyleBackColor = true;
+            this.RemoveCircuitButton.Click += new System.EventHandler(this.RemoveCircuitButton_Click);
             // 
             // NewCircuitButton
             // 
@@ -148,10 +165,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.NewCircuitButton.Location = new System.Drawing.Point(0, 3);
             this.NewCircuitButton.Name = "NewCircuitButton";
-            this.NewCircuitButton.Size = new System.Drawing.Size(119, 28);
+            this.NewCircuitButton.Size = new System.Drawing.Size(91, 28);
             this.NewCircuitButton.TabIndex = 0;
             this.NewCircuitButton.Text = "New circuit";
             this.NewCircuitButton.UseVisualStyleBackColor = true;
+            this.NewCircuitButton.Click += new System.EventHandler(this.NewCircuitButton_Click);
             // 
             // CircuitsComboBox
             // 
@@ -170,6 +188,7 @@
             this.CircuitTreeView.Name = "CircuitTreeView";
             this.CircuitTreeView.Size = new System.Drawing.Size(288, 488);
             this.CircuitTreeView.TabIndex = 2;
+            this.CircuitTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.CircuitTreeView_AfterSelect);
             // 
             // panel1
             // 
@@ -183,6 +202,7 @@
             // 
             // SchemaPictureBox
             // 
+            this.SchemaPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SchemaPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SchemaPictureBox.Location = new System.Drawing.Point(0, 0);
             this.SchemaPictureBox.Name = "SchemaPictureBox";
@@ -284,6 +304,8 @@
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.RemoveElementButton);
+            this.panel3.Controls.Add(this.EditElementButton);
             this.panel3.Controls.Add(this.textBox2);
             this.panel3.Controls.Add(this.AddSerialButton);
             this.panel3.Controls.Add(this.AddParallelButton);
@@ -299,6 +321,28 @@
             this.panel3.Size = new System.Drawing.Size(494, 238);
             this.panel3.TabIndex = 2;
             // 
+            // RemoveElementButton
+            // 
+            this.RemoveElementButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.RemoveElementButton.Location = new System.Drawing.Point(388, 158);
+            this.RemoveElementButton.Name = "RemoveElementButton";
+            this.RemoveElementButton.Size = new System.Drawing.Size(81, 35);
+            this.RemoveElementButton.TabIndex = 11;
+            this.RemoveElementButton.Text = "Remove";
+            this.RemoveElementButton.UseVisualStyleBackColor = true;
+            // 
+            // EditElementButton
+            // 
+            this.EditElementButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.EditElementButton.Location = new System.Drawing.Point(299, 158);
+            this.EditElementButton.Name = "EditElementButton";
+            this.EditElementButton.Size = new System.Drawing.Size(82, 35);
+            this.EditElementButton.TabIndex = 10;
+            this.EditElementButton.Text = "Edit";
+            this.EditElementButton.UseVisualStyleBackColor = true;
+            // 
             // textBox2
             // 
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -313,9 +357,9 @@
             // 
             this.AddSerialButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddSerialButton.Location = new System.Drawing.Point(299, 137);
+            this.AddSerialButton.Location = new System.Drawing.Point(299, 110);
             this.AddSerialButton.Name = "AddSerialButton";
-            this.AddSerialButton.Size = new System.Drawing.Size(171, 51);
+            this.AddSerialButton.Size = new System.Drawing.Size(171, 40);
             this.AddSerialButton.TabIndex = 8;
             this.AddSerialButton.Text = "Add serial element";
             this.AddSerialButton.UseVisualStyleBackColor = true;
@@ -326,13 +370,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.AddParallelButton.Location = new System.Drawing.Point(299, 61);
             this.AddParallelButton.Name = "AddParallelButton";
-            this.AddParallelButton.Size = new System.Drawing.Size(171, 51);
+            this.AddParallelButton.Size = new System.Drawing.Size(171, 40);
             this.AddParallelButton.TabIndex = 7;
             this.AddParallelButton.Text = "Add parallel element";
             this.AddParallelButton.UseVisualStyleBackColor = true;
             // 
             // TypeTextBox
             // 
+            this.TypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.TypeTextBox.Location = new System.Drawing.Point(122, 166);
             this.TypeTextBox.Name = "TypeTextBox";
             this.TypeTextBox.ReadOnly = true;
@@ -341,6 +387,8 @@
             // 
             // ValueTextBox
             // 
+            this.ValueTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.ValueTextBox.Location = new System.Drawing.Point(122, 113);
             this.ValueTextBox.Name = "ValueTextBox";
             this.ValueTextBox.ReadOnly = true;
@@ -349,6 +397,8 @@
             // 
             // NameTextBox
             // 
+            this.NameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.NameTextBox.Location = new System.Drawing.Point(122, 61);
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.ReadOnly = true;
@@ -357,6 +407,8 @@
             // 
             // textBox6
             // 
+            this.textBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox6.Location = new System.Drawing.Point(46, 169);
             this.textBox6.Name = "textBox6";
@@ -367,6 +419,8 @@
             // 
             // textBox5
             // 
+            this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox5.Location = new System.Drawing.Point(46, 116);
             this.textBox5.Name = "textBox5";
@@ -377,6 +431,8 @@
             // 
             // textBox4
             // 
+            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox4.Location = new System.Drawing.Point(46, 64);
             this.textBox4.Name = "textBox4";
@@ -414,7 +470,7 @@
             // 
             this.RemoveFrequencyButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RemoveFrequencyButton.Location = new System.Drawing.Point(41, 158);
+            this.RemoveFrequencyButton.Location = new System.Drawing.Point(41, 148);
             this.RemoveFrequencyButton.Name = "RemoveFrequencyButton";
             this.RemoveFrequencyButton.Size = new System.Drawing.Size(217, 45);
             this.RemoveFrequencyButton.TabIndex = 3;
@@ -426,7 +482,7 @@
             // 
             this.CalculateImpedanceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CalculateImpedanceButton.Location = new System.Drawing.Point(41, 94);
+            this.CalculateImpedanceButton.Location = new System.Drawing.Point(41, 90);
             this.CalculateImpedanceButton.Name = "CalculateImpedanceButton";
             this.CalculateImpedanceButton.Size = new System.Drawing.Size(217, 45);
             this.CalculateImpedanceButton.TabIndex = 2;
@@ -506,6 +562,9 @@
         private System.Windows.Forms.Button CalculateImpedanceButton;
         private System.Windows.Forms.TextBox NewFrequencyTextBox;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button EditCircuitButton;
+        private System.Windows.Forms.Button RemoveElementButton;
+        private System.Windows.Forms.Button EditElementButton;
     }
 }
 
