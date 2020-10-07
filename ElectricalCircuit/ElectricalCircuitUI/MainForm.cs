@@ -108,7 +108,8 @@ namespace ElectricalCircuitUI
         /// <param name="segment"></param>
         private void FindAllSegments(ISegment segment, TreeNode node)
         {
-            var newNode = node.Nodes.Add(segment.ToString());
+            var newNode = new SegmentTreeNode(segment);
+            node.Nodes.Add(newNode);
             if (segment.SubSegments == null)
             {
                 return;
@@ -351,50 +352,20 @@ namespace ElectricalCircuitUI
         {
             ClearElementInfoFields();
 
-            var currentSegment = FindSelectedSegment();
-            NameTextBox.Text = CircuitTreeView.SelectedNode.Text;
+            var selectedNode = CircuitTreeView.SelectedNode;
+            NameTextBox.Text = selectedNode.Text;
 
-            if (currentSegment is IElement)
+            if (selectedNode is SegmentTreeNode)
             {
-                var element = (IElement)currentSegment;
-                ValueTextBox.Text = element.Value.ToString();
-                TypeTextBox.Text = GetElementType(element).ToString();
+                var selectedSegment = ((SegmentTreeNode) selectedNode).Segment;
+
+                if (selectedSegment is IElement)
+                {
+                    var element = (IElement)selectedSegment;
+                    ValueTextBox.Text = element.Value.ToString();
+                    TypeTextBox.Text = GetElementType(element).ToString();
+                }
             }
-        }
-
-        /// <summary>
-        /// Метод поиска сегмента в списке подсегментов, используя данные из CircuitTreeView
-        /// </summary>
-        /// <returns></returns>
-        private ISegment FindSelectedSegment()
-        {
-            var currentNode = CircuitTreeView.SelectedNode;
-
-            // Каждый элемент показывает индекс, который элемент занимает в
-            // соответствующем списке сегментов
-            var path = new List<int>();
-
-            while (currentNode.Parent != null)
-            {
-                path.Insert(0, currentNode.Index);
-                currentNode = currentNode.Parent;
-            }
-
-            // Цепь пустая
-            if (path.Count == 0)
-            {
-                return null;
-            }
-
-            var currentSegment = ((Circuit)CircuitsComboBox.SelectedItem).Segments[path[0]];
-            path.RemoveAt(0);
-
-            foreach (var index in path)
-            {
-                currentSegment = currentSegment.SubSegments[index];
-            }
-
-            return currentSegment;
         }
 
         /// <summary>
