@@ -8,7 +8,7 @@ namespace ElectricalCircuit
     /// <summary>
     /// Класс <see cref="SerialSegment"/>, хранящий информацию о последовательном участке цепи
     /// </summary>
-    public class SerialSegment : ISegment
+    public class SerialSegment : ISegment, ICloneable
     {
         /// <inheritdoc/>
         public ObservableCollection<ISegment> SubSegments { get; private set; }
@@ -77,6 +77,33 @@ namespace ElectricalCircuit
         public override string ToString()
         {
             return "Serial segment";
+        }
+
+        /// <inheritdoc/>
+        public object Clone()
+        {
+            var segment = new SerialSegment();
+            foreach (var subSegment in SubSegments)
+            {
+                segment.SubSegments.Add((ISegment)subSegment.Clone());
+            }
+
+            return segment;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var segment = (ISegment)obj;
+            for (int i = 0; i < SubSegments.Count; i++)
+            {
+                if (!segment.SubSegments[i].Equals(SubSegments[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

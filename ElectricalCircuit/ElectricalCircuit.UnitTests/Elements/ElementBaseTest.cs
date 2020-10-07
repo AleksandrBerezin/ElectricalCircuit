@@ -90,5 +90,34 @@ namespace ElectricalCircuit.UnitTests.Elements
             Assert.IsTrue(wasCalled,
                 "При изменении номинала элемента должно вызываться событие SegmentChanged");
         }
+
+        [Test(Description = "Тест метода копирования")]
+        public void TestClone_CorrectValue()
+        {
+            var element = new Element()
+            {
+                Name = "Элемент 1",
+                Value = 20
+            };
+            var clonedElement = element.Clone();
+            var isEqual = clonedElement.Equals(element);
+
+            Assert.IsFalse(!isEqual, "Метод копирования должен создать точную копию объекта");
+        }
+
+        [Test(Description = "Тест метода сравнения двух объектов")]
+        public void TestEquals_CorrectValue()
+        {
+            var element = new Element()
+            {
+                Name = "Элемент 1",
+                Value = 20
+            };
+            var clonedElement = element.Clone();
+            var isEqual = clonedElement.Equals(element);
+
+            Assert.IsFalse(!isEqual,
+                "Метод сравнения должен вернуть истину, так как объекты идентичны");
+        }
     }
 }

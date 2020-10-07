@@ -7,7 +7,7 @@ namespace ElectricalCircuit
     /// <summary>
     /// Интерфейс <see cref="ISegment"/> определяет поля и методы для работы с сегментами цепей
     /// </summary>
-    public interface ISegment
+    public interface ISegment : ICloneable
     {
         /// <summary>
         /// Возвращает список внутренних сегментов

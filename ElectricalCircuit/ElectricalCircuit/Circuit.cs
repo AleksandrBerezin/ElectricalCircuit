@@ -9,7 +9,7 @@ namespace ElectricalCircuit
     /// <summary>
     /// Класс <see cref="Circuit"/>, хранящий список элементов цепи
     /// </summary>
-    public class Circuit
+    public class Circuit : ICloneable
     {
         /// <summary>
         /// Название цепи. Название не должно быть пустым
@@ -128,6 +128,33 @@ namespace ElectricalCircuit
         public override string ToString()
         {
             return Name;
+        }
+
+        /// <inheritdoc"/>
+        public object Clone()
+        {
+            var circuit = new Circuit(Name);
+            foreach (var segment in Segments)
+            {
+                circuit.Segments.Add((ISegment)segment.Clone());
+            }
+
+            return circuit;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var circuit = (Circuit)obj;
+            for (int i = 0; i < Segments.Count; i++)
+            {
+                if (!circuit.Segments[i].Equals(Segments[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

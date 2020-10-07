@@ -79,5 +79,32 @@ namespace ElectricalCircuit
         {
             return "Parallel segment";
         }
+
+        /// <inheritdoc/>
+        public object Clone()
+        {
+            var segment = new ParallelSegment();
+            foreach (var subSegment in SubSegments)
+            {
+                segment.SubSegments.Add((ISegment)subSegment.Clone());
+            }
+
+            return segment;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var segment = (ISegment)obj;
+            for (int i = 0; i < SubSegments.Count; i++)
+            {
+                if (!segment.SubSegments[i].Equals(SubSegments[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

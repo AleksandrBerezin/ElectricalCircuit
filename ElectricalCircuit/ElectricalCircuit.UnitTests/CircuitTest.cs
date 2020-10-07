@@ -214,5 +214,42 @@ namespace ElectricalCircuit.UnitTests
 
             Assert.AreEqual(expected, actual, "Метод ToString возвращает неправильную строку");
         }
+
+        [Test(Description = "Тест метода копирования")]
+        public void TestClone_CorrectValue()
+        {
+            var circuit = new Circuit("Цепь 1");
+            var segment = new SerialSegment();
+            segment.SubSegments.Add(new Resistor("R1", 20));
+
+            var parallelSegment = new ParallelSegment();
+            parallelSegment.SubSegments.Add(new Capacitor("C1", 2e-6));
+            segment.SubSegments.Add(parallelSegment);
+            circuit.Segments.Add(segment);
+
+            var clonedCircuit = (Circuit)circuit.Clone();
+            var isEqual = clonedCircuit.Equals(circuit);
+
+            Assert.IsTrue(isEqual, "Метод копирования должен создать точную копию объекта");
+        }
+
+        [Test(Description = "Тест метода сравнения двух объектов")]
+        public void TestEquals_CorrectValue()
+        {
+            var circuit = new Circuit("Цепь 1");
+            var segment = new SerialSegment();
+            segment.SubSegments.Add(new Resistor("R1", 20));
+
+            var parallelSegment = new ParallelSegment();
+            parallelSegment.SubSegments.Add(new Capacitor("C1", 2e-6));
+            segment.SubSegments.Add(parallelSegment);
+            circuit.Segments.Add(segment);
+
+            var clonedCircuit = (Circuit)circuit.Clone();
+            var isEqual = clonedCircuit.Equals(circuit);
+
+            Assert.IsTrue(isEqual,
+                "Метод сравнения должен вернуть истину, так как объекты идентичны");
+        }
     }
 }
