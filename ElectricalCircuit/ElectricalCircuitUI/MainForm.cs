@@ -301,6 +301,24 @@ namespace ElectricalCircuitUI
             {
                 return;
             }
+
+            var selectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
+            var realIndexInProject = _project.Circuits.IndexOf(selectedCircuit);
+
+            var inner = new CircuitForm();
+            inner.Circuit = (Circuit)selectedCircuit.Clone();
+            var result = inner.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var updatedCircuit = inner.Circuit;
+            _project.Circuits.RemoveAt(realIndexInProject);
+            _project.Circuits.Insert(realIndexInProject, updatedCircuit);
+
+            FillCircuitsComboBox();
+            CircuitsComboBox.SelectedItem = updatedCircuit;
         }
 
         private void RemoveCircuitButton_Click(object sender, EventArgs e)
