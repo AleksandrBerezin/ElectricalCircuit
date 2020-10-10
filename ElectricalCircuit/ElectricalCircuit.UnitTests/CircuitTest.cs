@@ -115,6 +115,12 @@ namespace ElectricalCircuit.UnitTests
 
             circuit.CircuitChanged += (o, e) => wasCalled = true;
             circuit.Segments.Add(new Inductor("L1", 2e-4));
+            circuit.Segments.Add(new SerialSegment());
+            wasCalled = false;
+
+            circuit.Segments[1].SubSegments.Add(new Resistor("R1", 20));
+            wasCalled = false;
+            circuit.Segments[1].SubSegments.Add(new Resistor("R1", 20));
 
             Assert.IsTrue(wasCalled,
                 "При добавлении элемента в цепь должно вызываться событие CircuitChanged");

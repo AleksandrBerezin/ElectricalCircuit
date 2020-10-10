@@ -27,10 +27,17 @@ namespace ElectricalCircuitUI
         {
             _project = new Project();
 
-            _frequencies = new List<double>();
-            _frequencies.Add(100);
-            _frequencies.Add(200);
-            _frequencies.Add(300);
+            foreach (var circuit in _project.Circuits)
+            {
+                circuit.CircuitChanged += CalculationImpedances;
+            }
+
+            _frequencies = new List<double>
+            {
+                100,
+                200,
+                300
+            };
 
             InitializeComponent();
 
@@ -59,7 +66,7 @@ namespace ElectricalCircuitUI
         /// </summary>
         private void FillImpedancesListBox()
         {
-            var selectedItem = (Circuit) CircuitsComboBox.SelectedItem;
+            var selectedItem = (Circuit)CircuitsComboBox.SelectedItem;
 
             if (selectedItem == null || selectedItem.Segments.Count == 0)
             {
@@ -98,15 +105,17 @@ namespace ElectricalCircuitUI
 
             foreach (var segment in circuit.Segments)
             {
-                FindAllSegments(segment, newNode);
+                WriteAllAllSegmentsInTree(segment, newNode);
             }
+
+            CircuitTreeView.ExpandAll();
         }
 
         /// <summary>
-        /// Метод поиска всех сегментов в цепи
+        /// Метод поиска всех сегментов в цепи, и добавление в TreeView
         /// </summary>
         /// <param name="segment"></param>
-        private void FindAllSegments(ISegment segment, TreeNode node)
+        private void WriteAllAllSegmentsInTree(ISegment segment, TreeNode node)
         {
             var newNode = new SegmentTreeNode(segment);
             node.Nodes.Add(newNode);
@@ -117,7 +126,7 @@ namespace ElectricalCircuitUI
 
             foreach (var subSegment in segment.SubSegments)
             {
-                FindAllSegments(subSegment, newNode);
+                WriteAllAllSegmentsInTree(subSegment, newNode);
             }
         }
 
@@ -281,8 +290,10 @@ namespace ElectricalCircuitUI
 
         private void NewCircuitButton_Click(object sender, EventArgs e)
         {
-            var inner = new CircuitForm();
-            inner.Circuit = new Circuit();
+            var inner = new CircuitForm
+            {
+                Circuit = new Circuit()
+            };
             var result = inner.ShowDialog();
 
             if (result != DialogResult.OK)
@@ -306,8 +317,10 @@ namespace ElectricalCircuitUI
             var selectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
             var realIndexInProject = _project.Circuits.IndexOf(selectedCircuit);
 
-            var inner = new CircuitForm();
-            inner.Circuit = (Circuit)selectedCircuit.Clone();
+            var inner = new CircuitForm
+            {
+                Circuit = (Circuit)selectedCircuit.Clone()
+            };
             var result = inner.ShowDialog();
             if (result != DialogResult.OK)
             {
@@ -397,6 +410,455 @@ namespace ElectricalCircuitUI
             NameTextBox.Text = "";
             ValueTextBox.Text = "";
             TypeTextBox.Text = "";
+        }
+
+        private void AddParallelButton_Click(object sender, EventArgs e)
+        {
+            if (CircuitTreeView.SelectedNode == null)
+            {
+                return;
+            }
+
+            var inner = new ElementForm
+            {
+                Element = new Resistor()
+            };
+            var result = inner.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var newElement = inner.Element;
+            var circuit = (Circuit)CircuitsComboBox.SelectedItem;
+
+            // Выбрана цепь
+            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
+            {
+                circuit.Segments.Add(newElement);
+                FillCircuitTreeView();
+                SelectNodeInTreeView(newElement);
+
+                return;
+            }
+
+            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+            var selectedSegment = selectedNode.Segment;
+            var parentNode = selectedNode.Parent;
+            var indexInParent = selectedNode.Index;
+
+            // Выбран последовательный сегмент
+            if (selectedSegment is SerialSegment)
+            {
+                // Родитель не является корневым узлом
+                if (parentNode is SegmentTreeNode)
+                {
+                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                    if (parentSegment is SerialSegment)
+                    {
+                        var parallelSegment = new ParallelSegment();
+                        parallelSegment.SubSegments.Add(selectedSegment);
+                        parallelSegment.SubSegments.Add(newElement);
+
+                        parentSegment.SubSegments[indexInParent] = parallelSegment;
+                    }
+                    else
+                    {
+                        parentSegment.SubSegments.Add(newElement);
+                    }
+                }
+                // Родитель является корневым узлом
+                else
+                {
+                    var parallelSegment = new ParallelSegment();
+                    parallelSegment.SubSegments.Add(selectedSegment);
+                    parallelSegment.SubSegments.Add(newElement);
+
+                    circuit.Segments[indexInParent] = parallelSegment;
+                }
+            }
+            // Выбран параллельный сегмент
+            else if (selectedSegment is ParallelSegment)
+            {
+                // Родитель не является корневым узлом
+                if (parentNode is SegmentTreeNode)
+                {
+                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                    if (parentSegment is SerialSegment)
+                    {
+                        var parallelSegment = new ParallelSegment();
+                        parallelSegment.SubSegments.Add(selectedSegment);
+                        parallelSegment.SubSegments.Add(newElement);
+
+                        parentSegment.SubSegments[indexInParent] = parallelSegment;
+                    }
+                    else
+                    {
+                        parentSegment.SubSegments.Add(newElement);
+                    }
+                }
+                // Родитель является корневым узлом
+                else
+                {
+                    var parallelSegment = new ParallelSegment();
+                    parallelSegment.SubSegments.Add(selectedSegment);
+                    parallelSegment.SubSegments.Add(newElement);
+
+                    circuit.Segments[indexInParent] = parallelSegment;
+                }
+            }
+            // Выбран элемент
+            else
+            {
+                // Родитель не является корневым узлом
+                if (parentNode is SegmentTreeNode)
+                {
+                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                    if (parentSegment is SerialSegment)
+                    {
+                        var parallelSegment = new ParallelSegment();
+                        parallelSegment.SubSegments.Add(selectedSegment);
+                        parallelSegment.SubSegments.Add(newElement);
+
+                        parentSegment.SubSegments[indexInParent] = parallelSegment;
+                    }
+                    else
+                    {
+                        parentSegment.SubSegments.Add(newElement);
+                    }
+                }
+                else
+                {
+                    var parallelSegment = new ParallelSegment();
+                    parallelSegment.SubSegments.Add(selectedSegment);
+                    parallelSegment.SubSegments.Add(newElement);
+
+                    circuit.Segments[indexInParent] = parallelSegment;
+                }
+            }
+
+            ClearElementInfoFields();
+            FillCircuitTreeView();
+            SelectNodeInTreeView(newElement);
+        }
+
+        private void AddSerialButton_Click(object sender, EventArgs e)
+        {
+            if (CircuitTreeView.SelectedNode == null)
+            {
+                return;
+            }
+
+            var inner = new ElementForm
+            {
+                Element = new Resistor()
+            };
+            var result = inner.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var newElement = inner.Element;
+            var circuit = (Circuit)CircuitsComboBox.SelectedItem;
+
+            // Выбрана цепь
+            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
+            {
+                circuit.Segments.Add(newElement);
+                FillCircuitTreeView();
+                SelectNodeInTreeView(newElement);
+
+                return;
+            }
+
+            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+            var selectedSegment = selectedNode.Segment;
+            var parentNode = selectedNode.Parent;
+            var indexInParent = selectedNode.Index;
+
+            // Выбран последовательный сегмент
+            if (selectedSegment is SerialSegment)
+            {
+                // Родитель не является корневым узлом
+                if (parentNode is SegmentTreeNode)
+                {
+                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                    if (parentSegment is SerialSegment)
+                    {
+                        parentSegment.SubSegments.Add(newElement);
+                    }
+                    else
+                    {
+                        var serialSegment = new SerialSegment();
+                        serialSegment.SubSegments.Add(selectedSegment);
+                        serialSegment.SubSegments.Add(newElement);
+
+                        parentSegment.SubSegments[indexInParent] = serialSegment;
+                    }
+                }
+                // Родитель является корневым узлом
+                else
+                {
+                    circuit.Segments.Add(newElement);
+                }
+            }
+            // Выбран параллельный сегмент
+            else if (selectedSegment is ParallelSegment)
+            {
+                // Родитель не является корневым узлом
+                if (parentNode is SegmentTreeNode)
+                {
+                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                    if (parentSegment is SerialSegment)
+                    {
+                        parentSegment.SubSegments.Add(newElement);
+                    }
+                    else
+                    {
+                        var serialSegment = new SerialSegment();
+                        serialSegment.SubSegments.Add(selectedSegment);
+                        serialSegment.SubSegments.Add(newElement);
+                        
+                        parentSegment.SubSegments[indexInParent] = serialSegment;
+                    }
+                }
+                // Родитель является корневым узлом
+                else
+                {
+                    circuit.Segments.Add(newElement);
+                }
+            }
+            // Выбран элемент
+            else
+            {
+                // Родитель не является корневым узлом
+                if (parentNode is SegmentTreeNode)
+                {
+                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                    if (parentSegment is SerialSegment)
+                    {
+                        parentSegment.SubSegments.Add(newElement);
+                    }
+                    else
+                    {
+                        var serialSegment = new SerialSegment();
+                        serialSegment.SubSegments.Add(selectedSegment);
+                        serialSegment.SubSegments.Add(newElement);
+
+                        parentSegment.SubSegments[indexInParent] = serialSegment;
+                    }
+                }
+                else
+                {
+                    var serialSegment = new SerialSegment();
+                    serialSegment.SubSegments.Add(selectedSegment);
+                    serialSegment.SubSegments.Add(newElement);
+
+                    circuit.Segments[indexInParent] = serialSegment;
+                }
+            }
+
+            ClearElementInfoFields();
+            FillCircuitTreeView();
+            SelectNodeInTreeView(newElement);
+        }
+
+        private void EditElementButton_Click(object sender, EventArgs e)
+        {
+            if (CircuitTreeView.SelectedNode == null)
+            {
+                return;
+            }
+
+            // Выбрана цепь
+            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
+            {
+                EditCircuitButton_Click(sender, e);
+                return;
+            }
+
+            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+            var selectedSegment = selectedNode.Segment;
+            var parentNode = selectedNode.Parent;
+
+            // Выбран сегмент - замена на противоположный сегмент
+            if (selectedSegment is ElementBase == false)
+            {
+                ISegment replacingSegment;
+                if (selectedSegment is SerialSegment)
+                {
+                    DialogResult changeSegment = MessageBox.Show(
+                        $"Do you really want to replace this serial segment with parallel segment?",
+                        "Replace Segment",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button2);
+
+                    replacingSegment = new ParallelSegment();
+                    foreach (var segment in selectedSegment.SubSegments)
+                    {
+                        replacingSegment.SubSegments.Add(segment);
+                    }
+                }
+                else
+                {
+                    DialogResult changeSegment = MessageBox.Show(
+                        $"Do you really want to replace this parallel segment with serial segment?",
+                        "Replace Segment",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button2);
+
+                    replacingSegment = new SerialSegment();
+                    foreach (var segment in selectedSegment.SubSegments)
+                    {
+                        replacingSegment.SubSegments.Add(segment);
+                    }
+                }
+
+                var index = selectedNode.Index;
+                if (parentNode is SegmentTreeNode)
+                {
+                    ((SegmentTreeNode)parentNode).Segment.SubSegments[index] = replacingSegment;
+                }
+                else
+                {
+                    ((Circuit)CircuitsComboBox.SelectedItem).Segments[index] = replacingSegment;
+                }
+
+                ClearElementInfoFields();
+                FillCircuitTreeView();
+                SelectNodeInTreeView(replacingSegment);
+
+                return;
+            }
+
+            // Выбран элемент
+            var inner = new ElementForm
+            {
+                Element = (IElement)selectedSegment.Clone()
+            };
+            var result = inner.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var updatedElement = inner.Element;
+            var realIndexInSegment = 0;
+
+            if (parentNode is SegmentTreeNode)
+            {
+                var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+                realIndexInSegment = selectedNode.Index;
+                parentSegment.SubSegments[realIndexInSegment] = updatedElement;
+            }
+            // parentNode является корневым узлом
+            else
+            {
+                var selectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
+                realIndexInSegment = selectedNode.Index;
+                selectedCircuit.Segments[realIndexInSegment] = updatedElement;
+            }
+
+            ClearElementInfoFields();
+            FillCircuitTreeView();
+            SelectNodeInTreeView(updatedElement);
+        }
+
+        private void RemoveElementButton_Click(object sender, EventArgs e)
+        {
+            if (CircuitTreeView.SelectedNode == null)
+            {
+                return;
+            }
+
+            // Выбрана цепь
+            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
+            {
+                RemoveCircuitButton_Click(sender, e);
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                $"Do you really want to remove this segment: {NameTextBox.Text}",
+                "Remove Segment",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.OK)
+            {
+                var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+                var selectedSegment = selectedNode.Segment;
+                var parentNode = selectedNode.Parent;
+
+                if (parentNode is SegmentTreeNode)
+                {
+                    ((SegmentTreeNode)parentNode).Segment.SubSegments.Remove(selectedSegment);
+                }
+                else
+                {
+                    ((Circuit)CircuitsComboBox.SelectedItem).Segments.Remove(selectedSegment);
+                }
+
+                ClearElementInfoFields();
+                FillCircuitTreeView();
+            }
+        }
+
+        /// <summary>
+        /// Метод расчета импедансов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CalculationImpedances(object sender, EventArgs e)
+        {
+            FillImpedancesListBox();
+        }
+
+        /// <summary>
+        /// Метод выбора элемента в CircuitTreeView
+        /// </summary>
+        /// <param name="segment"></param>
+        private void SelectNodeInTreeView(ISegment segment)
+        {
+            SegmentTreeNode node = null;
+            CircuitTreeView.SelectedNode = SearchNode(segment,
+                (SegmentTreeNode)CircuitTreeView.Nodes[0].Nodes[0]);
+        }
+
+        /// <summary>
+        /// Рекурсивный поиск элемента в дереве, соответствующий нужному <see cref="segment"/>
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <param name="startNode"></param>
+        /// <returns></returns>
+        private SegmentTreeNode SearchNode(ISegment segment, SegmentTreeNode startNode)
+        {
+            SegmentTreeNode node = null;
+            while (startNode != null)
+            {
+                if (startNode.Segment.Equals(segment))
+                {
+                    node = startNode;
+                    break;
+                }
+
+                if (startNode.Nodes.Count != 0)
+                {
+                    node = SearchNode(segment, (SegmentTreeNode)startNode.Nodes[0]);
+                    if (node != null)
+                    {
+                        break;
+                    }
+                }
+
+                startNode = startNode.NextNode as SegmentTreeNode;
+            }
+
+            return node;
         }
     }
 }

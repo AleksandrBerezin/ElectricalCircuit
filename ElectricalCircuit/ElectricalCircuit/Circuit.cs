@@ -48,9 +48,8 @@ namespace ElectricalCircuit
         public Circuit(string name)
         {
             Name = name;
-            CircuitChanged += (o, e) => { };
             Segments = new ObservableCollection<ISegment>();
-            Segments.CollectionChanged += Segments_CollectionChanged;
+            Segments.CollectionChanged += OnCollectionChanged;
         }
         
         /// <summary>
@@ -59,12 +58,46 @@ namespace ElectricalCircuit
         public Circuit()
         {
             Segments = new ObservableCollection<ISegment>();
+            Segments.CollectionChanged += OnCollectionChanged;
         }
 
         /// <summary>
         /// Сообщает об изменении цепи
         /// </summary>
-        public event EventHandler CircuitChanged;
+        private event EventHandler _circuitChanged;
+
+        /// <summary>
+        /// Добавляет и удаляет обработчики события изменения цепи
+        /// </summary>
+        public event EventHandler CircuitChanged
+        {
+            add
+            {
+                _circuitChanged += value;
+                if (Segments == null)
+                {
+                    return;
+                }
+
+                foreach (var segment in Segments)
+                {
+                    segment.SegmentChanged += value;
+                }
+            }
+            remove
+            {
+                _circuitChanged -= value;
+                if (Segments == null)
+                {
+                    return;
+                }
+
+                foreach (var segment in Segments)
+                {
+                    segment.SegmentChanged -= value;
+                }
+            }
+        }
 
         /// <summary>
         /// Метод для расчета импеданса цепи
@@ -93,35 +126,33 @@ namespace ElectricalCircuit
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Segments_CollectionChanged(object sender, 
-            NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                 {
                     ISegment segment = e.NewItems[0] as ISegment;
-                    segment.SegmentChanged += CircuitChanged;
-                    CircuitChanged?.Invoke(sender, e);
+                    segment.SegmentChanged += _circuitChanged;
                     break;
                 }
                 case NotifyCollectionChangedAction.Remove:
                 {
                     ISegment segment = e.OldItems[0] as ISegment;
-                    segment.SegmentChanged -= CircuitChanged;
-                    CircuitChanged?.Invoke(sender, e);
+                    segment.SegmentChanged -= _circuitChanged;
                     break;
                 }
                 case NotifyCollectionChangedAction.Replace:
                 {
                     ISegment replacedSegment = e.OldItems[0] as ISegment;
                     ISegment replacingSegment = e.NewItems[0] as ISegment;
-                    replacedSegment.SegmentChanged -= CircuitChanged;
-                    replacingSegment.SegmentChanged += CircuitChanged;
-                    CircuitChanged?.Invoke(sender, e);
+                    replacedSegment.SegmentChanged -= _circuitChanged;
+                    replacingSegment.SegmentChanged += _circuitChanged;
                     break;
                 }
             }
+
+            _circuitChanged?.Invoke(sender, e);
         }
 
         /// <inheritdoc/>
@@ -145,7 +176,17 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            var circuit = (Circuit)obj;
+            var circuit = obj as Circuit;
+            if (circuit == null)
+            {
+                return false;
+            }
+
+            if (Segments.Count != circuit.Segments.Count)
+            {
+                return false;
+            }
+
             for (int i = 0; i < Segments.Count; i++)
             {
                 if (!circuit.Segments[i].Equals(Segments[i]))

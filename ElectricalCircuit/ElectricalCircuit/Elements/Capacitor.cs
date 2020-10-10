@@ -31,5 +31,24 @@ namespace ElectricalCircuit
         {
             return Name;
         }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var element = obj as Capacitor;
+            if (element == null)
+            {
+                return false;
+            }
+
+            if (Name == element.Name && Value == element.Value)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

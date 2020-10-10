@@ -90,23 +90,17 @@ namespace ElectricalCircuitUI
         {
             RadioButton radioButton = (RadioButton) sender;
 
-            switch (radioButton.Text)
+            if (ResistorRadioButton.Checked)
             {
-                case "R":
-                {
-                    Element = new Resistor(Element.Name, Element.Value);
-                    break;
-                }
-                case "L":
-                {
-                    Element = new Inductor(Element.Name, Element.Value);
-                    break;
-                }
-                case "C":
-                {
-                    Element = new Capacitor(Element.Name, Element.Value);
-                    break;
-                }
+                Element = new Resistor(Element.Name, Element.Value);
+            }
+            else if (InductorRadioButton.Checked)
+            {
+                Element = new Inductor(Element.Name, Element.Value);
+            }
+            else
+            {
+                Element = new Capacitor(Element.Name, Element.Value);
             }
         }
 

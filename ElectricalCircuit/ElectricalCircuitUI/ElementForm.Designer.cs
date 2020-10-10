@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.CapacitorRadioButton = new System.Windows.Forms.RadioButton();
+            this.InductorRadioButton = new System.Windows.Forms.RadioButton();
+            this.ResistorRadioButton = new System.Windows.Forms.RadioButton();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -36,13 +40,9 @@
             this.NameTextBox = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.ValueTextBox = new System.Windows.Forms.TextBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.ResistorRadioButton = new System.Windows.Forms.RadioButton();
-            this.InductorRadioButton = new System.Windows.Forms.RadioButton();
-            this.CapacitorRadioButton = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -56,6 +56,52 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(347, 135);
             this.panel1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.CapacitorRadioButton);
+            this.panel2.Controls.Add(this.InductorRadioButton);
+            this.panel2.Controls.Add(this.ResistorRadioButton);
+            this.panel2.Location = new System.Drawing.Point(12, 98);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(139, 28);
+            this.panel2.TabIndex = 4;
+            // 
+            // CapacitorRadioButton
+            // 
+            this.CapacitorRadioButton.AutoSize = true;
+            this.CapacitorRadioButton.Location = new System.Drawing.Point(98, 4);
+            this.CapacitorRadioButton.Name = "CapacitorRadioButton";
+            this.CapacitorRadioButton.Size = new System.Drawing.Size(38, 21);
+            this.CapacitorRadioButton.TabIndex = 2;
+            this.CapacitorRadioButton.TabStop = true;
+            this.CapacitorRadioButton.Text = "C";
+            this.CapacitorRadioButton.UseVisualStyleBackColor = true;
+            this.CapacitorRadioButton.CheckedChanged += new System.EventHandler(this.ElementTypeRadioButton_CheckedChanged);
+            // 
+            // InductorRadioButton
+            // 
+            this.InductorRadioButton.AutoSize = true;
+            this.InductorRadioButton.Location = new System.Drawing.Point(50, 4);
+            this.InductorRadioButton.Name = "InductorRadioButton";
+            this.InductorRadioButton.Size = new System.Drawing.Size(37, 21);
+            this.InductorRadioButton.TabIndex = 1;
+            this.InductorRadioButton.TabStop = true;
+            this.InductorRadioButton.Text = "L";
+            this.InductorRadioButton.UseVisualStyleBackColor = true;
+            this.InductorRadioButton.CheckedChanged += new System.EventHandler(this.ElementTypeRadioButton_CheckedChanged);
+            // 
+            // ResistorRadioButton
+            // 
+            this.ResistorRadioButton.AutoSize = true;
+            this.ResistorRadioButton.Location = new System.Drawing.Point(3, 4);
+            this.ResistorRadioButton.Name = "ResistorRadioButton";
+            this.ResistorRadioButton.Size = new System.Drawing.Size(39, 21);
+            this.ResistorRadioButton.TabIndex = 0;
+            this.ResistorRadioButton.TabStop = true;
+            this.ResistorRadioButton.Text = "R";
+            this.ResistorRadioButton.UseVisualStyleBackColor = true;
+            this.ResistorRadioButton.CheckedChanged += new System.EventHandler(this.ElementTypeRadioButton_CheckedChanged);
             // 
             // CancelButton
             // 
@@ -134,52 +180,6 @@
             this.ValueTextBox.TabIndex = 3;
             this.ValueTextBox.TextChanged += new System.EventHandler(this.ValueTextBox_TextChanged);
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.CapacitorRadioButton);
-            this.panel2.Controls.Add(this.InductorRadioButton);
-            this.panel2.Controls.Add(this.ResistorRadioButton);
-            this.panel2.Location = new System.Drawing.Point(12, 98);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(139, 28);
-            this.panel2.TabIndex = 4;
-            // 
-            // ResistorRadioButton
-            // 
-            this.ResistorRadioButton.AutoSize = true;
-            this.ResistorRadioButton.Location = new System.Drawing.Point(3, 4);
-            this.ResistorRadioButton.Name = "ResistorRadioButton";
-            this.ResistorRadioButton.Size = new System.Drawing.Size(39, 21);
-            this.ResistorRadioButton.TabIndex = 0;
-            this.ResistorRadioButton.TabStop = true;
-            this.ResistorRadioButton.Text = "R";
-            this.ResistorRadioButton.UseVisualStyleBackColor = true;
-            this.ResistorRadioButton.CheckedChanged += new System.EventHandler(this.ElementTypeRadioButton_CheckedChanged);
-            // 
-            // InductorRadioButton
-            // 
-            this.InductorRadioButton.AutoSize = true;
-            this.InductorRadioButton.Location = new System.Drawing.Point(50, 4);
-            this.InductorRadioButton.Name = "InductorRadioButton";
-            this.InductorRadioButton.Size = new System.Drawing.Size(37, 21);
-            this.InductorRadioButton.TabIndex = 1;
-            this.InductorRadioButton.TabStop = true;
-            this.InductorRadioButton.Text = "L";
-            this.InductorRadioButton.UseVisualStyleBackColor = true;
-            this.InductorRadioButton.CheckedChanged += new System.EventHandler(this.ElementTypeRadioButton_CheckedChanged);
-            // 
-            // CapacitorRadioButton
-            // 
-            this.CapacitorRadioButton.AutoSize = true;
-            this.CapacitorRadioButton.Location = new System.Drawing.Point(98, 4);
-            this.CapacitorRadioButton.Name = "CapacitorRadioButton";
-            this.CapacitorRadioButton.Size = new System.Drawing.Size(38, 21);
-            this.CapacitorRadioButton.TabIndex = 2;
-            this.CapacitorRadioButton.TabStop = true;
-            this.CapacitorRadioButton.Text = "C";
-            this.CapacitorRadioButton.UseVisualStyleBackColor = true;
-            this.CapacitorRadioButton.CheckedChanged += new System.EventHandler(this.ElementTypeRadioButton_CheckedChanged);
-            // 
             // ElementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -192,10 +192,10 @@
             this.ShowIcon = false;
             this.Text = "Add/Edit Element";
             this.panel1.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }

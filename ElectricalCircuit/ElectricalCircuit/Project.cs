@@ -62,14 +62,14 @@ namespace ElectricalCircuit
             var parallelSegment = new ParallelSegment();
             parallelSegment.SubSegments.Add(new Resistor("R3", 20));
             parallelSegment.SubSegments.Add(new Resistor("R4", 20));
-            circuit.Segments.Add(parallelSegment);
 
-            circuit.Segments.Add(new Resistor("R5", 15));
+            var serialSegment = new SerialSegment();
+            serialSegment.SubSegments.Add(new Resistor("R5", 40));
+            serialSegment.SubSegments.Add(new Resistor("R6", 40));
 
-            parallelSegment = new ParallelSegment();
-            parallelSegment.SubSegments.Add(new Resistor("R6", 40));
-            parallelSegment.SubSegments.Add(new Resistor("R7", 40));
+            parallelSegment.SubSegments.Add(serialSegment);
             circuit.Segments.Add(parallelSegment);
+            circuit.Segments.Add(new Resistor("R7", 15));
 
             return circuit;
         }

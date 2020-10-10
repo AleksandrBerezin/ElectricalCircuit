@@ -58,7 +58,6 @@ namespace ElectricalCircuit
                 if (value != _value)
                 {
                     _value = value;
-                    SegmentChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -77,21 +76,6 @@ namespace ElectricalCircuit
         public object Clone()
         {
             return MemberwiseClone();
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            var element = (ElementBase) obj;
-
-            if (Name == element.Name && Value == element.Value)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }

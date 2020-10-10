@@ -331,6 +331,7 @@
             this.RemoveElementButton.TabIndex = 11;
             this.RemoveElementButton.Text = "Remove";
             this.RemoveElementButton.UseVisualStyleBackColor = true;
+            this.RemoveElementButton.Click += new System.EventHandler(this.RemoveElementButton_Click);
             // 
             // EditElementButton
             // 
@@ -342,6 +343,7 @@
             this.EditElementButton.TabIndex = 10;
             this.EditElementButton.Text = "Edit";
             this.EditElementButton.UseVisualStyleBackColor = true;
+            this.EditElementButton.Click += new System.EventHandler(this.EditElementButton_Click);
             // 
             // textBox2
             // 
@@ -363,6 +365,7 @@
             this.AddSerialButton.TabIndex = 8;
             this.AddSerialButton.Text = "Add serial element";
             this.AddSerialButton.UseVisualStyleBackColor = true;
+            this.AddSerialButton.Click += new System.EventHandler(this.AddSerialButton_Click);
             // 
             // AddParallelButton
             // 
@@ -374,6 +377,7 @@
             this.AddParallelButton.TabIndex = 7;
             this.AddParallelButton.Text = "Add parallel element";
             this.AddParallelButton.UseVisualStyleBackColor = true;
+            this.AddParallelButton.Click += new System.EventHandler(this.AddParallelButton_Click);
             // 
             // TypeTextBox
             // 
