@@ -106,6 +106,14 @@ namespace ElectricalCircuitUI
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            if (NameTextBox.BackColor == Color.LightCoral)
+            {
+                MessageBox.Show("Invalid values entered",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+
             if (ValueTextBox.BackColor == Color.LightCoral)
             {
                 MessageBox.Show("Invalid values entered",
