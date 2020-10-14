@@ -8,6 +8,7 @@ using ElectricalCircuit.Elements;
 
 namespace ElectricalCircuitUI
 {
+    //TODO: форма - 900 строк кода. Слишком много, надо делить на несколько классов или контролов
     public partial class MainForm : Form
     {
         /// <summary>
@@ -25,6 +26,7 @@ namespace ElectricalCircuitUI
 
         public MainForm()
         {
+            //TODO: логика в конструкторе формы до метода InitializeComponent() чревато исключениями и потерей всей верстки из-за криво открывающегося дизайнера форм
             _project = new Project();
 
             foreach (var circuit in _project.Circuits)
@@ -40,7 +42,7 @@ namespace ElectricalCircuitUI
             };
 
             InitializeComponent();
-
+            //TODO: почему нельзя задать свойство через дизайнер, чтобы оно не болталось здесь?
             tableLayoutPanel3.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutPanel5.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutPanel6.BorderStyle = BorderStyle.FixedSingle;
@@ -57,6 +59,7 @@ namespace ElectricalCircuitUI
         /// </summary>
         private void FillCircuitsComboBox()
         {
+            //TODO: зачем null? А если сразу присвоить нужную коллекцию?
             CircuitsComboBox.DataSource = null;
             CircuitsComboBox.DataSource = _project.Circuits;
         }
@@ -111,6 +114,8 @@ namespace ElectricalCircuitUI
             CircuitTreeView.ExpandAll();
         }
 
+        //TODO: что за AllAll в названии?
+        //TODO: всю работу с нодами вынести в отдельный вспомогательный класс
         /// <summary>
         /// Метод поиска всех сегментов в цепи, и добавление в TreeView
         /// </summary>
@@ -134,12 +139,12 @@ namespace ElectricalCircuitUI
         {
             ImpedancesListBox.SelectedIndex = FrequenciesListBox.SelectedIndex;
         }
-
+        //TODO: взаимное передергивание индексов - так себе решение. В таком случае лучше использовать таблицу
         private void ImpedancesListBox_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             FrequenciesListBox.SelectedIndex = ImpedancesListBox.SelectedIndex;
         }
-
+        //TODO: отрисовку сразу переноси в другой класс, пусть пока лежит в другом месте - не надо засорять форму
         /// <summary>
         /// Метод для отрисовки элемента
         /// </summary>
@@ -157,6 +162,7 @@ namespace ElectricalCircuitUI
         /// <param name="name"></param>
         private void DrawResistor(Graphics graphics, string name)
         {
+            //TODO: здесь и далее - куча магических чисел в отрисовке. В будущем надо создавать локальные и константные переменные с понятным именем, что это за число
             var pen = new Pen(Color.Black, 2);
             var contour = new Rectangle(_x, _y, _x + 40, _y + 40);
             var brush = new SolidBrush(Color.Black);
@@ -258,6 +264,7 @@ namespace ElectricalCircuitUI
                 var frequency = Convert.ToDouble(NewFrequencyTextBox.Text);
                 if (_frequencies.Contains(frequency))
                 {
+                    //TODO: что за кидание исключения самому себе?
                     throw new FormatException();
                 }
 
@@ -388,6 +395,7 @@ namespace ElectricalCircuitUI
         /// <returns></returns>
         private ElementType GetElementType(IElement element)
         {
+            //TODO: на подумать: а может имеет смысл тип элемента добавить в интерфейс элементов и забирать его напрямую?
             if (element is Resistor)
             {
                 return ElementType.Resistor;
@@ -446,7 +454,7 @@ namespace ElectricalCircuitUI
             var selectedSegment = selectedNode.Segment;
             var parentNode = selectedNode.Parent;
             var indexInParent = selectedNode.Index;
-
+            //TODO: куча дублирования, нет? Так и не понял, чем принципиально отличаются, имхо можно упростить
             // Выбран последовательный сегмент
             if (selectedSegment is SerialSegment)
             {
@@ -544,6 +552,7 @@ namespace ElectricalCircuitUI
 
         private void AddSerialButton_Click(object sender, EventArgs e)
         {
+            //TODO: Еще кусок дублирования
             if (CircuitTreeView.SelectedNode == null)
             {
                 return;
@@ -703,6 +712,7 @@ namespace ElectricalCircuitUI
                 }
                 else
                 {
+                    //TODO: дублирование с веткой выше, отличаются только конструктором и текстом сообщения
                     DialogResult changeSegment = MessageBox.Show(
                         $"Do you really want to replace this parallel segment with serial segment?",
                         "Replace Segment",

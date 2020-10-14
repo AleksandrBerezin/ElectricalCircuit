@@ -106,6 +106,7 @@ namespace ElectricalCircuitUI
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            //TODO: цвет фона - не самый надежный и понятный способ определения проблем в текстбоксе
             if (NameTextBox.BackColor == Color.LightCoral)
             {
                 MessageBox.Show("Invalid values entered",
@@ -114,6 +115,8 @@ namespace ElectricalCircuitUI
                     MessageBoxIcon.Error);
             }
 
+            //TODO: дублирование
+            //TODO: зачем показывать пользователю два сообщения?
             if (ValueTextBox.BackColor == Color.LightCoral)
             {
                 MessageBox.Show("Invalid values entered",
