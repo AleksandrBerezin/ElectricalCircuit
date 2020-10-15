@@ -7,21 +7,21 @@ namespace ElectricalCircuit.UnitTests
     public class ProjectTest
     {
         /// <summary>
-        /// Метод для создания списка цепей на 4 элемента
+        /// Create example list of 4 circuits
         /// </summary>
         /// <returns></returns>
         private List<Circuit> GetExampleList()
         {
             return new List<Circuit>()
             {
-                new Circuit("Цепь 1"),
-                new Circuit("Цепь 2"),
-                new Circuit("Цепь 3"),
-                new Circuit("Цепь 4")
+                new Circuit("Circuit 1"),
+                new Circuit("Circuit 2"),
+                new Circuit("Circuit 3"),
+                new Circuit("Circuit 4")
             };
         }
 
-        [Test(Description = "Позитивный тест геттера Circuits")]
+        [Test(Description = "Positive test of getter Circuits")]
         public void TestCircuitsGet_CorrectValue()
         {
             var expected = GetExampleList();
@@ -30,10 +30,10 @@ namespace ElectricalCircuit.UnitTests
             var actual = project.Circuits;
 
             CollectionAssert.AreEqual(expected, actual,
-                "Геттер Circuits возвращает направильный список цепей");
+                "Getter Circuits returns the wrong value");
         }
 
-        [Test(Description = "Позитивный тест сеттера Circuits")]
+        [Test(Description = "Positive test of setter Circuits")]
         public void TestCircuitsSet_CorrectValue()
         {
             var expected = GetExampleList();
@@ -42,16 +42,16 @@ namespace ElectricalCircuit.UnitTests
             var actual = project.Circuits;
 
             CollectionAssert.AreEqual(expected, actual,
-                "Сеттер Circuits присваивает направильный список цепей");
+                "Setter Circuits assigns the wrong value");
         }
 
-        [Test(Description = "Позитивный тест конструктора Project")]
+        [Test(Description = "Positive test of Project constructor")]
         public void TestProjectConstructor_CorrectValue()
         {
             var project = new Project();
             var isNull = project == null;
 
-            Assert.IsFalse(isNull, "Конструктор не создал экземпляр класса Project");
+            Assert.IsFalse(isNull, "Constructor didn't create an instance of  the Project");
         }
     }
 }
