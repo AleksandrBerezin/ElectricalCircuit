@@ -37,40 +37,15 @@ namespace ElectricalCircuit
         }
 
         /// <inheritdoc/>
-        public override object Clone()
-        {
-            var segment = new SerialSegment();
-            foreach (var subSegment in SubSegments)
-            {
-                segment.SubSegments.Add((ISegment)subSegment.Clone());
-            }
+        //public override object Clone()
+        //{
+        //    var segment = new SerialSegment();
+        //    foreach (var subSegment in SubSegments)
+        //    {
+        //        segment.SubSegments.Add((ISegment)subSegment.Clone());
+        //    }
 
-            return segment;
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            var segment = obj as SerialSegment;
-            if (segment == null)
-            {
-                return false;
-            }
-
-            if (SubSegments.Count != segment.SubSegments.Count)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < SubSegments.Count; i++)
-            {
-                if (!segment.SubSegments[i].Equals(SubSegments[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        //    return segment;
+        //}
     }
 }

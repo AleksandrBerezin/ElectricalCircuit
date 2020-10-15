@@ -8,7 +8,7 @@ namespace ElectricalCircuit
     /// Абстрактный класс <see cref="ElementBase"/>, предоставляющий для реализации 
     /// метод расчета импеданса элемента
     /// </summary>
-    public abstract class ElementBase : IElement, ICloneable
+    public abstract class ElementBase : IElement
     {
         /// <summary>
         /// Название элемента. Название не должно быть пустым
@@ -76,6 +76,25 @@ namespace ElectricalCircuit
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var element = (IElement)obj;
+            if (Name == element.Name && Value == element.Value)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

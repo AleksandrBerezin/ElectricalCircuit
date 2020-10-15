@@ -31,7 +31,7 @@ namespace ElectricalCircuitUI
 
             foreach (var circuit in _project.Circuits)
             {
-                circuit.CircuitChanged += CalculationImpedances;
+                circuit.SegmentChanged += CalculationImpedances;
             }
 
             _frequencies = new List<double>
@@ -71,7 +71,7 @@ namespace ElectricalCircuitUI
         {
             var selectedItem = (Circuit)CircuitsComboBox.SelectedItem;
 
-            if (selectedItem == null || selectedItem.Segments.Count == 0)
+            if (selectedItem == null || selectedItem.SubSegments.Count == 0)
             {
                 ImpedancesListBox.DataSource = null;
                 return;
@@ -103,12 +103,13 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var newNode = CircuitTreeView.Nodes.Add(CircuitsComboBox.SelectedItem.ToString());
             var circuit = (Circuit)CircuitsComboBox.SelectedItem;
+            var newNode = new SegmentTreeNode(circuit);
+            CircuitTreeView.Nodes.Add(newNode);
 
-            foreach (var segment in circuit.Segments)
+            foreach (var segment in circuit.SubSegments)
             {
-                WriteAllAllSegmentsInTree(segment, newNode);
+                WriteAllSegmentsInTree(segment, newNode);
             }
 
             CircuitTreeView.ExpandAll();
@@ -120,7 +121,7 @@ namespace ElectricalCircuitUI
         /// Метод поиска всех сегментов в цепи, и добавление в TreeView
         /// </summary>
         /// <param name="segment"></param>
-        private void WriteAllAllSegmentsInTree(ISegment segment, TreeNode node)
+        private void WriteAllSegmentsInTree(ISegment segment, SegmentTreeNode node)
         {
             var newNode = new SegmentTreeNode(segment);
             node.Nodes.Add(newNode);
@@ -131,7 +132,7 @@ namespace ElectricalCircuitUI
 
             foreach (var subSegment in segment.SubSegments)
             {
-                WriteAllAllSegmentsInTree(subSegment, newNode);
+                WriteAllSegmentsInTree(subSegment, newNode);
             }
         }
 
@@ -443,7 +444,7 @@ namespace ElectricalCircuitUI
             // Выбрана цепь
             if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
             {
-                circuit.Segments.Add(newElement);
+                circuit.SubSegments.Add(newElement);
                 FillCircuitTreeView();
                 SelectNodeInTreeView(newElement);
 
@@ -482,7 +483,7 @@ namespace ElectricalCircuitUI
                     parallelSegment.SubSegments.Add(selectedSegment);
                     parallelSegment.SubSegments.Add(newElement);
 
-                    circuit.Segments[indexInParent] = parallelSegment;
+                    circuit.SubSegments[indexInParent] = parallelSegment;
                 }
             }
             // Выбран параллельный сегмент
@@ -512,7 +513,7 @@ namespace ElectricalCircuitUI
                     parallelSegment.SubSegments.Add(selectedSegment);
                     parallelSegment.SubSegments.Add(newElement);
 
-                    circuit.Segments[indexInParent] = parallelSegment;
+                    circuit.SubSegments[indexInParent] = parallelSegment;
                 }
             }
             // Выбран элемент
@@ -541,7 +542,7 @@ namespace ElectricalCircuitUI
                     parallelSegment.SubSegments.Add(selectedSegment);
                     parallelSegment.SubSegments.Add(newElement);
 
-                    circuit.Segments[indexInParent] = parallelSegment;
+                    circuit.SubSegments[indexInParent] = parallelSegment;
                 }
             }
 
@@ -574,7 +575,7 @@ namespace ElectricalCircuitUI
             // Выбрана цепь
             if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
             {
-                circuit.Segments.Add(newElement);
+                circuit.SubSegments.Add(newElement);
                 FillCircuitTreeView();
                 SelectNodeInTreeView(newElement);
 
@@ -609,7 +610,7 @@ namespace ElectricalCircuitUI
                 // Родитель является корневым узлом
                 else
                 {
-                    circuit.Segments.Add(newElement);
+                    circuit.SubSegments.Add(newElement);
                 }
             }
             // Выбран параллельный сегмент
@@ -635,7 +636,7 @@ namespace ElectricalCircuitUI
                 // Родитель является корневым узлом
                 else
                 {
-                    circuit.Segments.Add(newElement);
+                    circuit.SubSegments.Add(newElement);
                 }
             }
             // Выбран элемент
@@ -664,7 +665,7 @@ namespace ElectricalCircuitUI
                     serialSegment.SubSegments.Add(selectedSegment);
                     serialSegment.SubSegments.Add(newElement);
 
-                    circuit.Segments[indexInParent] = serialSegment;
+                    circuit.SubSegments[indexInParent] = serialSegment;
                 }
             }
 
@@ -728,14 +729,7 @@ namespace ElectricalCircuitUI
                 }
 
                 var index = selectedNode.Index;
-                if (parentNode is SegmentTreeNode)
-                {
-                    ((SegmentTreeNode)parentNode).Segment.SubSegments[index] = replacingSegment;
-                }
-                else
-                {
-                    ((Circuit)CircuitsComboBox.SelectedItem).Segments[index] = replacingSegment;
-                }
+               ((SegmentTreeNode)parentNode).Segment.SubSegments[index] = replacingSegment;
 
                 ClearElementInfoFields();
                 FillCircuitTreeView();
@@ -756,21 +750,10 @@ namespace ElectricalCircuitUI
             }
 
             var updatedElement = inner.Element;
-            var realIndexInSegment = 0;
 
-            if (parentNode is SegmentTreeNode)
-            {
-                var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                realIndexInSegment = selectedNode.Index;
-                parentSegment.SubSegments[realIndexInSegment] = updatedElement;
-            }
-            // parentNode является корневым узлом
-            else
-            {
-                var selectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
-                realIndexInSegment = selectedNode.Index;
-                selectedCircuit.Segments[realIndexInSegment] = updatedElement;
-            }
+            var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+            var realIndexInSegment = selectedNode.Index;
+            parentSegment.SubSegments[realIndexInSegment] = updatedElement;
 
             ClearElementInfoFields();
             FillCircuitTreeView();
@@ -804,14 +787,7 @@ namespace ElectricalCircuitUI
                 var selectedSegment = selectedNode.Segment;
                 var parentNode = selectedNode.Parent;
 
-                if (parentNode is SegmentTreeNode)
-                {
-                    ((SegmentTreeNode)parentNode).Segment.SubSegments.Remove(selectedSegment);
-                }
-                else
-                {
-                    ((Circuit)CircuitsComboBox.SelectedItem).Segments.Remove(selectedSegment);
-                }
+                ((SegmentTreeNode)parentNode).Segment.SubSegments.Remove(selectedSegment);
 
                 ClearElementInfoFields();
                 FillCircuitTreeView();

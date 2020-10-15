@@ -90,6 +90,40 @@ namespace ElectricalCircuit.Segments
         }
 
         /// <inheritdoc/>
-        public abstract object Clone();
+        public virtual object Clone()
+        {
+            var segment = (ISegment)Activator.CreateInstance(GetType());
+            foreach (var subSegment in SubSegments)
+            {
+                segment.SubSegments.Add((ISegment)subSegment.Clone());
+            }
+
+            return segment;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var segment = (ISegment)obj;
+            if (SubSegments.Count != segment.SubSegments.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < SubSegments.Count; i++)
+            {
+                if (!segment.SubSegments[i].Equals(SubSegments[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
