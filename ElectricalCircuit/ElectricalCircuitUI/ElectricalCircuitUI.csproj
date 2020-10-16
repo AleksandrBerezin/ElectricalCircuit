@@ -55,6 +55,8 @@
     <Compile Include="CircuitForm.Designer.cs">
       <DependentUpon>CircuitForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CircuitTreeManager.cs" />
+    <Compile Include="DrawingManager.cs" />
     <Compile Include="ElementForm.cs">
       <SubType>Form</SubType>
     </Compile>

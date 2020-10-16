@@ -41,9 +41,6 @@ namespace ElectricalCircuit
             circuit.SubSegments.Add(new Capacitor("C1", 15e-6));
             circuit.SubSegments.Add(new Resistor("R3", 40));
             circuit.SubSegments.Add(new Capacitor("C2", 40e-6));
-            var parallelSegment = new ParallelSegment();
-
-            circuit.SubSegments.Add(parallelSegment);
 
             return circuit;
         }

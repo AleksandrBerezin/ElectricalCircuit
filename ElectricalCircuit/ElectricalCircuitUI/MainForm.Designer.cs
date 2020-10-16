@@ -41,7 +41,7 @@
             this.NewFrequencyTextBox = new System.Windows.Forms.TextBox();
             this.RemoveFrequencyButton = new System.Windows.Forms.Button();
             this.CalculateImpedanceButton = new System.Windows.Forms.Button();
-            this.ImpedancesDataGridView = new System.Windows.Forms.DataGridView();
+            this.ImpedancesTable = new System.Windows.Forms.DataGridView();
             this.FrequenciesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ImpedancesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ElementGroupBox = new System.Windows.Forms.GroupBox();
@@ -68,7 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.SchemaPictureBox)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             this.ImpedancesGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImpedancesDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImpedancesTable)).BeginInit();
             this.ElementGroupBox.SuspendLayout();
             this.CircuitGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -160,7 +160,7 @@
             this.ImpedancesGroupBox.Controls.Add(this.NewFrequencyTextBox);
             this.ImpedancesGroupBox.Controls.Add(this.RemoveFrequencyButton);
             this.ImpedancesGroupBox.Controls.Add(this.CalculateImpedanceButton);
-            this.ImpedancesGroupBox.Controls.Add(this.ImpedancesDataGridView);
+            this.ImpedancesGroupBox.Controls.Add(this.ImpedancesTable);
             this.ImpedancesGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ImpedancesGroupBox.Location = new System.Drawing.Point(376, 3);
             this.ImpedancesGroupBox.Name = "ImpedancesGroupBox";
@@ -214,20 +214,19 @@
             this.CalculateImpedanceButton.UseVisualStyleBackColor = true;
             this.CalculateImpedanceButton.Click += new System.EventHandler(this.CalculateImpedanceButton_Click);
             // 
-            // ImpedancesDataGridView
+            // ImpedancesTable
             // 
-            this.ImpedancesDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ImpedancesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ImpedancesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ImpedancesTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ImpedancesTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ImpedancesTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.FrequenciesColumn,
             this.ImpedancesColumn});
-            this.ImpedancesDataGridView.Location = new System.Drawing.Point(212, 21);
-            this.ImpedancesDataGridView.Name = "ImpedancesDataGridView";
-            this.ImpedancesDataGridView.RowHeadersWidth = 25;
-            this.ImpedancesDataGridView.RowTemplate.Height = 24;
-            this.ImpedancesDataGridView.Size = new System.Drawing.Size(353, 127);
-            this.ImpedancesDataGridView.TabIndex = 0;
-            this.ImpedancesDataGridView.SelectionChanged += new System.EventHandler(this.ImpedancesDataGridView_SelectionChanged);
+            this.ImpedancesTable.Location = new System.Drawing.Point(212, 21);
+            this.ImpedancesTable.Name = "ImpedancesTable";
+            this.ImpedancesTable.RowHeadersWidth = 25;
+            this.ImpedancesTable.RowTemplate.Height = 24;
+            this.ImpedancesTable.Size = new System.Drawing.Size(353, 127);
+            this.ImpedancesTable.TabIndex = 0;
             // 
             // FrequenciesColumn
             // 
@@ -452,7 +451,7 @@
             this.tableLayoutPanel4.ResumeLayout(false);
             this.ImpedancesGroupBox.ResumeLayout(false);
             this.ImpedancesGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImpedancesDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImpedancesTable)).EndInit();
             this.ElementGroupBox.ResumeLayout(false);
             this.ElementGroupBox.PerformLayout();
             this.CircuitGroupBox.ResumeLayout(false);
@@ -484,7 +483,7 @@
         private System.Windows.Forms.TextBox NewFrequencyTextBox;
         private System.Windows.Forms.Button RemoveFrequencyButton;
         private System.Windows.Forms.Button CalculateImpedanceButton;
-        private System.Windows.Forms.DataGridView ImpedancesDataGridView;
+        private System.Windows.Forms.DataGridView ImpedancesTable;
         private System.Windows.Forms.GroupBox CircuitGroupBox;
         private System.Windows.Forms.ComboBox CircuitsComboBox;
         private System.Windows.Forms.TreeView CircuitTreeView;

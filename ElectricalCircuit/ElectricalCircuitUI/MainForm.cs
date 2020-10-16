@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using ElectricalCircuit;
-using ElectricalCircuit.Elements;
 
 namespace ElectricalCircuitUI
 {
@@ -14,21 +12,29 @@ namespace ElectricalCircuitUI
         /// <summary>
         /// Проект
         /// </summary>
-        private Project _project;
+        private readonly Project _project;
 
         /// <summary>
         /// Список частот
         /// </summary>
-        private List<double> _frequencies;
-        
-        private int _x = 50;
-        private int _y = 150;
+        private readonly List<double> _frequencies;
+
+        /// <summary>
+        /// Класс для работы с деревом
+        /// </summary>
+        private readonly CircuitTreeManager _circuitTreeManager;
+
+        /// <summary>
+        /// Класс для отрисовки цепи
+        /// </summary>
+        private readonly DrawingManager _drawingManager;
 
         public MainForm()
         {
             //TODO: логика в конструкторе формы до метода InitializeComponent() чревато исключениями и потерей всей верстки из-за криво открывающегося дизайнера форм
-            _project = new Project();
+            InitializeComponent();
 
+            _project = new Project();
             foreach (var circuit in _project.Circuits)
             {
                 circuit.SegmentChanged += CalculationImpedances;
@@ -41,14 +47,18 @@ namespace ElectricalCircuitUI
                 300
             };
 
-            InitializeComponent();
+            _circuitTreeManager = new CircuitTreeManager();
+            _drawingManager = new DrawingManager();
+
+            _circuitTreeManager.CircuitTree = CircuitTreeView;
+            _drawingManager.Picture = SchemaPictureBox;
             //TODO: почему нельзя задать свойство через дизайнер, чтобы оно не болталось здесь?
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             FillCircuitsComboBox();
-            FillImpedancesDataGridView();
+            FillImpedancesTable();
         }
 
         /// <summary>
@@ -62,39 +72,57 @@ namespace ElectricalCircuitUI
         }
 
         /// <summary>
-        /// Метод, заполняющий список импедансов
+        /// Метод, заполняющий таблицу импедансов
         /// </summary>
-        private void FillImpedancesDataGridView()
+        private void FillImpedancesTable()
+        {
+            FillFrequenciesColumn();
+            FillImpedancesColumn();
+        }
+
+        /// <summary>
+        /// Метод, заполняющий колонку частот
+        /// </summary>
+        private void FillFrequenciesColumn()
+        {
+            _frequencies.Sort();
+            ImpedancesTable.Rows.Clear();
+
+            foreach (var frequency in _frequencies)
+            {
+                ImpedancesTable.Rows.Add(frequency);
+            }
+        }
+
+        /// <summary>
+        /// Метод, заполняющий колонку импедансов
+        /// </summary>
+        private void FillImpedancesColumn()
         {
             var selectedItem = (Circuit)CircuitsComboBox.SelectedItem;
-            FillFrequenciesColumn();
-
             if (selectedItem == null || selectedItem.SubSegments.Count == 0)
             {
                 return;
             }
 
             var impedances = selectedItem.CalculateZ(_frequencies);
-            for (int i = 0; i < _frequencies.Count; i++)
+            for (var i = 0; i < _frequencies.Count; i++)
             {
                 var impedance = impedances[i];
+                string imaginary = string.Format($"{impedance.Imaginary:F4}");
+                if (impedance.Imaginary < 0)
+                {
+                    imaginary = imaginary.Substring(1);
+                    imaginary = "- " + imaginary;
+                }
+                else
+                {
+                    imaginary = "+ " + imaginary;
+                }
+
                 //TODO +-
-                ImpedancesDataGridView[1, i].Value = 
-                    String.Format($"{impedance.Real} + {impedance.Imaginary:F4}*j Ом");
-            }
-        }
-
-        /// <summary>
-        /// Метод, заполняющий список частот
-        /// </summary>
-        private void FillFrequenciesColumn()
-        {
-            _frequencies.Sort();
-            ImpedancesDataGridView.Rows.Clear();
-
-            foreach (var frequency in _frequencies)
-            {
-                ImpedancesDataGridView.Rows.Add(frequency);
+                ImpedancesTable[1, i].Value =
+                    string.Format($"{impedance.Real:F4} {imaginary}*j Ом");
             }
         }
 
@@ -111,187 +139,65 @@ namespace ElectricalCircuitUI
             }
 
             var circuit = (Circuit)CircuitsComboBox.SelectedItem;
-            var newNode = new SegmentTreeNode(circuit);
-            CircuitTreeView.Nodes.Add(newNode);
-
-            foreach (var segment in circuit.SubSegments)
-            {
-                WriteAllSegmentsInTree(segment, newNode);
-            }
+            _circuitTreeManager.WriteCircuitInTree(circuit);
 
             CircuitTreeView.ExpandAll();
-        }
-
-        //TODO: что за AllAll в названии?
-        //TODO: всю работу с нодами вынести в отдельный вспомогательный класс
-        /// <summary>
-        /// Метод поиска всех сегментов в цепи, и добавление в TreeView
-        /// </summary>
-        /// <param name="segment"></param>
-        private void WriteAllSegmentsInTree(ISegment segment, SegmentTreeNode node)
-        {
-            var newNode = new SegmentTreeNode(segment);
-            node.Nodes.Add(newNode);
-            if (segment.SubSegments == null)
-            {
-                return;
-            }
-
-            foreach (var subSegment in segment.SubSegments)
-            {
-                WriteAllSegmentsInTree(subSegment, newNode);
-            }
-        }
-
-        //TODO: отрисовку сразу переноси в другой класс, пусть пока лежит в другом месте - не надо засорять форму
-        /// <summary>
-        /// Метод для отрисовки элемента
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="name"></param>
-        private void DrawElement(Graphics graphics, string name)
-        {
-
-        }
-
-        /// <summary>
-        /// Метод для отрисовки резистора
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="name"></param>
-        private void DrawResistor(Graphics graphics, string name)
-        {
-            //TODO: здесь и далее - куча магических чисел в отрисовке. В будущем надо создавать локальные и константные переменные с понятным именем, что это за число
-            var pen = new Pen(Color.Black, 2);
-            var contour = new Rectangle(_x, _y, _x + 40, _y + 40);
-            var brush = new SolidBrush(Color.Black);
-
-            StringFormat format = new StringFormat
-            {
-                Alignment = StringAlignment.Center
-            };
-            
-            graphics.DrawString(name, Font, brush, contour, format);
-
-            var rectangle = new Rectangle(_x, _y + 10, 40, 20);
-            graphics.DrawRectangle(pen, rectangle);
-            _x += 40;
-        }
-
-        /// <summary>
-        /// Метод для отрисовки катушки индуктивности
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="name"></param>
-        private void DrawInductor(Graphics graphics, string name)
-        {
-            var pen = new Pen(Color.Black, 2);
-            var contour = new Rectangle(_x, _y, _x + 40, _y + 40);
-            var brush = new SolidBrush(Color.Black);
-
-            StringFormat format = new StringFormat
-            {
-                Alignment = StringAlignment.Center
-            };
-            
-            graphics.DrawString(name, Font, brush, contour, format);
-
-            for (int i = 0; i < 4; i++)
-            {
-                graphics.DrawArc(pen, _x, _y + 12, 10, 15, 0, -180);
-                _x += 10;
-            }
-        }
-
-        /// <summary>
-        /// Метод для отрисовки конденсатора
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="name"></param>
-        private void DrawCapacitor(Graphics graphics, string name)
-        {
-            var pen = new Pen(Color.Black, 2);
-            var contour = new Rectangle(_x, _y, _x + 40, _y + 40);
-            var brush = new SolidBrush(Color.Black);
-
-            StringFormat format = new StringFormat
-            {
-                Alignment = StringAlignment.Center
-            };
-            
-            graphics.DrawString(name, Font, brush, contour, format);
-
-            graphics.DrawLine(pen, _x, _y + 20, _x + 17, _y + 20);
-            _x += 17;
-
-            graphics.DrawLine(pen, _x, _y, _x, _y + 30);
-            _x += 6;
-            graphics.DrawLine(pen, _x, _y, _x, _y + 30);
-
-            graphics.DrawLine(pen, _x, _y + 20, _x + 17, _y + 20);
-            _x += 17;
-        }
-
-        private void DrawConnection(Graphics graphics)
-        {
-            var pen = new Pen(Color.Black, 2);
-            graphics.DrawLine(pen, _x, _y + 20, _x + 10, _y + 20);
-            _x += 10;
-        }
-
-        private void DrawParallelConnection()
-        {
-
         }
 
         private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillCircuitTreeView();
-            FillImpedancesDataGridView();
+            FillImpedancesColumn();
             ClearElementInfoFields();
         }
 
         private void CalculateImpedanceButton_Click(object sender, EventArgs e)
         {
-            try
+            if (string.IsNullOrEmpty(NewFrequencyTextBox.Text))
             {
-                if (string.IsNullOrEmpty(NewFrequencyTextBox.Text))
-                {
-                    return;
-                }
-
-                var frequency = Convert.ToDouble(NewFrequencyTextBox.Text);
-                if (_frequencies.Contains(frequency))
-                {
-                    //TODO: что за кидание исключения самому себе?
-                    throw new FormatException();
-                }
-
-                _frequencies.Add(frequency);
-                NewFrequencyTextBox.Clear();
-                NewFrequencyTextBox.BackColor = Color.White;
-                FillImpedancesDataGridView();
+                return;
             }
-            catch (FormatException)
+
+            var frequency = Convert.ToDouble(NewFrequencyTextBox.Text);
+            if (_frequencies.Contains(frequency))
             {
+                //TODO: что за кидание исключения самому себе?
                 NewFrequencyTextBox.BackColor = Color.LightCoral;
+                return;
             }
+
+            _frequencies.Add(frequency);
+            NewFrequencyTextBox.Clear();
+            NewFrequencyTextBox.BackColor = Color.White;
+            FillImpedancesTable();
         }
 
         private void RemoveFrequencyButton_Click(object sender, EventArgs e)
         {
             //TODO
-            //if (_frequencies.Count == 0)
-            //{
-            //    return;
-            //}
+            if (ImpedancesTable.SelectedCells.Count > 1
+                || !ImpedancesTable.SelectedCells.Contains(ImpedancesColumn.CellTemplate))
+            {
+                MessageBox.Show(
+                    $"Please choose 1 frequency",
+                    "Remove frequency",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
 
-            //_frequencies.RemoveAt(ImpedancesDataGridView.Selected);
-            //FillFrequenciesListBox();
-            //FillImpedancesListBox();
+            if (_frequencies.Count == 0)
+            {
+                return;
+            }
 
-            //NewFrequencyTextBox.Clear();
-            //NewFrequencyTextBox.BackColor = Color.White;
+            var selectedFrequency = int.Parse(ImpedancesTable.SelectedCells[0].Value.ToString());
+
+            _frequencies.Remove(selectedFrequency);
+            FillImpedancesTable();
+
+            NewFrequencyTextBox.Clear();
+            NewFrequencyTextBox.BackColor = Color.White;
         }
 
         private void AddCircuitButton_Click(object sender, EventArgs e)
@@ -348,7 +254,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            DialogResult result = MessageBox.Show(
+            var result = MessageBox.Show(
                 $"Do you really want to remove this circuit: {CircuitsComboBox.SelectedItem}",
                 "Remove Circuit",
                 MessageBoxButtons.OKCancel,
@@ -374,38 +280,13 @@ namespace ElectricalCircuitUI
             var selectedNode = CircuitTreeView.SelectedNode;
             NameTextBox.Text = selectedNode.Text;
 
-            if (selectedNode is SegmentTreeNode)
-            {
-                var selectedSegment = ((SegmentTreeNode) selectedNode).Segment;
+            var selectedSegment = ((SegmentTreeNode)selectedNode).Segment;
 
-                if (selectedSegment is IElement)
-                {
-                    var element = (IElement)selectedSegment;
-                    ValueTextBox.Text = element.Value.ToString();
-                    TypeTextBox.Text = GetElementType(element).ToString();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Метод получения типа элемента
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        private ElementType GetElementType(IElement element)
-        {
-            //TODO: на подумать: а может имеет смысл тип элемента добавить в интерфейс элементов и забирать его напрямую?
-            if (element is Resistor)
+            if (selectedSegment is IElement)
             {
-                return ElementType.Resistor;
-            }
-            else if (element is Inductor)
-            {
-                return ElementType.Inductor;
-            }
-            else
-            {
-                return ElementType.Capacitor;
+                var element = (IElement)selectedSegment;
+                ValueTextBox.Text = element.Value.ToString();
+                TypeTextBox.Text = element.Type.ToString();
             }
         }
 
@@ -419,257 +300,89 @@ namespace ElectricalCircuitUI
             TypeTextBox.Text = "";
         }
 
-        private void AddParallelButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Получение элемента из ElementForm
+        /// </summary>
+        /// <param name="originalElement"></param>
+        /// <returns></returns>
+        private IElement GetElementFromElementForm(IElement originalElement)
         {
-            if (CircuitTreeView.SelectedNode == null)
+            var inner = new ElementForm();
+            if (originalElement == null)
             {
-                return;
+                inner.Element = new Resistor();
+            }
+            else
+            {
+                inner.Element = originalElement;
             }
 
-            var inner = new ElementForm
-            {
-                Element = new Resistor()
-            };
             var result = inner.ShowDialog();
             if (result != DialogResult.OK)
             {
-                return;
+                return null;
             }
 
-            var newElement = inner.Element;
-            var circuit = (Circuit)CircuitsComboBox.SelectedItem;
+            return inner.Element;
+        }
 
-            // Выбрана цепь
-            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
-            {
-                circuit.SubSegments.Add(newElement);
-                FillCircuitTreeView();
-                SelectNodeInTreeView(newElement);
-
-                return;
-            }
-
-            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
-            var selectedSegment = selectedNode.Segment;
-            var parentNode = selectedNode.Parent;
-            var indexInParent = selectedNode.Index;
-            //TODO: куча дублирования, нет? Так и не понял, чем принципиально отличаются, имхо можно упростить
-            // Выбран последовательный сегмент
-            if (selectedSegment is SerialSegment)
-            {
-                // Родитель не является корневым узлом
-                if (parentNode is SegmentTreeNode)
-                {
-                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                    if (parentSegment is SerialSegment)
-                    {
-                        var parallelSegment = new ParallelSegment();
-                        parallelSegment.SubSegments.Add(selectedSegment);
-                        parallelSegment.SubSegments.Add(newElement);
-
-                        parentSegment.SubSegments[indexInParent] = parallelSegment;
-                    }
-                    else
-                    {
-                        parentSegment.SubSegments.Add(newElement);
-                    }
-                }
-                // Родитель является корневым узлом
-                else
-                {
-                    var parallelSegment = new ParallelSegment();
-                    parallelSegment.SubSegments.Add(selectedSegment);
-                    parallelSegment.SubSegments.Add(newElement);
-
-                    circuit.SubSegments[indexInParent] = parallelSegment;
-                }
-            }
-            // Выбран параллельный сегмент
-            else if (selectedSegment is ParallelSegment)
-            {
-                // Родитель не является корневым узлом
-                if (parentNode is SegmentTreeNode)
-                {
-                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                    if (parentSegment is SerialSegment)
-                    {
-                        var parallelSegment = new ParallelSegment();
-                        parallelSegment.SubSegments.Add(selectedSegment);
-                        parallelSegment.SubSegments.Add(newElement);
-
-                        parentSegment.SubSegments[indexInParent] = parallelSegment;
-                    }
-                    else
-                    {
-                        parentSegment.SubSegments.Add(newElement);
-                    }
-                }
-                // Родитель является корневым узлом
-                else
-                {
-                    var parallelSegment = new ParallelSegment();
-                    parallelSegment.SubSegments.Add(selectedSegment);
-                    parallelSegment.SubSegments.Add(newElement);
-
-                    circuit.SubSegments[indexInParent] = parallelSegment;
-                }
-            }
-            // Выбран элемент
-            else
-            {
-                // Родитель не является корневым узлом
-                if (parentNode is SegmentTreeNode)
-                {
-                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                    if (parentSegment is SerialSegment)
-                    {
-                        var parallelSegment = new ParallelSegment();
-                        parallelSegment.SubSegments.Add(selectedSegment);
-                        parallelSegment.SubSegments.Add(newElement);
-
-                        parentSegment.SubSegments[indexInParent] = parallelSegment;
-                    }
-                    else
-                    {
-                        parentSegment.SubSegments.Add(newElement);
-                    }
-                }
-                else
-                {
-                    var parallelSegment = new ParallelSegment();
-                    parallelSegment.SubSegments.Add(selectedSegment);
-                    parallelSegment.SubSegments.Add(newElement);
-
-                    circuit.SubSegments[indexInParent] = parallelSegment;
-                }
-            }
-
-            ClearElementInfoFields();
-            FillCircuitTreeView();
-            SelectNodeInTreeView(newElement);
+        private void AddParallelButton_Click(object sender, EventArgs e)
+        {
+            AddElement(typeof(ParallelSegment));
         }
 
         private void AddSerialButton_Click(object sender, EventArgs e)
         {
             //TODO: Еще кусок дублирования
+            AddElement(typeof(SerialSegment));
+        }
+
+        private void AddElement(Type segmentType)
+        {
             if (CircuitTreeView.SelectedNode == null)
             {
                 return;
             }
 
-            var inner = new ElementForm
+            var newElement = GetElementFromElementForm(null);
+            if (newElement == null)
             {
-                Element = new Resistor()
-            };
-            var result = inner.ShowDialog();
-            if (result != DialogResult.OK)
-            {
-                return;
-            }
-
-            var newElement = inner.Element;
-            var circuit = (Circuit)CircuitsComboBox.SelectedItem;
-
-            // Выбрана цепь
-            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
-            {
-                circuit.SubSegments.Add(newElement);
-                FillCircuitTreeView();
-                SelectNodeInTreeView(newElement);
-
                 return;
             }
 
             var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
             var selectedSegment = selectedNode.Segment;
             var parentNode = selectedNode.Parent;
+
+            // Выбрана цепь
+            if (parentNode == null)
+            {
+                selectedSegment.SubSegments.Add(newElement);
+                FillCircuitTreeView();
+                _circuitTreeManager.SelectNodeInTreeView(newElement);
+                return;
+            }
+
             var indexInParent = selectedNode.Index;
+            var parentSegment = ((SegmentTreeNode)parentNode).Segment;
 
-            // Выбран последовательный сегмент
-            if (selectedSegment is SerialSegment)
+            //TODO: куча дублирования, нет? Так и не понял, чем принципиально отличаются, имхо можно упростить
+            if (parentSegment.GetType() == segmentType)
             {
-                // Родитель не является корневым узлом
-                if (parentNode is SegmentTreeNode)
-                {
-                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                    if (parentSegment is SerialSegment)
-                    {
-                        parentSegment.SubSegments.Add(newElement);
-                    }
-                    else
-                    {
-                        var serialSegment = new SerialSegment();
-                        serialSegment.SubSegments.Add(selectedSegment);
-                        serialSegment.SubSegments.Add(newElement);
-
-                        parentSegment.SubSegments[indexInParent] = serialSegment;
-                    }
-                }
-                // Родитель является корневым узлом
-                else
-                {
-                    circuit.SubSegments.Add(newElement);
-                }
+                parentSegment.SubSegments.Add(newElement);
             }
-            // Выбран параллельный сегмент
-            else if (selectedSegment is ParallelSegment)
-            {
-                // Родитель не является корневым узлом
-                if (parentNode is SegmentTreeNode)
-                {
-                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                    if (parentSegment is SerialSegment)
-                    {
-                        parentSegment.SubSegments.Add(newElement);
-                    }
-                    else
-                    {
-                        var serialSegment = new SerialSegment();
-                        serialSegment.SubSegments.Add(selectedSegment);
-                        serialSegment.SubSegments.Add(newElement);
-                        
-                        parentSegment.SubSegments[indexInParent] = serialSegment;
-                    }
-                }
-                // Родитель является корневым узлом
-                else
-                {
-                    circuit.SubSegments.Add(newElement);
-                }
-            }
-            // Выбран элемент
             else
             {
-                // Родитель не является корневым узлом
-                if (parentNode is SegmentTreeNode)
-                {
-                    var parentSegment = ((SegmentTreeNode)parentNode).Segment;
-                    if (parentSegment is SerialSegment)
-                    {
-                        parentSegment.SubSegments.Add(newElement);
-                    }
-                    else
-                    {
-                        var serialSegment = new SerialSegment();
-                        serialSegment.SubSegments.Add(selectedSegment);
-                        serialSegment.SubSegments.Add(newElement);
+                var parallelSegment = (ISegment)Activator.CreateInstance(segmentType);
+                parallelSegment.SubSegments.Add(selectedSegment);
+                parallelSegment.SubSegments.Add(newElement);
 
-                        parentSegment.SubSegments[indexInParent] = serialSegment;
-                    }
-                }
-                else
-                {
-                    var serialSegment = new SerialSegment();
-                    serialSegment.SubSegments.Add(selectedSegment);
-                    serialSegment.SubSegments.Add(newElement);
-
-                    circuit.SubSegments[indexInParent] = serialSegment;
-                }
+                parentSegment.SubSegments[indexInParent] = parallelSegment;
             }
 
             ClearElementInfoFields();
             FillCircuitTreeView();
-            SelectNodeInTreeView(newElement);
+            _circuitTreeManager.SelectNodeInTreeView(newElement);
         }
 
         private void EditElementButton_Click(object sender, EventArgs e)
@@ -679,83 +392,74 @@ namespace ElectricalCircuitUI
                 return;
             }
 
+            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+            var parentNode = (SegmentTreeNode)selectedNode.Parent;
+
             // Выбрана цепь
-            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
+            if (parentNode == null)
             {
                 EditCircuitButton_Click(sender, e);
                 return;
             }
 
-            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
             var selectedSegment = selectedNode.Segment;
-            var parentNode = selectedNode.Parent;
+            var parentSegment = parentNode.Segment;
 
             // Выбран сегмент - замена на противоположный сегмент
-            if (selectedSegment is ElementBase == false)
+            if (selectedSegment is IElement == false)
             {
                 ISegment replacingSegment;
-                if (selectedSegment is SerialSegment)
-                {
-                    DialogResult changeSegment = MessageBox.Show(
-                        $"Do you really want to replace this serial segment with parallel segment?",
-                        "Replace Segment",
-                        MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button2);
+                var segmentType = selectedSegment.GetType();
 
+                var changeSegment = MessageBox.Show(
+                    $"Do you really want to replace this segment with the opposite?",
+                    "Replace Segment",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2);
+
+                if (changeSegment != DialogResult.OK)
+                {
+                    return;
+                }
+
+                if (segmentType.ToString().Contains("SerialSegment"))
+                {
                     replacingSegment = new ParallelSegment();
-                    foreach (var segment in selectedSegment.SubSegments)
-                    {
-                        replacingSegment.SubSegments.Add(segment);
-                    }
                 }
                 else
                 {
-                    //TODO: дублирование с веткой выше, отличаются только конструктором и текстом сообщения
-                    DialogResult changeSegment = MessageBox.Show(
-                        $"Do you really want to replace this parallel segment with serial segment?",
-                        "Replace Segment",
-                        MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button2);
-
                     replacingSegment = new SerialSegment();
-                    foreach (var segment in selectedSegment.SubSegments)
-                    {
-                        replacingSegment.SubSegments.Add(segment);
-                    }
+                }
+
+                foreach (var segment in selectedSegment.SubSegments)
+                {
+                    replacingSegment.SubSegments.Add(segment);
                 }
 
                 var index = selectedNode.Index;
-               ((SegmentTreeNode)parentNode).Segment.SubSegments[index] = replacingSegment;
+                parentSegment.SubSegments[index] = replacingSegment;
 
                 ClearElementInfoFields();
                 FillCircuitTreeView();
-                SelectNodeInTreeView(replacingSegment);
+                _circuitTreeManager.SelectNodeInTreeView(replacingSegment);
 
                 return;
             }
 
             // Выбран элемент
-            var inner = new ElementForm
-            {
-                Element = (IElement)selectedSegment.Clone()
-            };
-            var result = inner.ShowDialog();
-            if (result != DialogResult.OK)
+            var updatedElement = GetElementFromElementForm((IElement)selectedSegment);
+            if (updatedElement == null)
             {
                 return;
             }
 
-            var updatedElement = inner.Element;
-
-            var parentSegment = ((SegmentTreeNode)parentNode).Segment;
             var realIndexInSegment = selectedNode.Index;
             parentSegment.SubSegments[realIndexInSegment] = updatedElement;
 
             ClearElementInfoFields();
             FillCircuitTreeView();
-            SelectNodeInTreeView(updatedElement);
+            _circuitTreeManager.SelectNodeInTreeView(updatedElement);
         }
 
         private void RemoveElementButton_Click(object sender, EventArgs e)
@@ -765,14 +469,17 @@ namespace ElectricalCircuitUI
                 return;
             }
 
+            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+            var parentNode = (SegmentTreeNode)selectedNode.Parent;
+
             // Выбрана цепь
-            if (CircuitTreeView.SelectedNode is SegmentTreeNode == false)
+            if (parentNode == null)
             {
                 RemoveCircuitButton_Click(sender, e);
                 return;
             }
 
-            DialogResult result = MessageBox.Show(
+            var result = MessageBox.Show(
                 $"Do you really want to remove this segment: {NameTextBox.Text}",
                 "Remove Segment",
                 MessageBoxButtons.OKCancel,
@@ -781,11 +488,8 @@ namespace ElectricalCircuitUI
 
             if (result == DialogResult.OK)
             {
-                var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
                 var selectedSegment = selectedNode.Segment;
-                var parentNode = selectedNode.Parent;
-
-                ((SegmentTreeNode)parentNode).Segment.SubSegments.Remove(selectedSegment);
+                parentNode.Segment.SubSegments.Remove(selectedSegment);
 
                 ClearElementInfoFields();
                 FillCircuitTreeView();
@@ -800,55 +504,7 @@ namespace ElectricalCircuitUI
         private void CalculationImpedances(object sender, EventArgs e)
         {
             //TODO Только импедансы
-            FillImpedancesDataGridView();
-        }
-
-        /// <summary>
-        /// Метод выбора элемента в CircuitTreeView
-        /// </summary>
-        /// <param name="segment"></param>
-        private void SelectNodeInTreeView(ISegment segment)
-        {
-            SegmentTreeNode node = null;
-            CircuitTreeView.SelectedNode = SearchNode(segment,
-                (SegmentTreeNode)CircuitTreeView.Nodes[0].Nodes[0]);
-        }
-
-        /// <summary>
-        /// Рекурсивный поиск элемента в дереве, соответствующий нужному <see cref="segment"/>
-        /// </summary>
-        /// <param name="segment"></param>
-        /// <param name="startNode"></param>
-        /// <returns></returns>
-        private SegmentTreeNode SearchNode(ISegment segment, SegmentTreeNode startNode)
-        {
-            SegmentTreeNode node = null;
-            while (startNode != null)
-            {
-                if (startNode.Segment.Equals(segment))
-                {
-                    node = startNode;
-                    break;
-                }
-
-                if (startNode.Nodes.Count != 0)
-                {
-                    node = SearchNode(segment, (SegmentTreeNode)startNode.Nodes[0]);
-                    if (node != null)
-                    {
-                        break;
-                    }
-                }
-
-                startNode = startNode.NextNode as SegmentTreeNode;
-            }
-
-            return node;
-        }
-
-        private void ImpedancesDataGridView_SelectionChanged(object sender, EventArgs e)
-        {
-
+            FillImpedancesColumn();
         }
     }
 }
