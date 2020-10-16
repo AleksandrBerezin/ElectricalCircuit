@@ -87,6 +87,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -106,6 +107,13 @@
       <Project>{18ce6d7d-1559-4abe-965a-569a6f23a079}</Project>
       <Name>ElectricalCircuit</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\AddImage.png" />
+    <Content Include="Resources\EditImage.png" />
+    <Content Include="Resources\ElectricalCircuitIcon.ico" />
+    <Content Include="Resources\RemoveImage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

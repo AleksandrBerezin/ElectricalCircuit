@@ -43,15 +43,12 @@ namespace ElectricalCircuitUI
 
             InitializeComponent();
             //TODO: почему нельзя задать свойство через дизайнер, чтобы оно не болталось здесь?
-            tableLayoutPanel3.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel5.BorderStyle = BorderStyle.FixedSingle;
-            tableLayoutPanel6.BorderStyle = BorderStyle.FixedSingle;
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             FillCircuitsComboBox();
-            FillFrequenciesListBox();
+            FillImpedancesDataGridView();
         }
 
         /// <summary>
@@ -67,28 +64,38 @@ namespace ElectricalCircuitUI
         /// <summary>
         /// Метод, заполняющий список импедансов
         /// </summary>
-        private void FillImpedancesListBox()
+        private void FillImpedancesDataGridView()
         {
             var selectedItem = (Circuit)CircuitsComboBox.SelectedItem;
+            FillFrequenciesColumn();
 
             if (selectedItem == null || selectedItem.SubSegments.Count == 0)
             {
-                ImpedancesListBox.DataSource = null;
                 return;
             }
 
-            ImpedancesListBox.DataSource =
-                selectedItem.CalculateZ(_frequencies);
+            var impedances = selectedItem.CalculateZ(_frequencies);
+            for (int i = 0; i < _frequencies.Count; i++)
+            {
+                var impedance = impedances[i];
+                //TODO +-
+                ImpedancesDataGridView[1, i].Value = 
+                    String.Format($"{impedance.Real} + {impedance.Imaginary:F4}*j Ом");
+            }
         }
 
         /// <summary>
         /// Метод, заполняющий список частот
         /// </summary>
-        private void FillFrequenciesListBox()
+        private void FillFrequenciesColumn()
         {
             _frequencies.Sort();
-            FrequenciesListBox.DataSource = null;
-            FrequenciesListBox.DataSource = _frequencies;
+            ImpedancesDataGridView.Rows.Clear();
+
+            foreach (var frequency in _frequencies)
+            {
+                ImpedancesDataGridView.Rows.Add(frequency);
+            }
         }
 
         /// <summary>
@@ -136,21 +143,12 @@ namespace ElectricalCircuitUI
             }
         }
 
-        private void FrequenciesListBox_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            ImpedancesListBox.SelectedIndex = FrequenciesListBox.SelectedIndex;
-        }
-        //TODO: взаимное передергивание индексов - так себе решение. В таком случае лучше использовать таблицу
-        private void ImpedancesListBox_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            FrequenciesListBox.SelectedIndex = ImpedancesListBox.SelectedIndex;
-        }
         //TODO: отрисовку сразу переноси в другой класс, пусть пока лежит в другом месте - не надо засорять форму
         /// <summary>
         /// Метод для отрисовки элемента
         /// </summary>
         /// <param name="graphics"></param>
-        /// <param name=""></param>
+        /// <param name="name"></param>
         private void DrawElement(Graphics graphics, string name)
         {
 
@@ -249,7 +247,7 @@ namespace ElectricalCircuitUI
         private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillCircuitTreeView();
-            FillImpedancesListBox();
+            FillImpedancesDataGridView();
             ClearElementInfoFields();
         }
 
@@ -272,8 +270,7 @@ namespace ElectricalCircuitUI
                 _frequencies.Add(frequency);
                 NewFrequencyTextBox.Clear();
                 NewFrequencyTextBox.BackColor = Color.White;
-                FillFrequenciesListBox();
-                FillImpedancesListBox();
+                FillImpedancesDataGridView();
             }
             catch (FormatException)
             {
@@ -283,20 +280,21 @@ namespace ElectricalCircuitUI
 
         private void RemoveFrequencyButton_Click(object sender, EventArgs e)
         {
-            if (_frequencies.Count == 0)
-            {
-                return;
-            }
+            //TODO
+            //if (_frequencies.Count == 0)
+            //{
+            //    return;
+            //}
 
-            _frequencies.RemoveAt(FrequenciesListBox.SelectedIndex);
-            FillFrequenciesListBox();
-            FillImpedancesListBox();
+            //_frequencies.RemoveAt(ImpedancesDataGridView.Selected);
+            //FillFrequenciesListBox();
+            //FillImpedancesListBox();
 
-            NewFrequencyTextBox.Clear();
-            NewFrequencyTextBox.BackColor = Color.White;
+            //NewFrequencyTextBox.Clear();
+            //NewFrequencyTextBox.BackColor = Color.White;
         }
 
-        private void NewCircuitButton_Click(object sender, EventArgs e)
+        private void AddCircuitButton_Click(object sender, EventArgs e)
         {
             var inner = new CircuitForm
             {
@@ -801,7 +799,8 @@ namespace ElectricalCircuitUI
         /// <param name="e"></param>
         private void CalculationImpedances(object sender, EventArgs e)
         {
-            FillImpedancesListBox();
+            //TODO Только импедансы
+            FillImpedancesDataGridView();
         }
 
         /// <summary>
@@ -845,6 +844,11 @@ namespace ElectricalCircuitUI
             }
 
             return node;
+        }
+
+        private void ImpedancesDataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
