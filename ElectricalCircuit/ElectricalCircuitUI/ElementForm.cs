@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using ElectricalCircuit;
-using ElectricalCircuit.Elements;
 
 namespace ElectricalCircuitUI
 {
@@ -12,6 +11,11 @@ namespace ElectricalCircuitUI
         /// Элемент
         /// </summary>
         private IElement _element;
+        
+        /// <summary>
+        /// Возвращает истину, если введенные данные корректны
+        /// </summary>
+        private bool _isCorrectData = true;
 
         /// <summary>
         /// Возвращает и задает элемент
@@ -28,32 +32,14 @@ namespace ElectricalCircuitUI
 
                 NameTextBox.Text = _element.Name;
                 ValueTextBox.Text = _element.Value.ToString();
-                SelectElementType();
+                TypeComboBox.SelectedItem = _element.Type;
             }
         }
 
         public ElementForm()
         {
             InitializeComponent();
-        }
-
-        /// <summary>
-        /// Метод выбора типа элемента 
-        /// </summary>
-        private void SelectElementType()
-        {
-            if (Element is Resistor)
-            {
-                ResistorRadioButton.Checked = true;
-            }
-            else if (Element is Inductor)
-            {
-                InductorRadioButton.Checked = true;
-            }
-            else
-            {
-                CapacitorRadioButton.Checked = true;
-            }
+            TypeComboBox.DataSource = Enum.GetValues(typeof(ElementType));
         }
 
         private void NameTextBox_TextChanged(object sender, System.EventArgs e)
@@ -62,10 +48,12 @@ namespace ElectricalCircuitUI
             {
                 Element.Name = NameTextBox.Text;
                 NameTextBox.BackColor = Color.White;
+                _isCorrectData = false;
             }
             catch (ArgumentException)
             {
                 NameTextBox.BackColor = Color.LightCoral;
+                _isCorrectData = false;
             }
         }
 
@@ -75,26 +63,33 @@ namespace ElectricalCircuitUI
             {
                 Element.Value = double.Parse(ValueTextBox.Text);
                 ValueTextBox.BackColor = Color.White;
+                _isCorrectData = true;
             }
             catch (ArgumentException)
             {
                 ValueTextBox.BackColor = Color.LightCoral;
+                _isCorrectData = false;
             }
             catch (FormatException)
             {
                 ValueTextBox.BackColor = Color.LightCoral;
+                _isCorrectData = false;
             }
         }
-
-        private void ElementTypeRadioButton_CheckedChanged(object sender, EventArgs e)
+        
+        private void TypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RadioButton radioButton = (RadioButton) sender;
+            if (Element == null)
+            {
+                return;
+            }
 
-            if (ResistorRadioButton.Checked)
+            var type = (ElementType)TypeComboBox.SelectedItem;
+            if (type == ElementType.Resistor)
             {
                 Element = new Resistor(Element.Name, Element.Value);
             }
-            else if (InductorRadioButton.Checked)
+            else if (type == ElementType.Inductor)
             {
                 Element = new Inductor(Element.Name, Element.Value);
             }
@@ -107,22 +102,14 @@ namespace ElectricalCircuitUI
         private void OKButton_Click(object sender, EventArgs e)
         {
             //TODO: цвет фона - не самый надежный и понятный способ определения проблем в текстбоксе
-            if (NameTextBox.BackColor == Color.LightCoral)
+            if (!_isCorrectData)
             {
                 MessageBox.Show("Invalid values entered",
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-            }
 
-            //TODO: дублирование
-            //TODO: зачем показывать пользователю два сообщения?
-            if (ValueTextBox.BackColor == Color.LightCoral)
-            {
-                MessageBox.Show("Invalid values entered",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                return;
             }
 
             DialogResult = DialogResult.OK;

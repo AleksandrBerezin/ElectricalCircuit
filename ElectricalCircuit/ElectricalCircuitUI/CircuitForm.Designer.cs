@@ -29,30 +29,40 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.NameTextBox = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.CancelButton);
             this.panel1.Controls.Add(this.OKButton);
             this.panel1.Controls.Add(this.NameTextBox);
-            this.panel1.Controls.Add(this.textBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(326, 94);
+            this.panel1.Size = new System.Drawing.Size(326, 84);
             this.panel1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(49, 17);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Name:";
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(166, 51);
+            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CancelButton.Location = new System.Drawing.Point(214, 40);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(148, 31);
+            this.CancelButton.Size = new System.Drawing.Size(100, 32);
             this.CancelButton.TabIndex = 3;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
@@ -60,9 +70,10 @@
             // 
             // OKButton
             // 
-            this.OKButton.Location = new System.Drawing.Point(12, 51);
+            this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKButton.Location = new System.Drawing.Point(108, 40);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(148, 31);
+            this.OKButton.Size = new System.Drawing.Size(100, 32);
             this.OKButton.TabIndex = 2;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -70,30 +81,20 @@
             // 
             // NameTextBox
             // 
-            this.NameTextBox.Location = new System.Drawing.Point(70, 12);
+            this.NameTextBox.Location = new System.Drawing.Point(67, 12);
             this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(244, 22);
+            this.NameTextBox.Size = new System.Drawing.Size(247, 22);
             this.NameTextBox.TabIndex = 0;
             this.NameTextBox.TextChanged += new System.EventHandler(this.NameTextBox_TextChanged);
-            // 
-            // textBox1
-            // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(12, 15);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(52, 15);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "Name:";
             // 
             // CircuitForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(326, 94);
+            this.ClientSize = new System.Drawing.Size(326, 84);
             this.Controls.Add(this.panel1);
-            this.MaximumSize = new System.Drawing.Size(344, 141);
-            this.MinimumSize = new System.Drawing.Size(344, 141);
+            this.MaximumSize = new System.Drawing.Size(344, 131);
+            this.MinimumSize = new System.Drawing.Size(344, 131);
             this.Name = "CircuitForm";
             this.ShowIcon = false;
             this.Text = "Add/Edit Circuit";
@@ -109,6 +110,6 @@
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.TextBox NameTextBox;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
     }
 }

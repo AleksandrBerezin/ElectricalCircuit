@@ -13,6 +13,11 @@ namespace ElectricalCircuitUI
         private Circuit _circuit;
 
         /// <summary>
+        /// Возвращает истину, если введенные данные корректны
+        /// </summary>
+        private bool _isCorrectData = true;
+
+        /// <summary>
         /// Возвращент и задает цепь
         /// </summary>
         public Circuit Circuit
@@ -39,15 +44,27 @@ namespace ElectricalCircuitUI
             {
                 Circuit.Name = NameTextBox.Text;
                 NameTextBox.BackColor = Color.White;
+                _isCorrectData = true;
             }
             catch (ArgumentException)
             {
                 NameTextBox.BackColor = Color.LightCoral;
+                _isCorrectData = false;
             }
         }
 
         private void OKButton_Click(object sender, System.EventArgs e)
         {
+            if (!_isCorrectData)
+            {
+                MessageBox.Show("Invalid values entered",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                return;
+            }
+
             DialogResult = DialogResult.OK;
             Close();
         }
