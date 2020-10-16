@@ -1,4 +1,4 @@
-﻿namespace ElectricalCircuit.Elements
+﻿namespace ElectricalCircuit
 {
     /// <summary>
     /// Перечисление <see cref="ElementType"/>, содержащее тип элемента

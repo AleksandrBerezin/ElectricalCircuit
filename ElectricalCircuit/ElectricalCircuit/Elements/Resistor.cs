@@ -17,6 +17,7 @@ namespace ElectricalCircuit
         {
             Name = name;
             Value = value;
+            Type = ElementType.Resistor;
         }
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace ElectricalCircuit
         {
             Name = "Новый элемент";
             Value = 1;
+            Type = ElementType.Resistor;
         }
 
         /// <inheritdoc/>

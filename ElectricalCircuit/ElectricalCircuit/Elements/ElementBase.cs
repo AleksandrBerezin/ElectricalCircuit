@@ -20,6 +20,11 @@ namespace ElectricalCircuit
         /// </summary>
         private double _value;
 
+        /// <summary>
+        /// Тип элемента
+        /// </summary>
+        private ElementType _type;
+
         /// <inheritdoc/>
         public ObservableCollection<ISegment> SubSegments { get; private set; } = null;
 
@@ -61,6 +66,9 @@ namespace ElectricalCircuit
                 }
             }
         }
+
+        /// <inheritdoc/>
+        public ElementType Type { get; protected set; }
         
         /// <inheritdoc/>
         public event EventHandler SegmentChanged;

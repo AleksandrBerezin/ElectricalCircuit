@@ -14,5 +14,10 @@
         /// Возвращает и задает номинал элемента
         /// </summary>
         double Value { get; set; }
+
+        /// <summary>
+        /// Возвращает тип элемента
+        /// </summary>
+        ElementType Type { get; }
     }
 }

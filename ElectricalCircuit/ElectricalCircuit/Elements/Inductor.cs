@@ -17,6 +17,7 @@ namespace ElectricalCircuit
         {
             Name = name;
             Value = value;
+            Type = ElementType.Inductor;
         }
 
         /// <inheritdoc/>
