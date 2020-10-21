@@ -34,13 +34,50 @@ namespace ElectricalCircuit
         private Circuit Circuit0()
         {
             var circuit = new Circuit("Цепь 0");
-            circuit.SubSegments.Add(new Resistor("R1", 15));
-            circuit.SubSegments.Add(new Inductor("L1", 0.01));
-            circuit.SubSegments.Add(new Inductor("L2", 0.02));
-            circuit.SubSegments.Add(new Resistor("R2", 20));
-            circuit.SubSegments.Add(new Capacitor("C1", 15e-6));
-            circuit.SubSegments.Add(new Resistor("R3", 40));
-            circuit.SubSegments.Add(new Capacitor("C2", 40e-6));
+            var parallelSegment1 = new ParallelSegment();
+
+            var serialSegment1 = new SerialSegment();
+            serialSegment1.SubSegments.Add(new Resistor("R1", 20));
+            serialSegment1.SubSegments.Add(new Inductor("L1", 4e-5));
+            serialSegment1.SubSegments.Add(new Capacitor("C1", 8e-9));
+
+            var serialSegment2 = new SerialSegment();
+            serialSegment2.SubSegments.Add(new Capacitor("C2", 3.5e-9));
+
+            var parallelSegment2 = new ParallelSegment();
+            parallelSegment2.SubSegments.Add(new Resistor("R2", 45));
+            parallelSegment2.SubSegments.Add(new Resistor("R3", 80));
+            serialSegment2.SubSegments.Add(parallelSegment2);
+
+            var serialSegment3 = new SerialSegment();
+            serialSegment3.SubSegments.Add(new Resistor("R4", 15));
+
+            var parallelSegment3 = new ParallelSegment();
+            
+            var serialSegment4 = new SerialSegment();
+            serialSegment4.SubSegments.Add(new Resistor("R5", 30));
+            serialSegment4.SubSegments.Add(new Resistor("R6", 50));
+
+            parallelSegment3.SubSegments.Add(serialSegment4);
+            parallelSegment3.SubSegments.Add(new Capacitor("C3", 1.5e-9));
+            parallelSegment3.SubSegments.Add(new Inductor("L2", 8.1e-5));
+            serialSegment3.SubSegments.Add(parallelSegment3);
+
+            parallelSegment1.SubSegments.Add(serialSegment1);
+            parallelSegment1.SubSegments.Add(serialSegment2);
+            parallelSegment1.SubSegments.Add(serialSegment3);
+
+            var parallelSegment4 = new ParallelSegment();
+
+            var serialSegment5 = new SerialSegment();
+            serialSegment5.SubSegments.Add(new Resistor("R7", 10));
+            serialSegment5.SubSegments.Add(new Inductor("L3", 7e-5));
+
+            parallelSegment4.SubSegments.Add(serialSegment5);
+            parallelSegment4.SubSegments.Add(new Capacitor("C4", 5e-9));
+
+            circuit.SubSegments.Add(parallelSegment1);
+            circuit.SubSegments.Add(parallelSegment4);
 
             return circuit;
         }

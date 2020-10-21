@@ -52,7 +52,6 @@ namespace ElectricalCircuitUI
 
             _circuitTreeManager.CircuitTree = CircuitTreeView;
             _drawingManager.Picture = SchemaPictureBox;
-            //TODO: почему нельзя задать свойство через дизайнер, чтобы оно не болталось здесь?
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
@@ -120,7 +119,6 @@ namespace ElectricalCircuitUI
                     imaginary = "+ " + imaginary;
                 }
 
-                //TODO +-
                 ImpedancesTable[1, i].Value =
                     string.Format($"{impedance.Real:F4} {imaginary}*j Ом");
             }
@@ -142,6 +140,10 @@ namespace ElectricalCircuitUI
             _circuitTreeManager.WriteCircuitInTree(circuit);
 
             CircuitTreeView.ExpandAll();
+
+            //TODO
+            _circuitTreeManager.CalculateSegmentsCount((SegmentTreeNode)CircuitTreeView.Nodes[0]);
+            _drawingManager.DrawCircuit((SegmentTreeNode)CircuitTreeView.Nodes[0]);
         }
 
         private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -503,7 +505,6 @@ namespace ElectricalCircuitUI
         /// <param name="e"></param>
         private void CalculationImpedances(object sender, EventArgs e)
         {
-            //TODO Только импедансы
             FillImpedancesColumn();
         }
     }

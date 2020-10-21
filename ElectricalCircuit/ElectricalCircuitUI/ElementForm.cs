@@ -48,7 +48,7 @@ namespace ElectricalCircuitUI
             {
                 Element.Name = NameTextBox.Text;
                 NameTextBox.BackColor = Color.White;
-                _isCorrectData = false;
+                _isCorrectData = true;
             }
             catch (ArgumentException)
             {
