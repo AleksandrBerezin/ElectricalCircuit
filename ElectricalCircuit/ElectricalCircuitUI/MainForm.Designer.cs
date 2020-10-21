@@ -131,10 +131,11 @@
             // SchemaPictureBox
             // 
             this.SchemaPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.SchemaPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SchemaPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.SchemaPictureBox.MinimumSize = new System.Drawing.Size(711, 385);
             this.SchemaPictureBox.Name = "SchemaPictureBox";
             this.SchemaPictureBox.Size = new System.Drawing.Size(944, 465);
+            this.SchemaPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.SchemaPictureBox.TabIndex = 1;
             this.SchemaPictureBox.TabStop = false;
             // 
@@ -416,11 +417,16 @@
             // 
             // CircuitTreeView
             // 
+            this.CircuitTreeView.AllowDrop = true;
             this.CircuitTreeView.Location = new System.Drawing.Point(6, 51);
             this.CircuitTreeView.Name = "CircuitTreeView";
             this.CircuitTreeView.Size = new System.Drawing.Size(282, 544);
             this.CircuitTreeView.TabIndex = 4;
+            this.CircuitTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.CircuitTreeView_ItemDrag);
             this.CircuitTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.CircuitTreeView_AfterSelect);
+            this.CircuitTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.CircuitTreeView_DragDrop);
+            this.CircuitTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.CircuitTreeView_DragEnter);
+            this.CircuitTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.CircuitTreeView_DragOver);
             // 
             // CircuitsComboBox
             // 
@@ -448,6 +454,7 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SchemaPictureBox)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.ImpedancesGroupBox.ResumeLayout(false);

@@ -178,7 +178,8 @@ namespace ElectricalCircuitUI
         {
             //TODO
             if (ImpedancesTable.SelectedCells.Count > 1
-                || !ImpedancesTable.SelectedCells.Contains(ImpedancesColumn.CellTemplate))
+                || ImpedancesTable.SelectedCells[0].RowIndex >= _frequencies.Count
+                || ImpedancesTable.SelectedCells[0].ColumnIndex != 0)
             {
                 MessageBox.Show(
                     $"Please choose 1 frequency",
@@ -493,6 +494,12 @@ namespace ElectricalCircuitUI
                 var selectedSegment = selectedNode.Segment;
                 parentNode.Segment.SubSegments.Remove(selectedSegment);
 
+                if (parentNode.Nodes.Count == 1)
+                {
+                    ((SegmentTreeNode)parentNode.Parent)?.Segment.SubSegments.RemoveAt
+                        (parentNode.Index);
+                }
+
                 ClearElementInfoFields();
                 FillCircuitTreeView();
             }
@@ -506,6 +513,79 @@ namespace ElectricalCircuitUI
         private void CalculationImpedances(object sender, EventArgs e)
         {
             FillImpedancesColumn();
+        }
+
+        private void CircuitTreeView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.All);
+        }
+
+        private void CircuitTreeView_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+
+        private void CircuitTreeView_DragOver(object sender, DragEventArgs e)
+        {
+            Point targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
+            CircuitTreeView.SelectedNode = CircuitTreeView.GetNodeAt(targetPoint);
+        }
+
+        private void CircuitTreeView_DragDrop(object sender, DragEventArgs e)
+        {
+            var targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
+            var targetNode = (SegmentTreeNode)CircuitTreeView.GetNodeAt(targetPoint);
+            var draggedNode = (SegmentTreeNode)e.Data.GetData(typeof(SegmentTreeNode));
+
+            // Confirm that the node at the drop location is not 
+            // the dragged node or a descendant of the dragged node.
+            if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode))
+            {
+                if (targetNode.Segment is IElement == false)
+                {
+                    ((SegmentTreeNode)draggedNode.Parent).Segment.SubSegments.Remove
+                        (draggedNode.Segment);
+                    targetNode.Segment.SubSegments.Add(draggedNode.Segment);
+                }
+                else
+                {
+                    ((SegmentTreeNode)draggedNode.Parent).Segment.SubSegments.Remove
+                        (draggedNode.Segment);
+
+                    var serialSegment = new SerialSegment();
+                    serialSegment.SubSegments.Add(targetNode.Segment);
+                    serialSegment.SubSegments.Add(draggedNode.Segment);
+                    ((SegmentTreeNode)targetNode.Parent).Segment.SubSegments[targetNode.Index] =
+                        serialSegment;
+                }
+
+                var parent = (SegmentTreeNode)draggedNode.Parent;
+
+                // Delete empty segment
+                if (parent.Nodes.Count == 1)
+                {
+                    ((SegmentTreeNode)parent.Parent)?.Segment.SubSegments.RemoveAt(parent.Index);
+                }
+
+                FillCircuitTreeView();
+            }
+        }
+
+        // Determine whether one node is a parent 
+        // or ancestor of a second node.
+        private bool ContainsNode(TreeNode node1, TreeNode node2)
+        {
+            if (node2.Parent == null)
+            {
+                return false;
+            }
+
+            if (node2.Parent.Equals(node1))
+            {
+                return true;
+            }
+
+            return ContainsNode(node1, node2.Parent);
         }
     }
 }

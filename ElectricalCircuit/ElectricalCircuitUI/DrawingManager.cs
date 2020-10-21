@@ -29,7 +29,8 @@ namespace ElectricalCircuitUI
         /// </summary>
         public void DrawCircuit(SegmentTreeNode node)
         {
-            var bitmap = new Bitmap(Picture.Width, Picture.Height);
+            var bitmap = new Bitmap((node.SerialSegmentsCount + 2) * ElementWidth,
+                (node.ParallelSegmentsCount + 3) * ElementHeight);
             _graphics = Graphics.FromImage(bitmap);
             _font = Picture.Font;
 
