@@ -67,7 +67,6 @@ namespace Drawing
             }
         }
 
-        //TODO Дублирование
         /// <summary>
         /// Calculating the coordinates for each node
         /// </summary>
@@ -78,15 +77,13 @@ namespace Drawing
             while (startNode != null)
             {
                 var parent = (DrawingBaseNode)startNode.Parent;
+                var prevNode = (DrawingBaseNode)startNode.PrevNode;
 
                 if (parent == null)
                 {
-                    startNode.StartPoint = new Point(50,
-                        50 + ElementHeight * startNode.ParallelSegmentsCount / 2);
-
-                    var endX = startNode.StartPoint.X + startNode.SerialSegmentsCount
-                        * (ElementWidth + ConnectionLength) - ConnectionLength;
-                    startNode.EndPoint = new Point(endX, startNode.StartPoint.Y);
+                    startNode.StartPoint = new Point(ElementWidth, ElementHeight
+                        * (startNode.ParallelSegmentsCount / 2 + 1));
+                    startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
                 }
                 else if (parent.Segment is ParallelSegment)
                 {
@@ -101,26 +98,23 @@ namespace Drawing
                         {
                             X = parent.StartPoint.X + (parent.EndPoint.X
                             - parent.StartPoint.X - (startNode.SerialSegmentsCount
-                            * (ElementWidth + ConnectionLength) - ConnectionLength)) / 2
+                            * (ElementWidth + ConnectionLength) - ConnectionLength)) / 2,
+                            Y = startNode.ParallelSegmentsCount * ElementHeight / 2
                         };
 
                         if (startNode.Index == 0)
                         {
-                            startPoint.Y = parent.StartPoint.Y - (parent.ParallelSegmentsCount - 1)
+                            startPoint.Y += parent.StartPoint.Y - parent.ParallelSegmentsCount
                                 * ElementHeight / 2;
                         }
                         else
                         {
-                            startPoint.Y = ((DrawingBaseNode)startNode.PrevNode).StartPoint.Y 
-                                           + startNode.ParallelSegmentsCount * ElementHeight;
+                            startPoint.Y += prevNode.StartPoint.Y + prevNode.ParallelSegmentsCount
+                                * ElementHeight / 2;
                         }
 
                         startNode.StartPoint = startPoint;
-
-                        var endX = startNode.StartPoint.X + startNode.SerialSegmentsCount
-                            * (ElementWidth + ConnectionLength) - ConnectionLength;
-
-                        startNode.EndPoint = new Point(endX, startNode.StartPoint.Y);
+                        startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
                     }
                 }
                 else
@@ -132,9 +126,8 @@ namespace Drawing
                     }
                     else
                     {
-                        var preventNode = (DrawingBaseNode)startNode.PrevNode;
-                        startNode.StartPoint = new Point(preventNode.EndPoint.X + ConnectionLength,
-                            preventNode.EndPoint.Y);
+                        startNode.StartPoint = new Point(prevNode.EndPoint.X + ConnectionLength,
+                            prevNode.EndPoint.Y);
                     }
 
                     if (startNode.Index == parent.Nodes.Count - 1)
@@ -144,10 +137,7 @@ namespace Drawing
                     }
                     else
                     {
-                        var endX = startNode.StartPoint.X + startNode.SerialSegmentsCount
-                            * (ElementWidth + ConnectionLength) - ConnectionLength;
-
-                        startNode.EndPoint = new Point(endX, startNode.StartPoint.Y);
+                        startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
                     }
                 }
 
@@ -158,6 +148,17 @@ namespace Drawing
 
                 startNode = startNode.NextNode as DrawingBaseNode;
             }
+        }
+
+        /// <summary>
+        /// Returns the end X coordinate of node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static int GetEndX(DrawingBaseNode node)
+        {
+            return node.StartPoint.X + node.SerialSegmentsCount
+                * (ElementWidth + ConnectionLength) - ConnectionLength;
         }
     }
 }
