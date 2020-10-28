@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectricalCircuit.UnitTests", "ElectricalCircuit.UnitTests\ElectricalCircuit.UnitTests.csproj", "{4D3220E7-C505-4E72-B1F9-7F9738720617}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drawing", "Drawing\Drawing.csproj", "{55F59364-B22C-4CFF-AF14-C33ECA68B4C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{4D3220E7-C505-4E72-B1F9-7F9738720617}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D3220E7-C505-4E72-B1F9-7F9738720617}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D3220E7-C505-4E72-B1F9-7F9738720617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F59364-B22C-4CFF-AF14-C33ECA68B4C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F59364-B22C-4CFF-AF14-C33ECA68B4C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F59364-B22C-4CFF-AF14-C33ECA68B4C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F59364-B22C-4CFF-AF14-C33ECA68B4C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using Drawing;
 using ElectricalCircuit;
 
 namespace ElectricalCircuitUI
@@ -19,7 +20,7 @@ namespace ElectricalCircuitUI
         /// </summary>
         public void WriteCircuitInTree(Circuit circuit)
         {
-            var newNode = new SegmentTreeNode(circuit);
+            var newNode = DrawingManager.CreateNode(circuit);
             CircuitTree.Nodes.Add(newNode);
 
             foreach (var segment in circuit.SubSegments)
@@ -37,9 +38,9 @@ namespace ElectricalCircuitUI
         /// </summary>
         /// <param name="segment"></param>
         /// <param name="node"></param>
-        private void WriteAllSegmentsInTree(ISegment segment, SegmentTreeNode node)
+        private void WriteAllSegmentsInTree(ISegment segment, DrawingBaseNode node)
         {
-            var newNode = new SegmentTreeNode(segment);
+            var newNode = DrawingManager.CreateNode(segment);;
             node.Nodes.Add(newNode);
             if (segment.SubSegments == null)
             {
@@ -59,7 +60,7 @@ namespace ElectricalCircuitUI
         public void SelectNodeInTreeView(ISegment segment)
         {
             CircuitTree.SelectedNode = SearchNode(segment,
-                (SegmentTreeNode)CircuitTree.Nodes[0]);
+                (DrawingBaseNode)CircuitTree.Nodes[0]);
         }
 
         /// <summary>
@@ -68,9 +69,9 @@ namespace ElectricalCircuitUI
         /// <param name="segment"></param>
         /// <param name="startNode"></param>
         /// <returns></returns>
-        private SegmentTreeNode SearchNode(ISegment segment, SegmentTreeNode startNode)
+        private DrawingBaseNode SearchNode(ISegment segment, DrawingBaseNode startNode)
         {
-            SegmentTreeNode node = null;
+            DrawingBaseNode node = null;
             while (startNode != null)
             {
                 if (startNode.Segment.Equals(segment))
@@ -81,14 +82,14 @@ namespace ElectricalCircuitUI
 
                 if (startNode.Nodes.Count != 0)
                 {
-                    node = SearchNode(segment, (SegmentTreeNode)startNode.Nodes[0]);
+                    node = SearchNode(segment, (DrawingBaseNode)startNode.Nodes[0]);
                     if (node != null)
                     {
                         break;
                     }
                 }
 
-                startNode = startNode.NextNode as SegmentTreeNode;
+                startNode = startNode.NextNode as DrawingBaseNode;
             }
 
             return node;
@@ -99,13 +100,13 @@ namespace ElectricalCircuitUI
         /// </summary>
         /// <param name="startNode"></param>
         /// <returns></returns>
-        public void CalculateSegmentsCount(SegmentTreeNode startNode)
+        public void CalculateSegmentsCount(DrawingBaseNode startNode)
         {
             while (startNode != null)
             {
                 if (startNode.Nodes.Count != 0)
                 {
-                    CalculateSegmentsCount((SegmentTreeNode)startNode.Nodes[0]);
+                    CalculateSegmentsCount((DrawingBaseNode)startNode.Nodes[0]);
                 }
 
                 //TODO Дублирование
@@ -118,7 +119,7 @@ namespace ElectricalCircuitUI
                 else if (segment is ParallelSegment)
                 {
                     var maxSerialCount = 0;
-                    foreach (SegmentTreeNode node in startNode.Nodes)
+                    foreach (DrawingBaseNode node in startNode.Nodes)
                     {
                         startNode.ParallelSegmentsCount += node.ParallelSegmentsCount;
                         if (node.SerialSegmentsCount > maxSerialCount)
@@ -132,7 +133,7 @@ namespace ElectricalCircuitUI
                 else
                 {
                     var maxParallelCount = 0;
-                    foreach (SegmentTreeNode node in startNode.Nodes)
+                    foreach (DrawingBaseNode node in startNode.Nodes)
                     {
                         startNode.SerialSegmentsCount += node.SerialSegmentsCount;
                         if (node.ParallelSegmentsCount > maxParallelCount)
@@ -144,7 +145,7 @@ namespace ElectricalCircuitUI
                     }
                 }
 
-                startNode = startNode.NextNode as SegmentTreeNode;
+                startNode = startNode.NextNode as DrawingBaseNode;
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Drawing;
 using ElectricalCircuit;
 
 namespace ElectricalCircuitUI
@@ -24,11 +25,6 @@ namespace ElectricalCircuitUI
         /// </summary>
         private readonly CircuitTreeManager _circuitTreeManager;
 
-        /// <summary>
-        /// Класс для отрисовки цепи
-        /// </summary>
-        private readonly DrawingManager _drawingManager;
-
         public MainForm()
         {
             //TODO: логика в конструкторе формы до метода InitializeComponent() чревато исключениями и потерей всей верстки из-за криво открывающегося дизайнера форм
@@ -48,10 +44,8 @@ namespace ElectricalCircuitUI
             };
 
             _circuitTreeManager = new CircuitTreeManager();
-            _drawingManager = new DrawingManager();
 
             _circuitTreeManager.CircuitTree = CircuitTreeView;
-            _drawingManager.Picture = SchemaPictureBox;
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
@@ -142,8 +136,8 @@ namespace ElectricalCircuitUI
             CircuitTreeView.ExpandAll();
 
             //TODO
-            _circuitTreeManager.CalculateSegmentsCount((SegmentTreeNode)CircuitTreeView.Nodes[0]);
-            _drawingManager.DrawCircuit((SegmentTreeNode)CircuitTreeView.Nodes[0]);
+            _circuitTreeManager.CalculateSegmentsCount((DrawingBaseNode)CircuitTreeView.Nodes[0]);
+            DrawCircuit();
         }
 
         private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -283,7 +277,7 @@ namespace ElectricalCircuitUI
             var selectedNode = CircuitTreeView.SelectedNode;
             NameTextBox.Text = selectedNode.Text;
 
-            var selectedSegment = ((SegmentTreeNode)selectedNode).Segment;
+            var selectedSegment = ((DrawingBaseNode)selectedNode).Segment;
 
             if (selectedSegment is IElement)
             {
@@ -353,7 +347,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
+            var selectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
             var selectedSegment = selectedNode.Segment;
             var parentNode = selectedNode.Parent;
 
@@ -367,7 +361,7 @@ namespace ElectricalCircuitUI
             }
 
             var indexInParent = selectedNode.Index;
-            var parentSegment = ((SegmentTreeNode)parentNode).Segment;
+            var parentSegment = ((DrawingBaseNode)parentNode).Segment;
 
             //TODO: куча дублирования, нет? Так и не понял, чем принципиально отличаются, имхо можно упростить
             if (parentSegment.GetType() == segmentType)
@@ -395,8 +389,8 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
-            var parentNode = (SegmentTreeNode)selectedNode.Parent;
+            var selectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
+            var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
             // Выбрана цепь
             if (parentNode == null)
@@ -472,8 +466,8 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var selectedNode = (SegmentTreeNode)CircuitTreeView.SelectedNode;
-            var parentNode = (SegmentTreeNode)selectedNode.Parent;
+            var selectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
+            var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
             // Выбрана цепь
             if (parentNode == null)
@@ -496,7 +490,7 @@ namespace ElectricalCircuitUI
 
                 if (parentNode.Nodes.Count == 1)
                 {
-                    ((SegmentTreeNode)parentNode.Parent)?.Segment.SubSegments.RemoveAt
+                    ((DrawingBaseNode)parentNode.Parent)?.Segment.SubSegments.RemoveAt
                         (parentNode.Index);
                 }
 
@@ -534,8 +528,8 @@ namespace ElectricalCircuitUI
         private void CircuitTreeView_DragDrop(object sender, DragEventArgs e)
         {
             var targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
-            var targetNode = (SegmentTreeNode)CircuitTreeView.GetNodeAt(targetPoint);
-            var draggedNode = (SegmentTreeNode)e.Data.GetData(typeof(SegmentTreeNode));
+            var targetNode = (DrawingBaseNode)CircuitTreeView.GetNodeAt(targetPoint);
+            var draggedNode = (DrawingBaseNode)e.Data.GetData(typeof(DrawingBaseNode));
 
             // Confirm that the node at the drop location is not 
             // the dragged node or a descendant of the dragged node.
@@ -543,28 +537,28 @@ namespace ElectricalCircuitUI
             {
                 if (targetNode.Segment is IElement == false)
                 {
-                    ((SegmentTreeNode)draggedNode.Parent).Segment.SubSegments.Remove
+                    ((DrawingBaseNode)draggedNode.Parent).Segment.SubSegments.Remove
                         (draggedNode.Segment);
                     targetNode.Segment.SubSegments.Add(draggedNode.Segment);
                 }
                 else
                 {
-                    ((SegmentTreeNode)draggedNode.Parent).Segment.SubSegments.Remove
+                    ((DrawingBaseNode)draggedNode.Parent).Segment.SubSegments.Remove
                         (draggedNode.Segment);
 
                     var serialSegment = new SerialSegment();
                     serialSegment.SubSegments.Add(targetNode.Segment);
                     serialSegment.SubSegments.Add(draggedNode.Segment);
-                    ((SegmentTreeNode)targetNode.Parent).Segment.SubSegments[targetNode.Index] =
+                    ((DrawingBaseNode)targetNode.Parent).Segment.SubSegments[targetNode.Index] =
                         serialSegment;
                 }
 
-                var parent = (SegmentTreeNode)draggedNode.Parent;
+                var parent = (DrawingBaseNode)draggedNode.Parent;
 
                 // Delete empty segment
                 if (parent.Nodes.Count == 1)
                 {
-                    ((SegmentTreeNode)parent.Parent)?.Segment.SubSegments.RemoveAt(parent.Index);
+                    ((DrawingBaseNode)parent.Parent)?.Segment.SubSegments.RemoveAt(parent.Index);
                 }
 
                 FillCircuitTreeView();
@@ -586,6 +580,12 @@ namespace ElectricalCircuitUI
             }
 
             return ContainsNode(node1, node2.Parent);
+        }
+
+        private void DrawCircuit()
+        {
+            DrawingManager.DrawCircuit((DrawingBaseNode)CircuitTreeView.Nodes[0],
+                SchemaPictureBox);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ElectricalCircuit
         {
             Circuits = new List<Circuit>
             {
-                Circuit0(),
+                //Circuit0(),
                 Circuit1(),
                 Circuit2(),
                 Circuit3(),
