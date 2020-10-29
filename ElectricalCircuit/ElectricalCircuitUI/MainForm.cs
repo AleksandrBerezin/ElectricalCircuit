@@ -11,27 +11,17 @@ namespace ElectricalCircuitUI
     public partial class MainForm : Form
     {
         /// <summary>
-        /// Currentcircuit
-        /// </summary>
-        public Circuit circuit = null;
-
-        /// <summary>
         /// List of frequencies
         /// </summary>
         private readonly List<double> _frequencies;
-
-        /// <summary>
-        /// Класс для работы с деревом
-        /// </summary>
-        private readonly CircuitTreeManager _circuitTreeManager;
 
         public MainForm()
         {
             //TODO: логика в конструкторе формы до метода InitializeComponent() чревато исключениями и потерей всей верстки из-за криво открывающегося дизайнера форм
             InitializeComponent();
 
-            _project = new Project();
-            foreach (var circuit in _project.Circuits)
+            CircuitControl.Project = new Project();
+            foreach (var circuit in CircuitControl.Project.Circuits)
             {
                 circuit.SegmentChanged += CalculationImpedances;
             }
@@ -43,25 +33,13 @@ namespace ElectricalCircuitUI
                 300
             };
 
-            _circuitTreeManager = new CircuitTreeManager();
-
-            _circuitTreeManager.CircuitTree = CircuitTreeView;
+            CircuitControl.SelectedCircuitChanged += CircuitControl_SelectedCircuitChanged;
+            CircuitControl.SelectedSegmentChanged += CircuitControl_SelectedSegmentChanged;
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            FillCircuitsComboBox();
             FillImpedancesTable();
-        }
-
-        /// <summary>
-        /// Метод, заполняющий выпадающий список цепей
-        /// </summary>
-        private void FillCircuitsComboBox()
-        {
-            //TODO: зачем null? А если сразу присвоить нужную коллекцию?
-            CircuitsComboBox.DataSource = null;
-            CircuitsComboBox.DataSource = _project.Circuits;
         }
 
         /// <summary>
@@ -92,7 +70,7 @@ namespace ElectricalCircuitUI
         /// </summary>
         private void FillImpedancesColumn()
         {
-            var selectedItem = (Circuit)CircuitsComboBox.SelectedItem;
+            var selectedItem = CircuitControl.SelectedCircuit;
             if (selectedItem == null || selectedItem.SubSegments.Count == 0)
             {
                 return;
@@ -118,33 +96,6 @@ namespace ElectricalCircuitUI
             }
         }
 
-        /// <summary>
-        /// Метод, заполняющий дерево элементов цепи
-        /// </summary>
-        private void FillCircuitTreeView()
-        {
-            CircuitTreeView.Nodes.Clear();
-
-            if (CircuitsComboBox.SelectedItem == null)
-            {
-                return;
-            }
-
-            var circuit = (Circuit)CircuitsComboBox.SelectedItem;
-            _circuitTreeManager.WriteCircuitInTree(circuit);
-
-            CircuitTreeView.ExpandAll();
-
-            DrawCircuit();
-        }
-
-        private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            FillCircuitTreeView();
-            FillImpedancesColumn();
-            ClearElementInfoFields();
-        }
-
         private void CalculateImpedanceButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(NewFrequencyTextBox.Text))
@@ -168,7 +119,6 @@ namespace ElectricalCircuitUI
 
         private void RemoveFrequencyButton_Click(object sender, EventArgs e)
         {
-            //TODO
             if (ImpedancesTable.SelectedCells.Count > 1
                 || ImpedancesTable.SelectedCells[0].RowIndex >= _frequencies.Count
                 || ImpedancesTable.SelectedCells[0].ColumnIndex != 0)
@@ -193,96 +143,6 @@ namespace ElectricalCircuitUI
 
             NewFrequencyTextBox.Clear();
             NewFrequencyTextBox.BackColor = Color.White;
-        }
-
-        private void AddCircuitButton_Click(object sender, EventArgs e)
-        {
-            var inner = new CircuitForm
-            {
-                Circuit = new Circuit()
-            };
-            var result = inner.ShowDialog();
-
-            if (result != DialogResult.OK)
-            {
-                return;
-            }
-
-            var newCircuit = inner.Circuit;
-            _project.Circuits.Add(newCircuit);
-            FillCircuitsComboBox();
-            CircuitsComboBox.SelectedItem = newCircuit;
-        }
-
-        private void EditCircuitButton_Click(object sender, EventArgs e)
-        {
-            if (CircuitsComboBox.SelectedItem == null)
-            {
-                return;
-            }
-
-            var selectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
-            var realIndexInProject = _project.Circuits.IndexOf(selectedCircuit);
-
-            var inner = new CircuitForm
-            {
-                Circuit = (Circuit)selectedCircuit.Clone()
-            };
-            var result = inner.ShowDialog();
-            if (result != DialogResult.OK)
-            {
-                return;
-            }
-
-            var updatedCircuit = inner.Circuit;
-            _project.Circuits.RemoveAt(realIndexInProject);
-            _project.Circuits.Insert(realIndexInProject, updatedCircuit);
-
-            FillCircuitsComboBox();
-            CircuitsComboBox.SelectedItem = updatedCircuit;
-        }
-
-        private void RemoveCircuitButton_Click(object sender, EventArgs e)
-        {
-            if (CircuitsComboBox.SelectedItem == null)
-            {
-                return;
-            }
-
-            var result = MessageBox.Show(
-                $"Do you really want to remove this circuit: {CircuitsComboBox.SelectedItem}",
-                "Remove Circuit",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2);
-
-            if (result == DialogResult.OK)
-            {
-                _project.Circuits.RemoveAt(CircuitsComboBox.SelectedIndex);
-                FillCircuitsComboBox();
-
-                if (CircuitsComboBox.SelectedItem == null && CircuitsComboBox.Items.Count != 0)
-                {
-                    CircuitsComboBox.SelectedItem = CircuitsComboBox.Items[0];
-                }
-            }
-        }
-
-        private void CircuitTreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            ClearElementInfoFields();
-
-            var selectedNode = CircuitTreeView.SelectedNode;
-            NameTextBox.Text = selectedNode.Text;
-
-            var selectedSegment = ((DrawingBaseNode)selectedNode).Segment;
-
-            if (selectedSegment is IElement)
-            {
-                var element = (IElement)selectedSegment;
-                ValueTextBox.Text = element.Value.ToString();
-                TypeTextBox.Text = element.Type.ToString();
-            }
         }
 
         /// <summary>
@@ -334,7 +194,8 @@ namespace ElectricalCircuitUI
 
         private void AddElement(Type segmentType)
         {
-            if (CircuitTreeView.SelectedNode == null)
+            var selectedNode = CircuitControl.SelectedNode;
+            if (selectedNode == null)
             {
                 return;
             }
@@ -345,7 +206,6 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var selectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
             var selectedSegment = selectedNode.Segment;
             var parentNode = selectedNode.Parent;
 
@@ -353,8 +213,8 @@ namespace ElectricalCircuitUI
             if (parentNode == null)
             {
                 selectedSegment.SubSegments.Add(newElement);
-                FillCircuitTreeView();
-                _circuitTreeManager.SelectNodeInTreeView(newElement);
+                CircuitControl.FillCircuitTreeView();
+                CircuitControl.SelectNodeInTreeView(newElement);
                 return;
             }
 
@@ -376,24 +236,24 @@ namespace ElectricalCircuitUI
             }
 
             ClearElementInfoFields();
-            FillCircuitTreeView();
-            _circuitTreeManager.SelectNodeInTreeView(newElement);
+            CircuitControl.FillCircuitTreeView();
+            CircuitControl.SelectNodeInTreeView(newElement);
         }
 
         private void EditElementButton_Click(object sender, EventArgs e)
         {
-            if (CircuitTreeView.SelectedNode == null)
+            var selectedNode = CircuitControl.SelectedNode;
+            if (selectedNode == null)
             {
                 return;
             }
 
-            var selectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
             var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
             // Выбрана цепь
             if (parentNode == null)
             {
-                EditCircuitButton_Click(sender, e);
+                CircuitControl.EditCircuitButton_Click(sender, e);
                 return;
             }
 
@@ -407,7 +267,7 @@ namespace ElectricalCircuitUI
                 var segmentType = selectedSegment.GetType();
 
                 var changeSegment = MessageBox.Show(
-                    $"Do you really want to replace this segment with the opposite?",
+                    $@"Do you really want to replace this segment with the opposite?",
                     "Replace Segment",
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Warning,
@@ -436,8 +296,8 @@ namespace ElectricalCircuitUI
                 parentSegment.SubSegments[index] = replacingSegment;
 
                 ClearElementInfoFields();
-                FillCircuitTreeView();
-                _circuitTreeManager.SelectNodeInTreeView(replacingSegment);
+                CircuitControl.FillCircuitTreeView();
+                CircuitControl.SelectNodeInTreeView(replacingSegment);
 
                 return;
             }
@@ -453,29 +313,29 @@ namespace ElectricalCircuitUI
             parentSegment.SubSegments[realIndexInSegment] = updatedElement;
 
             ClearElementInfoFields();
-            FillCircuitTreeView();
-            _circuitTreeManager.SelectNodeInTreeView(updatedElement);
+            CircuitControl.FillCircuitTreeView();
+            CircuitControl.SelectNodeInTreeView(updatedElement);
         }
 
         private void RemoveElementButton_Click(object sender, EventArgs e)
         {
-            if (CircuitTreeView.SelectedNode == null)
+            var selectedNode = CircuitControl.SelectedNode;
+            if (selectedNode == null)
             {
                 return;
             }
 
-            var selectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
             var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
             // Выбрана цепь
             if (parentNode == null)
             {
-                RemoveCircuitButton_Click(sender, e);
+                CircuitControl.RemoveCircuitButton_Click(sender, e);
                 return;
             }
 
             var result = MessageBox.Show(
-                $"Do you really want to remove this segment: {NameTextBox.Text}",
+                $@"Do you really want to remove this segment: {NameTextBox.Text}",
                 "Remove Segment",
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Warning,
@@ -493,7 +353,7 @@ namespace ElectricalCircuitUI
                 }
 
                 ClearElementInfoFields();
-                FillCircuitTreeView();
+                CircuitControl.FillCircuitTreeView();
             }
         }
 
@@ -507,83 +367,27 @@ namespace ElectricalCircuitUI
             FillImpedancesColumn();
         }
 
-        private void CircuitTreeView_ItemDrag(object sender, ItemDragEventArgs e)
+        private void CircuitControl_SelectedCircuitChanged(object sender, EventArgs e)
         {
-            DoDragDrop(e.Item, DragDropEffects.All);
+            FillImpedancesColumn();
+            ClearElementInfoFields();
         }
 
-        private void CircuitTreeView_DragEnter(object sender, DragEventArgs e)
+        private void CircuitControl_SelectedSegmentChanged(object sender, EventArgs e)
         {
-            e.Effect = e.AllowedEffect;
-        }
+            ClearElementInfoFields();
 
-        private void CircuitTreeView_DragOver(object sender, DragEventArgs e)
-        {
-            Point targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
-            CircuitTreeView.SelectedNode = CircuitTreeView.GetNodeAt(targetPoint);
-        }
+            var selectedNode = CircuitControl.SelectedNode;
+            NameTextBox.Text = selectedNode.Text;
 
-        private void CircuitTreeView_DragDrop(object sender, DragEventArgs e)
-        {
-            var targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
-            var targetNode = (DrawingBaseNode)CircuitTreeView.GetNodeAt(targetPoint);
-            var draggedNode = (DrawingBaseNode)e.Data.GetData(typeof(DrawingBaseNode));
+            var selectedSegment = ((DrawingBaseNode)selectedNode).Segment;
 
-            // Confirm that the node at the drop location is not 
-            // the dragged node or a descendant of the dragged node.
-            if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode))
+            if (selectedSegment is IElement)
             {
-                if (targetNode.Segment is IElement == false)
-                {
-                    ((DrawingBaseNode)draggedNode.Parent).Segment.SubSegments.Remove
-                        (draggedNode.Segment);
-                    targetNode.Segment.SubSegments.Add(draggedNode.Segment);
-                }
-                else
-                {
-                    ((DrawingBaseNode)draggedNode.Parent).Segment.SubSegments.Remove
-                        (draggedNode.Segment);
-
-                    var serialSegment = new SerialSegment();
-                    serialSegment.SubSegments.Add(targetNode.Segment);
-                    serialSegment.SubSegments.Add(draggedNode.Segment);
-                    ((DrawingBaseNode)targetNode.Parent).Segment.SubSegments[targetNode.Index] =
-                        serialSegment;
-                }
-
-                var parent = (DrawingBaseNode)draggedNode.Parent;
-
-                // Delete empty segment
-                if (parent.Nodes.Count == 1)
-                {
-                    ((DrawingBaseNode)parent.Parent)?.Segment.SubSegments.RemoveAt(parent.Index);
-                }
-
-                FillCircuitTreeView();
+                var element = (IElement)selectedSegment;
+                ValueTextBox.Text = element.Value.ToString();
+                TypeTextBox.Text = element.Type.ToString();
             }
-        }
-
-        // Determine whether one node is a parent 
-        // or ancestor of a second node.
-        private bool ContainsNode(TreeNode node1, TreeNode node2)
-        {
-            if (node2.Parent == null)
-            {
-                return false;
-            }
-
-            if (node2.Parent.Equals(node1))
-            {
-                return true;
-            }
-
-            return ContainsNode(node1, node2.Parent);
-        }
-
-        private void DrawCircuit()
-        {
-            DrawingManager.DrawCircuit((DrawingBaseNode)CircuitTreeView.Nodes[0],
-                SchemaPictureBox);
         }
     }
 }

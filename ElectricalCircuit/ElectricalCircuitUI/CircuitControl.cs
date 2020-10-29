@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Drawing;
 using ElectricalCircuit;
@@ -11,15 +12,58 @@ namespace ElectricalCircuitUI
     public partial class CircuitControl : UserControl
     {
         /// <summary>
-        /// Project
+        /// Root node of tree view
         /// </summary>
-        public readonly Project _project;
+        private DrawingBaseNode _rootNode;
+
+        /// <summary>
+        /// Dragged node
+        /// </summary>
+        private DrawingBaseNode _draggedNode;
+
+        /// <summary>
+        /// Gets and sets current Project
+        /// </summary>
+        public Project Project { get; set; }
+
+        /// <summary>
+        /// Gets and sets selected circuit
+        /// </summary>
+        public Circuit SelectedCircuit { get; private set; }
+
+        /// <summary>
+        /// Gets and sets selected node
+        /// </summary>
+        public DrawingBaseNode SelectedNode { get; private set; }
+
+        /// <summary>
+        /// Picture box in which the circuit is drawn
+        /// </summary>
+        public PictureBox PictureBox { get; set; }
 
         public CircuitControl()
         {
             InitializeComponent();
 
-            _project = new Project();
+            Load += CircuitControl_Load;
+        }
+
+        /// <summary>
+        /// Selected circuit has changed in combo box
+        /// </summary>
+        public event EventHandler SelectedCircuitChanged;
+
+        /// <summary>
+        /// Selected segment has changed in tree view
+        /// </summary>
+        public event TreeViewEventHandler SelectedSegmentChanged;
+
+        private void CircuitControl_Load(object sender, EventArgs e)
+        {
+            CircuitsComboBox.SelectedIndexChanged += SelectedCircuitChanged;
+            CircuitTreeView.AfterSelect += SelectedSegmentChanged;
+
+            FillCircuitsComboBox();
         }
 
         /// <summary>
@@ -28,14 +72,15 @@ namespace ElectricalCircuitUI
         private void FillCircuitsComboBox()
         {
             //TODO: зачем null? А если сразу присвоить нужную коллекцию?
+            CircuitsComboBox.SelectedText = "";
             CircuitsComboBox.DataSource = null;
-            CircuitsComboBox.DataSource = _project.Circuits;
+            CircuitsComboBox.DataSource = Project.Circuits;
         }
 
         /// <summary>
         /// Method that fill the tree of circuit elements
         /// </summary>
-        private void FillCircuitTreeView()
+        public void FillCircuitTreeView()
         {
             CircuitTreeView.Nodes.Clear();
 
@@ -46,6 +91,8 @@ namespace ElectricalCircuitUI
 
             var circuit = (Circuit)CircuitsComboBox.SelectedItem;
             WriteCircuitInTree(circuit);
+            _rootNode = (DrawingBaseNode)CircuitTreeView.Nodes[0];
+            DrawCircuit();
         }
 
         /// <summary>
@@ -71,7 +118,7 @@ namespace ElectricalCircuitUI
         /// <param name="node"></param>
         private void WriteAllSegmentsInTree(ISegment segment, DrawingBaseNode node)
         {
-            var newNode = DrawingManager.CreateNode(segment); ;
+            var newNode = DrawingManager.CreateNode(segment);
             node.Nodes.Add(newNode);
             if (segment.SubSegments == null)
             {
@@ -126,18 +173,21 @@ namespace ElectricalCircuitUI
             return node;
         }
 
-        private void CircuitsComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillCircuitTreeView();
+            _rootNode = (DrawingBaseNode)CircuitTreeView.Nodes[0];
+            SelectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
         }
 
         private void CircuitTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-
+            SelectedNode = (DrawingBaseNode)CircuitTreeView.SelectedNode;
         }
 
         private void CircuitTreeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
+            _draggedNode = (DrawingBaseNode)e.Item;
             DoDragDrop(e.Item, DragDropEffects.All);
         }
 
@@ -148,7 +198,7 @@ namespace ElectricalCircuitUI
 
         private void CircuitTreeView_DragOver(object sender, DragEventArgs e)
         {
-            Point targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
+            var targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
             CircuitTreeView.SelectedNode = CircuitTreeView.GetNodeAt(targetPoint);
         }
 
@@ -156,7 +206,7 @@ namespace ElectricalCircuitUI
         {
             var targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
             var targetNode = (DrawingBaseNode)CircuitTreeView.GetNodeAt(targetPoint);
-            var draggedNode = (DrawingBaseNode)e.Data.GetData(typeof(DrawingBaseNode));
+            var draggedNode = _draggedNode;
 
             // Confirm that the node at the drop location is not 
             // the dragged node or a descendant of the dragged node.
@@ -209,7 +259,7 @@ namespace ElectricalCircuitUI
             return ContainsNode(node1, node2.Parent);
         }
 
-        private void AddCircuitButton_Click(object sender, System.EventArgs e)
+        private void AddCircuitButton_Click(object sender, EventArgs e)
         {
             var inner = new CircuitForm
             {
@@ -223,19 +273,70 @@ namespace ElectricalCircuitUI
             }
 
             var newCircuit = inner.Circuit;
-            _project.Circuits.Add(newCircuit);
+            Project.Circuits.Add(newCircuit);
             FillCircuitsComboBox();
             CircuitsComboBox.SelectedItem = newCircuit;
         }
 
-        private void EditCircuitButton_Click(object sender, System.EventArgs e)
+        public void EditCircuitButton_Click(object sender, EventArgs e)
         {
+            if (CircuitsComboBox.SelectedItem == null)
+            {
+                return;
+            }
 
+            var realIndexInProject = Project.Circuits.IndexOf(SelectedCircuit);
+
+            var inner = new CircuitForm
+            {
+                Circuit = (Circuit)SelectedCircuit.Clone()
+            };
+            var result = inner.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var updatedCircuit = inner.Circuit;
+            Project.Circuits.RemoveAt(realIndexInProject);
+            Project.Circuits.Insert(realIndexInProject, updatedCircuit);
+
+            FillCircuitsComboBox();
+            CircuitsComboBox.SelectedItem = updatedCircuit;
         }
 
-        private void RemoveCircuitButton_Click(object sender, System.EventArgs e)
+        public void RemoveCircuitButton_Click(object sender, EventArgs e)
         {
+            if (CircuitsComboBox.SelectedItem == null)
+            {
+                return;
+            }
 
+            var result = MessageBox.Show(
+                $@"Do you really want to remove this circuit: {CircuitsComboBox.SelectedItem}",
+                @"Remove Circuit",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (result == DialogResult.OK)
+            {
+                Project.Circuits.RemoveAt(CircuitsComboBox.SelectedIndex);
+                FillCircuitsComboBox();
+
+                if (CircuitsComboBox.SelectedItem == null && CircuitsComboBox.Items.Count != 0)
+                {
+                    CircuitsComboBox.SelectedItem = CircuitsComboBox.Items[0];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw current circuit
+        /// </summary>
+        private void DrawCircuit()
+        {
+            DrawingManager.DrawCircuit(_rootNode, PictureBox);
         }
     }
 }
