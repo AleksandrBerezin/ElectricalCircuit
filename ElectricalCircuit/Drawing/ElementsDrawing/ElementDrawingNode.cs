@@ -3,6 +3,7 @@ using ElectricalCircuit;
 
 namespace Drawing
 {
+    //TODO: этот класс должен быть абстрактным
     /// <summary>
     /// <see cref="ElementDrawingNode"/> contains algorithm for drawing the element
     /// </summary>

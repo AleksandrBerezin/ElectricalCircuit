@@ -4,17 +4,23 @@ using ElectricalCircuit;
 
 namespace Drawing
 {
+    //TODO: В C# различия между базовым классом и интерфейсом более существенные...
+    // ... Сделать интерфейс, а базовый класс должен его реализовывать...
+    // ... Менеджер отрисовки должен работать с отрисовщиками преимущественно через интерфейс.
+    //TODO: Base ставится в конце имени класса, не по середине
     /// <summary>
     /// Abstract class <see cref="DrawingBaseNode"/> contains info for drawing segments
     /// and provides a drawing method for implementation
     /// </summary>
     public abstract class DrawingBaseNode : TreeNode
     {
+        //TODO: неправильное создание базового класса. Базовый класс ничего не должен знать о наследниках. Здесь же содержится много информации или об элементах, или о дочерних сегментах.
         /// <summary>
         /// Standard element width
         /// </summary>
         protected const int ElementWidth = 60;
 
+        //TODO: не должно быть в базовом классе. Если надо, то создавай еще один базовый класс, специально для элементов.
         /// <summary>
         /// Standart element height
         /// </summary>
@@ -45,11 +51,13 @@ namespace Drawing
         /// </summary>
         public ISegment Segment { get; private set; }
 
+        //TODO: информация о дочерних сегментах? В базовом классе её быть не должно
         /// <summary>
         /// Gets and sets count of serial segments for each node
         /// </summary>
         public int SerialSegmentsCount { get; set; }
 
+        //TODO: в итоге, у тебя базовый класс хранит куски ВСЕХ своих наследников. Это неправильно
         /// <summary>
         /// Gets and sets count of parallel segments for each node
         /// </summary>

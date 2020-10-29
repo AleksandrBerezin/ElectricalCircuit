@@ -9,6 +9,7 @@ namespace Drawing
     /// </summary>
     public static class DrawingManager
     {
+        //TODO: второй раз указываются константы для элементов. Должны быть только в одном месте
         /// <summary>
         /// Standard element width
         /// </summary>
@@ -65,7 +66,7 @@ namespace Drawing
                 return new ParallelSegmentDrawingNode(segment);
             }
             else
-            {
+            { //TODO: здесь тоже должно быть условие проверки типа, и должна быть еще одна ветка без условия, которая кидает исключения, если ни один тип не подошел
                 return new SerialSegmentDrawingNode(segment);
             }
         }
@@ -140,11 +141,14 @@ namespace Drawing
                 // startNode is Root
                 if (parent == null)
                 {
+                    //TODO: менеджер ничего не должен знать про количество параллельных или последовательных сегментов внутри сегмента...
+                    // ...Он должен забирать у отрисовщика конечные размеры и работать с ними.
                     // Padding from border of the PictureBox
                     startNode.StartPoint = new Point(ElementWidth, ElementHeight
                         * (startNode.ParallelSegmentsCount / 2 + 1));
                     startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
                 }
+                //TODO: опять - знания о конкретном типе родителя. Можно сделать так, чтобы менеджер ничего не знал о конкретных типах отрисовщиков
                 else if (parent.Segment is ParallelSegment)
                 {
                     if (parent.Nodes.Count == 1)
@@ -218,6 +222,9 @@ namespace Drawing
         /// <returns></returns>
         private static int GetEndX(DrawingBaseNode node)
         {
+            //TODO: сделано куча классов, но менеджер все равно содержит специфические для конкретных сегментов методы...
+            // ... Менеджер должен просто связывать сегмент с его отрисовщиком, отдавать отрисовщику сегмент и вызывать ...
+            // ... у отрисовщика метод рисования. Вся магия рисования должна происходить внутри отрисовщика.
             return node.StartPoint.X + node.SerialSegmentsCount
                 * (ElementWidth + ConnectionLength) - ConnectionLength;
         }
