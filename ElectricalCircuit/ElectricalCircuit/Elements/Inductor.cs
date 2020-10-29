@@ -4,12 +4,12 @@ using System.Numerics;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Inductor"/>, хранящий информацию о катушке индуктивности
+    /// <see cref="Inductor"/> stores info about inductor
     /// </summary>
     public class Inductor : ElementBase
     {
         /// <summary>
-        /// Создает экземпляр <see cref="Inductor"/>
+        /// Create an instance of <see cref="Inductor"/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>

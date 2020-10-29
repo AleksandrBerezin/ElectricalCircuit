@@ -1,22 +1,22 @@
 ﻿namespace ElectricalCircuit
 {
     /// <summary>
-    /// Интерфейс <see cref="IElement"/> определяет поля и методы для работы с элементами
+    /// <see cref="IElement"/> defines fields and methods for working with elements
     /// </summary>
     public interface IElement : ISegment
     {
         /// <summary>
-        /// Возвращает и задает название элемента
+        /// Gets and sets element name
         /// </summary>
         string Name { get; set; }
 
         /// <summary>
-        /// Возвращает и задает номинал элемента
+        /// Gets and sets element value
         /// </summary>
         double Value { get; set; }
 
         /// <summary>
-        /// Возвращает тип элемента
+        /// Returns element type
         /// </summary>
         ElementType Type { get; }
     }

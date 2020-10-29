@@ -6,8 +6,8 @@ using System.Numerics;
 namespace ElectricalCircuit.Segments
 {
     /// <summary>
-    /// Абстрактный класс <see cref="SegmentBase"/>, предоставляющий для реализации 
-    /// метод расчета импеданса элемента
+    /// Abstract class <see cref="SegmentBase"/> provides method for calculating
+    /// the segment impedance for implementation
     /// </summary>
     public abstract class SegmentBase : ISegment
     {
@@ -15,12 +15,12 @@ namespace ElectricalCircuit.Segments
         public ObservableCollection<ISegment> SubSegments { get; protected set; }
 
         /// <summary>
-        /// Сообщает об изменении сегмента цепи
+        /// Informs a change in circuit segment
         /// </summary>
         private event EventHandler _segmentChanged;
 
         /// <summary>
-        /// Добавляет и удаляет обработчики события изменения сегмента цепи
+        /// Adds and removes handlers for the circuit segment change event
         /// </summary>
         public event EventHandler SegmentChanged
         {
@@ -56,7 +56,7 @@ namespace ElectricalCircuit.Segments
         public abstract Complex CalculateZ(double frequency);
 
         /// <summary>
-        /// Подписывает и отписывает элементы на событие изменения сегмента цепи
+        /// Subscribes and unsubscribes elements to segment change event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -104,7 +104,7 @@ namespace ElectricalCircuit.Segments
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            if (GetType() != obj.GetType())
+            if (GetType() != obj?.GetType())
             {
                 return false;
             }

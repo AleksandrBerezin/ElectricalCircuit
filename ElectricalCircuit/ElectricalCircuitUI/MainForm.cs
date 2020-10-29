@@ -7,7 +7,6 @@ using ElectricalCircuit;
 
 namespace ElectricalCircuitUI
 {
-    //TODO: форма - 900 строк кода. Слишком много, надо делить на несколько классов или контролов
     public partial class MainForm : Form
     {
         /// <summary>
@@ -17,14 +16,7 @@ namespace ElectricalCircuitUI
 
         public MainForm()
         {
-            //TODO: логика в конструкторе формы до метода InitializeComponent() чревато исключениями и потерей всей верстки из-за криво открывающегося дизайнера форм
             InitializeComponent();
-
-            CircuitControl.Project = new Project();
-            foreach (var circuit in CircuitControl.Project.Circuits)
-            {
-                circuit.SegmentChanged += CalculationImpedances;
-            }
 
             _frequencies = new List<double>
             {
@@ -33,17 +25,22 @@ namespace ElectricalCircuitUI
                 300
             };
 
-            CircuitControl.SelectedCircuitChanged += CircuitControl_SelectedCircuitChanged;
-            CircuitControl.SelectedSegmentChanged += CircuitControl_SelectedSegmentChanged;
+            CircuitInfo.SelectedCircuitChanged += CircuitInfo_SelectedCircuitChanged;
+            CircuitInfo.SelectedSegmentChanged += CircuitInfo_SelectedSegmentChanged;
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
+            foreach (var circuit in CircuitInfo.project.Circuits)
+            {
+                circuit.SegmentChanged += CalculationImpedances;
+            }
+
             FillImpedancesTable();
         }
 
         /// <summary>
-        /// Метод, заполняющий таблицу импедансов
+        /// Impedance table filling method
         /// </summary>
         private void FillImpedancesTable()
         {
@@ -52,7 +49,7 @@ namespace ElectricalCircuitUI
         }
 
         /// <summary>
-        /// Метод, заполняющий колонку частот
+        /// Frequency column filling method
         /// </summary>
         private void FillFrequenciesColumn()
         {
@@ -66,11 +63,11 @@ namespace ElectricalCircuitUI
         }
 
         /// <summary>
-        /// Метод, заполняющий колонку импедансов
+        /// Impedance column filling method
         /// </summary>
         private void FillImpedancesColumn()
         {
-            var selectedItem = CircuitControl.SelectedCircuit;
+            var selectedItem = CircuitInfo.SelectedCircuit;
             if (selectedItem == null || selectedItem.SubSegments.Count == 0)
             {
                 return;
@@ -106,7 +103,6 @@ namespace ElectricalCircuitUI
             var frequency = Convert.ToDouble(NewFrequencyTextBox.Text);
             if (_frequencies.Contains(frequency))
             {
-                //TODO: что за кидание исключения самому себе?
                 NewFrequencyTextBox.BackColor = Color.LightCoral;
                 return;
             }
@@ -124,8 +120,8 @@ namespace ElectricalCircuitUI
                 || ImpedancesTable.SelectedCells[0].ColumnIndex != 0)
             {
                 MessageBox.Show(
-                    $"Please choose 1 frequency",
-                    "Remove frequency",
+                    $@"Please choose 1 frequency",
+                    @"Remove frequency",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
@@ -146,7 +142,7 @@ namespace ElectricalCircuitUI
         }
 
         /// <summary>
-        /// Метод очистки полей с информацией об элементе
+        /// Method for clearing element info fields
         /// </summary>
         private void ClearElementInfoFields()
         {
@@ -156,7 +152,7 @@ namespace ElectricalCircuitUI
         }
 
         /// <summary>
-        /// Получение элемента из ElementForm
+        /// Gets element from ElementForm
         /// </summary>
         /// <param name="originalElement"></param>
         /// <returns></returns>
@@ -188,13 +184,12 @@ namespace ElectricalCircuitUI
 
         private void AddSerialButton_Click(object sender, EventArgs e)
         {
-            //TODO: Еще кусок дублирования
             AddElement(typeof(SerialSegment));
         }
 
         private void AddElement(Type segmentType)
         {
-            var selectedNode = CircuitControl.SelectedNode;
+            var selectedNode = CircuitInfo.SelectedNode;
             if (selectedNode == null)
             {
                 return;
@@ -209,19 +204,18 @@ namespace ElectricalCircuitUI
             var selectedSegment = selectedNode.Segment;
             var parentNode = selectedNode.Parent;
 
-            // Выбрана цепь
+            // Circuit selected
             if (parentNode == null)
             {
                 selectedSegment.SubSegments.Add(newElement);
-                CircuitControl.FillCircuitTreeView();
-                CircuitControl.SelectNodeInTreeView(newElement);
+                CircuitInfo.FillCircuitTreeView();
+                CircuitInfo.SelectNodeInTreeView(newElement);
                 return;
             }
 
             var indexInParent = selectedNode.Index;
             var parentSegment = ((DrawingBaseNode)parentNode).Segment;
 
-            //TODO: куча дублирования, нет? Так и не понял, чем принципиально отличаются, имхо можно упростить
             if (parentSegment.GetType() == segmentType)
             {
                 parentSegment.SubSegments.Add(newElement);
@@ -236,13 +230,13 @@ namespace ElectricalCircuitUI
             }
 
             ClearElementInfoFields();
-            CircuitControl.FillCircuitTreeView();
-            CircuitControl.SelectNodeInTreeView(newElement);
+            CircuitInfo.FillCircuitTreeView();
+            CircuitInfo.SelectNodeInTreeView(newElement);
         }
 
         private void EditElementButton_Click(object sender, EventArgs e)
         {
-            var selectedNode = CircuitControl.SelectedNode;
+            var selectedNode = CircuitInfo.SelectedNode;
             if (selectedNode == null)
             {
                 return;
@@ -250,17 +244,17 @@ namespace ElectricalCircuitUI
 
             var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
-            // Выбрана цепь
+            // Circuit selected
             if (parentNode == null)
             {
-                CircuitControl.EditCircuitButton_Click(sender, e);
+                CircuitInfo.EditCircuitButton_Click(sender, e);
                 return;
             }
 
             var selectedSegment = selectedNode.Segment;
             var parentSegment = parentNode.Segment;
 
-            // Выбран сегмент - замена на противоположный сегмент
+            // Selected segment - replace with opposite segment
             if (selectedSegment is IElement == false)
             {
                 ISegment replacingSegment;
@@ -268,7 +262,7 @@ namespace ElectricalCircuitUI
 
                 var changeSegment = MessageBox.Show(
                     $@"Do you really want to replace this segment with the opposite?",
-                    "Replace Segment",
+                    @"Replace Segment",
                     MessageBoxButtons.OKCancel,
                     MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button2);
@@ -296,13 +290,13 @@ namespace ElectricalCircuitUI
                 parentSegment.SubSegments[index] = replacingSegment;
 
                 ClearElementInfoFields();
-                CircuitControl.FillCircuitTreeView();
-                CircuitControl.SelectNodeInTreeView(replacingSegment);
+                CircuitInfo.FillCircuitTreeView();
+                CircuitInfo.SelectNodeInTreeView(replacingSegment);
 
                 return;
             }
 
-            // Выбран элемент
+            // Element selected
             var updatedElement = GetElementFromElementForm((IElement)selectedSegment);
             if (updatedElement == null)
             {
@@ -313,13 +307,13 @@ namespace ElectricalCircuitUI
             parentSegment.SubSegments[realIndexInSegment] = updatedElement;
 
             ClearElementInfoFields();
-            CircuitControl.FillCircuitTreeView();
-            CircuitControl.SelectNodeInTreeView(updatedElement);
+            CircuitInfo.FillCircuitTreeView();
+            CircuitInfo.SelectNodeInTreeView(updatedElement);
         }
 
         private void RemoveElementButton_Click(object sender, EventArgs e)
         {
-            var selectedNode = CircuitControl.SelectedNode;
+            var selectedNode = CircuitInfo.SelectedNode;
             if (selectedNode == null)
             {
                 return;
@@ -327,16 +321,16 @@ namespace ElectricalCircuitUI
 
             var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
-            // Выбрана цепь
+            // Circuit selected
             if (parentNode == null)
             {
-                CircuitControl.RemoveCircuitButton_Click(sender, e);
+                CircuitInfo.RemoveCircuitButton_Click(sender, e);
                 return;
             }
 
             var result = MessageBox.Show(
                 $@"Do you really want to remove this segment: {NameTextBox.Text}",
-                "Remove Segment",
+                @"Remove Segment",
                 MessageBoxButtons.OKCancel,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2);
@@ -353,12 +347,12 @@ namespace ElectricalCircuitUI
                 }
 
                 ClearElementInfoFields();
-                CircuitControl.FillCircuitTreeView();
+                CircuitInfo.FillCircuitTreeView();
             }
         }
 
         /// <summary>
-        /// Метод расчета импедансов
+        /// Method of impedance calculation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -367,17 +361,17 @@ namespace ElectricalCircuitUI
             FillImpedancesColumn();
         }
 
-        private void CircuitControl_SelectedCircuitChanged(object sender, EventArgs e)
+        private void CircuitInfo_SelectedCircuitChanged(object sender, EventArgs e)
         {
             FillImpedancesColumn();
             ClearElementInfoFields();
         }
 
-        private void CircuitControl_SelectedSegmentChanged(object sender, EventArgs e)
+        private void CircuitInfo_SelectedSegmentChanged(object sender, EventArgs e)
         {
             ClearElementInfoFields();
 
-            var selectedNode = CircuitControl.SelectedNode;
+            var selectedNode = CircuitInfo.SelectedNode;
             NameTextBox.Text = selectedNode.Text;
 
             var selectedSegment = ((DrawingBaseNode)selectedNode).Segment;

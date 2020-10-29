@@ -7,17 +7,17 @@ using ElectricalCircuit.Segments;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Circuit"/>, хранящий список элементов цепи
+    /// <see cref="Circuit"/> stores list of the circuit segments
     /// </summary>
     public class Circuit : SegmentBase
     {
         /// <summary>
-        /// Название цепи. Название не должно быть пустым
+        /// Circuit name. Name must not be empty
         /// </summary>
         private string _name;
 
         /// <summary>
-        /// Возвращает и задает название цепи
+        /// Gets and sets citcuit name
         /// </summary>
         public string Name
         {
@@ -37,7 +37,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Создает экземпляр <see cref="Circuit"/>
+        /// Create an instance of <see cref="Circuit"/>
         /// </summary>
         /// <param name="name"></param>
         public Circuit(string name)
@@ -48,7 +48,7 @@ namespace ElectricalCircuit
         }
         
         /// <summary>
-        /// Создает экземпляр <see cref="Circuit"/>
+        /// Create an instance of <see cref="Circuit"/>
         /// </summary>
         public Circuit()
         {
@@ -69,7 +69,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Метод для расчета импеданса цепи
+        /// Method for calculating impedance of the circuit
         /// </summary>
         /// <param name="frequencies"></param>
         /// <returns></returns>

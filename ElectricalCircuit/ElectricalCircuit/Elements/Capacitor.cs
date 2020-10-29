@@ -4,12 +4,12 @@ using System.Numerics;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Capacitor"/>, хранящий информацию о конденсаторе
+    /// <see cref="Capacitor"/> stores info about capacitor
     /// </summary>
     public class Capacitor : ElementBase
     {
         /// <summary>
-        /// Создает экземпляр <see cref="Capacitor"/>
+        /// Create an instance of <see cref="Capacitor"/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>

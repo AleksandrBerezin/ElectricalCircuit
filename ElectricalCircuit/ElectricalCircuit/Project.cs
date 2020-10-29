@@ -3,17 +3,17 @@
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Project"/>, хранящий список цепей
+    /// <see cref="Project"/> store the list of circuits
     /// </summary>
     public class Project
     {
         /// <summary>
-        /// Возвращает и задает список цепей
+        /// Gets and sets the list of circuits
         /// </summary>
         public List<Circuit> Circuits { get; set; }
 
         /// <summary>
-        /// Создает экземпляр <see cref="Project"/>
+        /// Creates an instance of <see cref="Project"/>
         /// </summary>
         public Project()
         {
@@ -28,7 +28,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Метод создания цепи 0
+        /// Creates Circuit 0
         /// </summary>
         /// <returns></returns>
         private Circuit Circuit0()
@@ -83,7 +83,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Метод создания цепи 1
+        /// Creates Circuit 1
         /// </summary>
         /// <returns></returns>
         private Circuit Circuit1()
@@ -108,7 +108,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Метод создания цепи 2
+        /// Creates Circuit 2
         /// </summary>
         /// <returns></returns>
         private Circuit Circuit2()
@@ -133,7 +133,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Метод создания цепи 3
+        /// Creates Circuit 3
         /// </summary>
         /// <returns></returns>
         private Circuit Circuit3()
@@ -158,7 +158,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Метод создания цепи 4
+        /// Creates Circuit 4
         /// </summary>
         /// <returns></returns>
         private Circuit Circuit4()

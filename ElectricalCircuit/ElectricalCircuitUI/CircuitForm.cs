@@ -8,17 +8,17 @@ namespace ElectricalCircuitUI
     public partial class CircuitForm : Form
     {
         /// <summary>
-        /// Цепь
+        /// Current circuit
         /// </summary>
         private Circuit _circuit;
 
         /// <summary>
-        /// Возвращает истину, если введенные данные корректны
+        /// Returns true if the entered data is correct
         /// </summary>
         private bool _isCorrectData = true;
 
         /// <summary>
-        /// Возвращент и задает цепь
+        /// Gets and sets circuit
         /// </summary>
         public Circuit Circuit
         {
@@ -38,7 +38,7 @@ namespace ElectricalCircuitUI
             InitializeComponent();
         }
 
-        private void NameTextBox_TextChanged(object sender, System.EventArgs e)
+        private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
             try
             {
@@ -53,12 +53,12 @@ namespace ElectricalCircuitUI
             }
         }
 
-        private void OKButton_Click(object sender, System.EventArgs e)
+        private void OKButton_Click(object sender, EventArgs e)
         {
             if (!_isCorrectData)
             {
-                MessageBox.Show("Invalid values entered",
-                    "Error",
+                MessageBox.Show(@"Invalid values entered",
+                    @"Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -69,7 +69,7 @@ namespace ElectricalCircuitUI
             Close();
         }
 
-        private void CancelButton_Click(object sender, System.EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();

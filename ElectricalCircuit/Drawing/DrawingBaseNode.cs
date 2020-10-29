@@ -38,22 +38,22 @@ namespace Drawing
         /// <summary>
         /// Standard font for segment drawing
         /// </summary>
-        protected Font font = new Font(FontFamily.GenericSansSerif, 8.25F);
+        protected readonly Font font = new Font(FontFamily.GenericSansSerif, 8.25F);
 
         /// <summary>
         /// Gets and sets segment
         /// </summary>
-        public ISegment Segment { get; protected set; }
+        public ISegment Segment { get; private set; }
 
         /// <summary>
         /// Gets and sets count of serial segments for each node
         /// </summary>
-        public int SerialSegmentsCount { get; set; } = 0;
+        public int SerialSegmentsCount { get; set; }
 
         /// <summary>
         /// Gets and sets count of parallel segments for each node
         /// </summary>
-        public int ParallelSegmentsCount { get; set; } = 0;
+        public int ParallelSegmentsCount { get; set; }
 
         /// <summary>
         /// Gets and sets point to start drawing for each node
@@ -73,13 +73,6 @@ namespace Drawing
         {
             Segment = segment;
             Text = segment.ToString();
-        }
-
-        /// <summary>
-        /// Create an inctance of <see cref="DrawingBaseNode"/>
-        /// </summary>
-        protected DrawingBaseNode()
-        {
         }
 
         /// <summary>

@@ -5,12 +5,12 @@ using ElectricalCircuit.Segments;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="SerialSegment"/>, хранящий информацию о последовательном участке цепи
+    /// <see cref="SerialSegment"/> stores info about serial segment of the circuit
     /// </summary>
     public class SerialSegment : SegmentBase
     {
         /// <summary>
-        /// Создает экземпляр <see cref="SerialSegment"/>
+        /// Creates an instance of <see cref="SerialSegment"/>
         /// </summary>
         public SerialSegment()
         {
@@ -35,17 +35,5 @@ namespace ElectricalCircuit
         {
             return "Serial segment";
         }
-
-        /// <inheritdoc/>
-        //public override object Clone()
-        //{
-        //    var segment = new SerialSegment();
-        //    foreach (var subSegment in SubSegments)
-        //    {
-        //        segment.SubSegments.Add((ISegment)subSegment.Clone());
-        //    }
-
-        //    return segment;
-        //}
     }
 }

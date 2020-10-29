@@ -5,22 +5,22 @@ using System.Numerics;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Интерфейс <see cref="ISegment"/> определяет поля и методы для работы с сегментами цепей
+    /// <see cref="ISegment"/> defines fields and methods for working with circuit segments
     /// </summary>
     public interface ISegment : ICloneable
     {
         /// <summary>
-        /// Возвращает список внутренних сегментов
+        /// Gets and sets list of sub-segments
         /// </summary>
         ObservableCollection<ISegment> SubSegments { get; }
-        
+
         /// <summary>
-        /// Сообщает об изменении сегмента цепи
+        /// Informs a change in circuit segment
         /// </summary>
         event EventHandler SegmentChanged;
 
         /// <summary>
-        /// Метод для расчета импеданса участка цепи
+        /// Method for calculating the impedance of circuit segments
         /// </summary>
         /// <param name="frequency"></param>
         /// <returns></returns>

@@ -5,12 +5,12 @@ using ElectricalCircuit.Segments;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="ParallelSegment"/>, хранящий информацию о последовательном участке цепи
+    /// <see cref="ParallelSegment"/> stores info about parallel segment of the circuit
     /// </summary>
     public class ParallelSegment : SegmentBase
     {
         /// <summary>
-        /// Создает экземпляр <see cref="ParallelSegment"/>
+        /// Create an instance of <see cref="ParallelSegment"/>
         /// </summary>
         public ParallelSegment()
         {
@@ -36,17 +36,5 @@ namespace ElectricalCircuit
         {
             return "Parallel segment";
         }
-
-        /// <inheritdoc/>
-        //public override object Clone()
-        //{
-        //    var segment = new ParallelSegment();
-        //    foreach (var subSegment in SubSegments)
-        //    {
-        //        segment.SubSegments.Add((ISegment)subSegment.Clone());
-        //    }
-
-        //    return segment;
-        //}
     }
 }

@@ -5,25 +5,21 @@ using System.Collections.ObjectModel;
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Абстрактный класс <see cref="ElementBase"/>, предоставляющий для реализации 
+    /// Abstract class <see cref="ElementBase"/> provides method for calculating
+    /// the element impedance for implementation 
     /// метод расчета импеданса элемента
     /// </summary>
     public abstract class ElementBase : IElement
     {
         /// <summary>
-        /// Название элемента. Название не должно быть пустым
+        /// Element name. Name must not be empty
         /// </summary>
         private string _name;
 
         /// <summary>
-        /// Номинал элемента. Номинал должен быть больше нуля
+        /// Element value. Value must be greater than zero
         /// </summary>
         private double _value;
-
-        /// <summary>
-        /// Тип элемента
-        /// </summary>
-        private ElementType _type;
 
         /// <inheritdoc/>
         public ObservableCollection<ISegment> SubSegments { get; private set; } = null;
@@ -74,7 +70,7 @@ namespace ElectricalCircuit
         public event EventHandler SegmentChanged;
 
         /// <summary>
-        /// Метод для расчета импеданса элемента
+        /// Method for calculating the impedance of element
         /// </summary>
         /// <param name="frequency"></param>
         /// <returns></returns>

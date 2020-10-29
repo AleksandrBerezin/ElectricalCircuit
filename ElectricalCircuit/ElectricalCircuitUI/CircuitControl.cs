@@ -22,9 +22,9 @@ namespace ElectricalCircuitUI
         private DrawingBaseNode _draggedNode;
 
         /// <summary>
-        /// Gets and sets current Project
+        /// Current project
         /// </summary>
-        public Project Project { get; set; }
+        public Project project;
 
         /// <summary>
         /// Gets and sets selected circuit
@@ -63,6 +63,8 @@ namespace ElectricalCircuitUI
             CircuitsComboBox.SelectedIndexChanged += SelectedCircuitChanged;
             CircuitTreeView.AfterSelect += SelectedSegmentChanged;
 
+            project = new Project();
+
             FillCircuitsComboBox();
         }
 
@@ -71,10 +73,10 @@ namespace ElectricalCircuitUI
         /// </summary>
         private void FillCircuitsComboBox()
         {
-            //TODO: зачем null? А если сразу присвоить нужную коллекцию?
+            //TODO: зачем null? А если сразу присвоить нужную коллекцию? - Тогда коллекция не обновится
             CircuitsComboBox.SelectedText = "";
             CircuitsComboBox.DataSource = null;
-            CircuitsComboBox.DataSource = Project.Circuits;
+            CircuitsComboBox.DataSource = project.Circuits;
         }
 
         /// <summary>
@@ -273,7 +275,7 @@ namespace ElectricalCircuitUI
             }
 
             var newCircuit = inner.Circuit;
-            Project.Circuits.Add(newCircuit);
+            project.Circuits.Add(newCircuit);
             FillCircuitsComboBox();
             CircuitsComboBox.SelectedItem = newCircuit;
         }
@@ -285,7 +287,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var realIndexInProject = Project.Circuits.IndexOf(SelectedCircuit);
+            var realIndexInProject = project.Circuits.IndexOf(SelectedCircuit);
 
             var inner = new CircuitForm
             {
@@ -298,8 +300,8 @@ namespace ElectricalCircuitUI
             }
 
             var updatedCircuit = inner.Circuit;
-            Project.Circuits.RemoveAt(realIndexInProject);
-            Project.Circuits.Insert(realIndexInProject, updatedCircuit);
+            project.Circuits.RemoveAt(realIndexInProject);
+            project.Circuits.Insert(realIndexInProject, updatedCircuit);
 
             FillCircuitsComboBox();
             CircuitsComboBox.SelectedItem = updatedCircuit;
@@ -321,7 +323,7 @@ namespace ElectricalCircuitUI
 
             if (result == DialogResult.OK)
             {
-                Project.Circuits.RemoveAt(CircuitsComboBox.SelectedIndex);
+                project.Circuits.RemoveAt(CircuitsComboBox.SelectedIndex);
                 FillCircuitsComboBox();
 
                 if (CircuitsComboBox.SelectedItem == null && CircuitsComboBox.Items.Count != 0)

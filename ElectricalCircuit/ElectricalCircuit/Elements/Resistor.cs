@@ -1,15 +1,14 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace ElectricalCircuit
 {
     /// <summary>
-    /// Класс <see cref="Resistor"/>, хранящий информацию о резисторе
+    /// <see cref="Resistor"/> stores info about resistor
     /// </summary>
     public class Resistor : ElementBase
     {
         /// <summary>
-        /// Создает экземпляр <see cref="Resistor"/>
+        /// Create an instance of <see cref="Resistor"/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
@@ -21,7 +20,7 @@ namespace ElectricalCircuit
         }
 
         /// <summary>
-        /// Создает экземпляр <see cref="Resistor"/>
+        /// Create an instance of <see cref="Resistor"/>
         /// </summary>
         public Resistor()
         {

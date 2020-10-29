@@ -35,7 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.NameTextBox = new System.Windows.Forms.TextBox();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.CancelFormButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -48,7 +48,7 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.NameTextBox);
-            this.panel1.Controls.Add(this.CancelButton);
+            this.panel1.Controls.Add(this.CancelFormButton);
             this.panel1.Controls.Add(this.OKButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -111,17 +111,17 @@
             this.NameTextBox.TabIndex = 4;
             this.NameTextBox.TextChanged += new System.EventHandler(this.NameTextBox_TextChanged);
             // 
-            // CancelButton
+            // CancelFormButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(235, 93);
-            this.CancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(100, 32);
-            this.CancelButton.TabIndex = 3;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.CancelFormButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CancelFormButton.Location = new System.Drawing.Point(235, 93);
+            this.CancelFormButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CancelFormButton.Name = "CancelFormButton";
+            this.CancelFormButton.Size = new System.Drawing.Size(100, 32);
+            this.CancelFormButton.TabIndex = 3;
+            this.CancelFormButton.Text = "Cancel";
+            this.CancelFormButton.UseVisualStyleBackColor = true;
+            this.CancelFormButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // OKButton
             // 
@@ -156,7 +156,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button CancelFormButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;

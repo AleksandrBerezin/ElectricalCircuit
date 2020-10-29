@@ -8,17 +8,17 @@ namespace ElectricalCircuitUI
     public partial class ElementForm : Form
     {
         /// <summary>
-        /// Элемент
+        /// Current Element
         /// </summary>
         private IElement _element;
-        
+
         /// <summary>
-        /// Возвращает истину, если введенные данные корректны
+        /// Returns true if the entered data is correct
         /// </summary>
         private bool _isCorrectData = true;
 
         /// <summary>
-        /// Возвращает и задает элемент
+        /// Gets and sets element
         /// </summary>
         public IElement Element
         {
@@ -42,7 +42,7 @@ namespace ElectricalCircuitUI
             TypeComboBox.DataSource = Enum.GetValues(typeof(ElementType));
         }
 
-        private void NameTextBox_TextChanged(object sender, System.EventArgs e)
+        private void NameTextBox_TextChanged(object sender, EventArgs e)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace ElectricalCircuitUI
             }
         }
 
-        private void ValueTextBox_TextChanged(object sender, System.EventArgs e)
+        private void ValueTextBox_TextChanged(object sender, EventArgs e)
         {
             try
             {
@@ -101,11 +101,10 @@ namespace ElectricalCircuitUI
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            //TODO: цвет фона - не самый надежный и понятный способ определения проблем в текстбоксе
             if (!_isCorrectData)
             {
-                MessageBox.Show("Invalid values entered",
-                    "Error",
+                MessageBox.Show(@"Invalid values entered",
+                    @"Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 

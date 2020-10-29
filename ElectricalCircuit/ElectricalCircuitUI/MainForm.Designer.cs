@@ -55,7 +55,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.CircuitControl = new ElectricalCircuitUI.CircuitControl();
+            this.CircuitInfo = new ElectricalCircuitUI.CircuitControl();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -87,7 +87,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.CircuitControl, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.CircuitInfo, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -125,10 +125,11 @@
             // SchemaPictureBox
             // 
             this.SchemaPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.SchemaPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("SchemaPictureBox.Image")));
             this.SchemaPictureBox.Location = new System.Drawing.Point(0, 0);
             this.SchemaPictureBox.MinimumSize = new System.Drawing.Size(711, 402);
             this.SchemaPictureBox.Name = "SchemaPictureBox";
-            this.SchemaPictureBox.Size = new System.Drawing.Size(944, 492);
+            this.SchemaPictureBox.Size = new System.Drawing.Size(711, 454);
             this.SchemaPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.SchemaPictureBox.TabIndex = 1;
             this.SchemaPictureBox.TabStop = false;
@@ -351,19 +352,18 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Name:";
             // 
-            // CircuitControl
+            // CircuitInfo
             // 
-            this.CircuitControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CircuitInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.CircuitControl.Location = new System.Drawing.Point(6, 3);
-            this.CircuitControl.Margin = new System.Windows.Forms.Padding(6, 3, 0, 3);
-            this.CircuitControl.MaximumSize = new System.Drawing.Size(294, 668);
-            this.CircuitControl.MinimumSize = new System.Drawing.Size(294, 658);
-            this.CircuitControl.Name = "CircuitControl";
-            this.CircuitControl.PictureBox = this.SchemaPictureBox;
-            this.CircuitControl.Project = null;
-            this.CircuitControl.Size = new System.Drawing.Size(294, 661);
-            this.CircuitControl.TabIndex = 2;
+            this.CircuitInfo.Location = new System.Drawing.Point(6, 3);
+            this.CircuitInfo.Margin = new System.Windows.Forms.Padding(6, 3, 0, 3);
+            this.CircuitInfo.MaximumSize = new System.Drawing.Size(294, 668);
+            this.CircuitInfo.MinimumSize = new System.Drawing.Size(294, 658);
+            this.CircuitInfo.Name = "CircuitInfo";
+            this.CircuitInfo.PictureBox = this.SchemaPictureBox;
+            this.CircuitInfo.Size = new System.Drawing.Size(294, 661);
+            this.CircuitInfo.TabIndex = 2;
             // 
             // MainForm
             // 
@@ -422,7 +422,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataGridViewTextBoxColumn FrequenciesColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ImpedancesColumn;
-        private CircuitControl CircuitControl;
+        private CircuitControl CircuitInfo;
     }
 }
 

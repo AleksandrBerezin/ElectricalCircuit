@@ -31,7 +31,6 @@ namespace Drawing
             var rightTopCorner = new Point();
             var rightBottomCorner = new Point();
 
-            //TODO Дублирование
             foreach (DrawingBaseNode node in Nodes)
             {
                 if (node.Index == 0)

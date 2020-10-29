@@ -124,7 +124,9 @@ namespace Drawing
         }
 
         /// <summary>
-        /// Calculating the coordinates for each node
+        /// Calculating the coordinates for each node.
+        /// First, we calculate the coordinates for the parent, then go down to the level below
+        /// and calculate the coordinates for the child.
         /// </summary>
         /// <param name="startNode"></param>
         /// <returns></returns>
@@ -135,8 +137,10 @@ namespace Drawing
                 var parent = (DrawingBaseNode)startNode.Parent;
                 var prevNode = (DrawingBaseNode)startNode.PrevNode;
 
+                // startNode is Root
                 if (parent == null)
                 {
+                    // Padding from border of the PictureBox
                     startNode.StartPoint = new Point(ElementWidth, ElementHeight
                         * (startNode.ParallelSegmentsCount / 2 + 1));
                     startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
@@ -152,6 +156,7 @@ namespace Drawing
                     {
                         var startPoint = new Point
                         {
+                            // Calculate the start X coordinate taking into account the alignment
                             X = parent.StartPoint.X + (parent.EndPoint.X
                             - parent.StartPoint.X - (startNode.SerialSegmentsCount
                             * (ElementWidth + ConnectionLength) - ConnectionLength)) / 2,

@@ -1,7 +1,7 @@
 ﻿namespace ElectricalCircuit
 {
     /// <summary>
-    /// Перечисление <see cref="ElementType"/>, содержащее тип элемента
+    /// Enum <see cref="ElementType"/> contains the element types
     /// </summary>
     public enum ElementType
     {
