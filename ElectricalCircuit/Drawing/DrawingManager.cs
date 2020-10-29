@@ -29,12 +29,15 @@ namespace Drawing
         /// </summary>
         public static void DrawCircuit(DrawingBaseNode node, PictureBox picture)
         {
+            CalculateSegmentsCount(node);
+
             var bitmap = new Bitmap((node.SerialSegmentsCount + 2) * ElementWidth,
                 (node.ParallelSegmentsCount + 3) * ElementHeight);
             var graphics = Graphics.FromImage(bitmap);
 
             CalculateCoordinates(node);
             node.Draw(graphics);
+
             picture.Image = bitmap;
         }
 
@@ -64,6 +67,59 @@ namespace Drawing
             else
             {
                 return new SerialSegmentDrawingNode(segment);
+            }
+        }
+
+        /// <summary>
+        /// Calculating the count of parallel and serial segments for each node
+        /// </summary>
+        /// <param name="startNode"></param>
+        /// <returns></returns>
+        private static void CalculateSegmentsCount(DrawingBaseNode startNode)
+        {
+            while (startNode != null)
+            {
+                if (startNode.Nodes.Count != 0)
+                {
+                    CalculateSegmentsCount((DrawingBaseNode)startNode.Nodes[0]);
+                }
+
+                var segment = startNode.Segment;
+                if (segment is IElement)
+                {
+                    startNode.SerialSegmentsCount = 1;
+                    startNode.ParallelSegmentsCount = 1;
+                }
+                else if (segment is ParallelSegment)
+                {
+                    var maxSerialCount = 0;
+                    foreach (DrawingBaseNode node in startNode.Nodes)
+                    {
+                        startNode.ParallelSegmentsCount += node.ParallelSegmentsCount;
+                        if (node.SerialSegmentsCount > maxSerialCount)
+                        {
+                            maxSerialCount = node.SerialSegmentsCount;
+                        }
+
+                        startNode.SerialSegmentsCount = maxSerialCount;
+                    }
+                }
+                else
+                {
+                    var maxParallelCount = 0;
+                    foreach (DrawingBaseNode node in startNode.Nodes)
+                    {
+                        startNode.SerialSegmentsCount += node.SerialSegmentsCount;
+                        if (node.ParallelSegmentsCount > maxParallelCount)
+                        {
+                            maxParallelCount = node.ParallelSegmentsCount;
+                        }
+
+                        startNode.ParallelSegmentsCount = maxParallelCount;
+                    }
+                }
+
+                startNode = startNode.NextNode as DrawingBaseNode;
             }
         }
 

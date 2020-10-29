@@ -77,13 +77,13 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+            this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1262, 673);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -95,11 +95,11 @@
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.CircuitGroupBox, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 30);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1256, 640);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1256, 667);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -114,7 +114,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(950, 634);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(950, 661);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // panel1
@@ -125,16 +125,16 @@
             this.panel1.Location = new System.Drawing.Point(3, 6);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(944, 465);
+            this.panel1.Size = new System.Drawing.Size(944, 492);
             this.panel1.TabIndex = 0;
             // 
             // SchemaPictureBox
             // 
             this.SchemaPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.SchemaPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.SchemaPictureBox.MinimumSize = new System.Drawing.Size(711, 385);
+            this.SchemaPictureBox.MinimumSize = new System.Drawing.Size(711, 402);
             this.SchemaPictureBox.Name = "SchemaPictureBox";
-            this.SchemaPictureBox.Size = new System.Drawing.Size(944, 465);
+            this.SchemaPictureBox.Size = new System.Drawing.Size(944, 492);
             this.SchemaPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.SchemaPictureBox.TabIndex = 1;
             this.SchemaPictureBox.TabStop = false;
@@ -147,7 +147,7 @@
             this.tableLayoutPanel4.Controls.Add(this.ImpedancesGroupBox, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.ElementGroupBox, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 474);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 501);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
@@ -368,7 +368,7 @@
             this.CircuitGroupBox.Location = new System.Drawing.Point(3, 3);
             this.CircuitGroupBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.CircuitGroupBox.Name = "CircuitGroupBox";
-            this.CircuitGroupBox.Size = new System.Drawing.Size(294, 631);
+            this.CircuitGroupBox.Size = new System.Drawing.Size(294, 658);
             this.CircuitGroupBox.TabIndex = 2;
             this.CircuitGroupBox.TabStop = false;
             this.CircuitGroupBox.Text = "Current Circuit:";
@@ -380,7 +380,7 @@
             this.EditCircuitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.EditCircuitButton.FlatAppearance.BorderSize = 0;
             this.EditCircuitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EditCircuitButton.Location = new System.Drawing.Point(36, 601);
+            this.EditCircuitButton.Location = new System.Drawing.Point(36, 628);
             this.EditCircuitButton.Name = "EditCircuitButton";
             this.EditCircuitButton.Size = new System.Drawing.Size(24, 24);
             this.EditCircuitButton.TabIndex = 9;
@@ -394,7 +394,7 @@
             this.RemoveCircuitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.RemoveCircuitButton.FlatAppearance.BorderSize = 0;
             this.RemoveCircuitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RemoveCircuitButton.Location = new System.Drawing.Point(66, 601);
+            this.RemoveCircuitButton.Location = new System.Drawing.Point(66, 628);
             this.RemoveCircuitButton.Name = "RemoveCircuitButton";
             this.RemoveCircuitButton.Size = new System.Drawing.Size(24, 24);
             this.RemoveCircuitButton.TabIndex = 8;
@@ -408,7 +408,7 @@
             this.AddCircuitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.AddCircuitButton.FlatAppearance.BorderSize = 0;
             this.AddCircuitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AddCircuitButton.Location = new System.Drawing.Point(6, 601);
+            this.AddCircuitButton.Location = new System.Drawing.Point(6, 628);
             this.AddCircuitButton.Name = "AddCircuitButton";
             this.AddCircuitButton.Size = new System.Drawing.Size(24, 24);
             this.AddCircuitButton.TabIndex = 7;
@@ -420,7 +420,7 @@
             this.CircuitTreeView.AllowDrop = true;
             this.CircuitTreeView.Location = new System.Drawing.Point(6, 51);
             this.CircuitTreeView.Name = "CircuitTreeView";
-            this.CircuitTreeView.Size = new System.Drawing.Size(282, 544);
+            this.CircuitTreeView.Size = new System.Drawing.Size(282, 571);
             this.CircuitTreeView.TabIndex = 4;
             this.CircuitTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.CircuitTreeView_ItemDrag);
             this.CircuitTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.CircuitTreeView_AfterSelect);

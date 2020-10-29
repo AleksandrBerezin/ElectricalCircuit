@@ -48,7 +48,7 @@
             this.CircuitGroupBox.Location = new System.Drawing.Point(0, 0);
             this.CircuitGroupBox.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.CircuitGroupBox.Name = "CircuitGroupBox";
-            this.CircuitGroupBox.Size = new System.Drawing.Size(294, 631);
+            this.CircuitGroupBox.Size = new System.Drawing.Size(294, 658);
             this.CircuitGroupBox.TabIndex = 3;
             this.CircuitGroupBox.TabStop = false;
             this.CircuitGroupBox.Text = "Current Circuit:";
@@ -60,11 +60,12 @@
             this.EditCircuitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.EditCircuitButton.FlatAppearance.BorderSize = 0;
             this.EditCircuitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EditCircuitButton.Location = new System.Drawing.Point(36, 601);
+            this.EditCircuitButton.Location = new System.Drawing.Point(36, 628);
             this.EditCircuitButton.Name = "EditCircuitButton";
             this.EditCircuitButton.Size = new System.Drawing.Size(24, 24);
             this.EditCircuitButton.TabIndex = 9;
             this.EditCircuitButton.UseVisualStyleBackColor = true;
+            this.EditCircuitButton.Click += new System.EventHandler(this.EditCircuitButton_Click);
             // 
             // RemoveCircuitButton
             // 
@@ -73,11 +74,12 @@
             this.RemoveCircuitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.RemoveCircuitButton.FlatAppearance.BorderSize = 0;
             this.RemoveCircuitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RemoveCircuitButton.Location = new System.Drawing.Point(66, 601);
+            this.RemoveCircuitButton.Location = new System.Drawing.Point(66, 628);
             this.RemoveCircuitButton.Name = "RemoveCircuitButton";
             this.RemoveCircuitButton.Size = new System.Drawing.Size(24, 24);
             this.RemoveCircuitButton.TabIndex = 8;
             this.RemoveCircuitButton.UseVisualStyleBackColor = true;
+            this.RemoveCircuitButton.Click += new System.EventHandler(this.RemoveCircuitButton_Click);
             // 
             // AddCircuitButton
             // 
@@ -86,19 +88,25 @@
             this.AddCircuitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.AddCircuitButton.FlatAppearance.BorderSize = 0;
             this.AddCircuitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AddCircuitButton.Location = new System.Drawing.Point(6, 601);
+            this.AddCircuitButton.Location = new System.Drawing.Point(6, 628);
             this.AddCircuitButton.Name = "AddCircuitButton";
             this.AddCircuitButton.Size = new System.Drawing.Size(24, 24);
             this.AddCircuitButton.TabIndex = 7;
             this.AddCircuitButton.UseVisualStyleBackColor = true;
+            this.AddCircuitButton.Click += new System.EventHandler(this.AddCircuitButton_Click);
             // 
             // CircuitTreeView
             // 
             this.CircuitTreeView.AllowDrop = true;
             this.CircuitTreeView.Location = new System.Drawing.Point(6, 51);
             this.CircuitTreeView.Name = "CircuitTreeView";
-            this.CircuitTreeView.Size = new System.Drawing.Size(282, 544);
+            this.CircuitTreeView.Size = new System.Drawing.Size(282, 571);
             this.CircuitTreeView.TabIndex = 4;
+            this.CircuitTreeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.CircuitTreeView_ItemDrag);
+            this.CircuitTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.CircuitTreeView_AfterSelect);
+            this.CircuitTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.CircuitTreeView_DragDrop);
+            this.CircuitTreeView.DragEnter += new System.Windows.Forms.DragEventHandler(this.CircuitTreeView_DragEnter);
+            this.CircuitTreeView.DragOver += new System.Windows.Forms.DragEventHandler(this.CircuitTreeView_DragOver);
             // 
             // CircuitsComboBox
             // 
@@ -107,6 +115,7 @@
             this.CircuitsComboBox.Name = "CircuitsComboBox";
             this.CircuitsComboBox.Size = new System.Drawing.Size(282, 24);
             this.CircuitsComboBox.TabIndex = 3;
+            this.CircuitsComboBox.SelectedIndexChanged += new System.EventHandler(this.CircuitsComboBox_SelectedIndexChanged);
             // 
             // CircuitControl
             // 
@@ -114,7 +123,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.CircuitGroupBox);
             this.Name = "CircuitControl";
-            this.Size = new System.Drawing.Size(294, 631);
+            this.Size = new System.Drawing.Size(294, 658);
             this.CircuitGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 

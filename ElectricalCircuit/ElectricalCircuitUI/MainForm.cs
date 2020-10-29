@@ -11,12 +11,12 @@ namespace ElectricalCircuitUI
     public partial class MainForm : Form
     {
         /// <summary>
-        /// Проект
+        /// Currentcircuit
         /// </summary>
-        private readonly Project _project;
+        public Circuit circuit = null;
 
         /// <summary>
-        /// Список частот
+        /// List of frequencies
         /// </summary>
         private readonly List<double> _frequencies;
 
@@ -135,8 +135,6 @@ namespace ElectricalCircuitUI
 
             CircuitTreeView.ExpandAll();
 
-            //TODO
-            _circuitTreeManager.CalculateSegmentsCount((DrawingBaseNode)CircuitTreeView.Nodes[0]);
             DrawCircuit();
         }
 
