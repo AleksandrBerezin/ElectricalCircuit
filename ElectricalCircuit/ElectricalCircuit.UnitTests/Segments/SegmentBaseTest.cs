@@ -6,6 +6,20 @@ namespace ElectricalCircuit.UnitTests.Segments
     [TestFixture]
     public class SegmentBaseTest
     {
+        /// <summary>
+        /// Creating an example of Segment
+        /// </summary>
+        /// <returns></returns>
+        private Segment GetExampleSerialSegment()
+        {
+            var segment = new Segment();
+            segment.SubSegments.Add(new Resistor("R1", 20));
+            segment.SubSegments.Add(new Inductor("L1", 2e-3));
+            segment.SubSegments.Add(new Capacitor("C1", 2e-6));
+
+            return segment;
+        }
+
         [Test(Description = "Positive test of getter SubSegments")]
         public void TestSubSegmentsGet_CorrectValue()
         {
@@ -20,6 +34,30 @@ namespace ElectricalCircuit.UnitTests.Segments
             var actual = segment.SubSegments;
 
             Assert.AreEqual(expected, actual, "Getter SubSegments returns the wrong value");
+        }
+
+        [Test(Description = "Test CalculateSegmentsCount method for SerialSegmentsCount")]
+        public void TestCalculateSegmentsCount_CalculateSerialSegmentsCount()
+        {
+            var segment = GetExampleSerialSegment();
+
+            var expected = 3;
+            var actual = segment.SerialSegmentsCount;
+
+            Assert.AreEqual(expected, actual, "CalculateSegmentsCount method calculate " +
+                                              "count of serial segments wrong");
+        }
+
+        [Test(Description = "Test CalculateSegmentsCount method for ParallelSegmentsCount")]
+        public void TestCalculateSegmentsCount_CalculateParallelSegmentsCount()
+        {
+            var segment = GetExampleSerialSegment();
+
+            var expected = 1;
+            var actual = segment.ParallelSegmentsCount;
+
+            Assert.AreEqual(expected, actual, "CalculateSegmentsCount method calculate " +
+                                              "count of parallel segments wrong");
         }
 
         [Test(Description = "Invoke SegmentChanged event when item added to a segment")]

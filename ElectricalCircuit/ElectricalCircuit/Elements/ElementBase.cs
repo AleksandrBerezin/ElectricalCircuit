@@ -24,6 +24,16 @@ namespace ElectricalCircuit
         /// <inheritdoc/>
         public ObservableCollection<ISegment> SubSegments { get; private set; } = null;
 
+        /// <summary>
+        /// Gets and sets count of serial segments for each node
+        /// </summary>
+        public int SerialSegmentsCount { get; } = 1;
+
+        /// <summary>
+        /// Gets and sets count of parallel segments for each node
+        /// </summary>
+        public int ParallelSegmentsCount { get; } = 1;
+
         /// <inheritdoc/>
         public string Name
         {

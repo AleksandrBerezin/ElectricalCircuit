@@ -32,6 +32,24 @@ namespace ElectricalCircuit
         }
 
         /// <inheritdoc/>
+        protected override void CalculateSegmentsCount()
+        {
+            ParallelSegmentsCount = 0;
+            var maxSerialCount = 0;
+
+            foreach (var segment in SubSegments)
+            {
+                ParallelSegmentsCount += segment.ParallelSegmentsCount;
+                if (segment.SerialSegmentsCount > maxSerialCount)
+                {
+                    maxSerialCount = segment.SerialSegmentsCount;
+                }
+
+                SerialSegmentsCount = maxSerialCount;
+            }
+        }
+
+        /// <inheritdoc/>
         public override string ToString()
         {
             return "Parallel segment";

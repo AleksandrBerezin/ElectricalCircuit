@@ -5,6 +5,20 @@ namespace ElectricalCircuit.UnitTests.Segments
     [TestFixture]
     public class ParallelSegmentTest
     {
+        /// <summary>
+        /// Creating an example of SerialSegment
+        /// </summary>
+        /// <returns></returns>
+        private ParallelSegment GetExampleSerialSegment()
+        {
+            var segment = new ParallelSegment();
+            segment.SubSegments.Add(new Resistor("R1", 20));
+            segment.SubSegments.Add(new Inductor("L1", 2e-3));
+            segment.SubSegments.Add(new Capacitor("C1", 2e-6));
+
+            return segment;
+        }
+
         [Test(Description = "Positive test of ParallelSegment constructor")]
         public void TestParallelSegmentConstructor_CorrectValue()
         {
@@ -33,6 +47,30 @@ namespace ElectricalCircuit.UnitTests.Segments
             var actual = segment.CalculateZ(frequency);
 
             Assert.AreEqual(expected, actual, "CalculateZ method calculate impedance wrong");
+        }
+
+        [Test(Description = "Test CalculateSegmentsCount method for SerialSegmentsCount")]
+        public void TestCalculateSegmentsCount_CalculateSerialSegmentsCount()
+        {
+            var segment = GetExampleSerialSegment();
+
+            var expected = 1;
+            var actual = segment.SerialSegmentsCount;
+
+            Assert.AreEqual(expected, actual, "CalculateSegmentsCount method calculate " +
+                                              "count of serial segments wrong");
+        }
+
+        [Test(Description = "Test CalculateSegmentsCount method for ParallelSegmentsCount")]
+        public void TestCalculateSegmentsCount_CalculateParallelSegmentsCount()
+        {
+            var segment = GetExampleSerialSegment();
+
+            var expected = 3;
+            var actual = segment.ParallelSegmentsCount;
+
+            Assert.AreEqual(expected, actual, "CalculateSegmentsCount method calculate " +
+                                              "count of parallel segments wrong");
         }
 
         [Test(Description = "Positive test of ToString method")]

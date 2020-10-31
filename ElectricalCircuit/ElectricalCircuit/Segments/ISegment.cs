@@ -15,6 +15,16 @@ namespace ElectricalCircuit
         ObservableCollection<ISegment> SubSegments { get; }
 
         /// <summary>
+        /// Gets and sets count of serial segments for each node
+        /// </summary>
+        int SerialSegmentsCount { get; }
+
+        /// <summary>
+        /// Gets and sets count of parallel segments for each node
+        /// </summary>
+        int ParallelSegmentsCount { get; }
+
+        /// <summary>
         /// Informs a change in circuit segment
         /// </summary>
         event EventHandler SegmentChanged;
