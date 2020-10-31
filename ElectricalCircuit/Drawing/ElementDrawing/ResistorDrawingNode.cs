@@ -6,7 +6,7 @@ namespace Drawing
     /// <summary>
     /// <see cref="ResistorDrawingNode"/> contains algorithm for drawing the resistor
     /// </summary>
-    public class ResistorDrawingNode : ElementDrawingNode
+    public class ResistorDrawingNode : ElementDrawingNodeBase
     {
         /// <summary>
         /// Standard resistor width

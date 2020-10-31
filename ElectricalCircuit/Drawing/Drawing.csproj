@@ -43,15 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElementDrawing\CapacitorDrawingNode.cs" />
     <Compile Include="DrawingManager.cs" />
-    <Compile Include="ElementsDrawing\CapacitorDrawingNode.cs" />
-    <Compile Include="ElementsDrawing\ElementDrawingNode.cs" />
-    <Compile Include="ElementsDrawing\InductorDrawingNode.cs" />
-    <Compile Include="ElementsDrawing\ResistorDrawingNode.cs" />
+    <Compile Include="ElementDrawing\ElementDrawingNodeBase.cs" />
+    <Compile Include="ElementDrawing\InductorDrawingNode.cs" />
+    <Compile Include="SegmentsDrawing\CircuitDrawingNode.cs" />
+    <Compile Include="SegmentsDrawing\ISegmentDrawing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ElementDrawing\ResistorDrawingNode.cs" />
     <Compile Include="SegmentsDrawing\ParallelSegmentDrawingNode.cs" />
     <Compile Include="SegmentsDrawing\SerialSegmentDrawingNode.cs" />
-    <Compile Include="DrawingBaseNode.cs" />
+    <Compile Include="SegmentsDrawing\SegmentDrawingNodeBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ElectricalCircuit\ElectricalCircuit.csproj">

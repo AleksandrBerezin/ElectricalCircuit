@@ -7,7 +7,7 @@ namespace Drawing
     /// <see cref="ParallelSegmentDrawingNode"/> contains algorithm for drawing the
     /// serial segment
     /// </summary>
-    public class ParallelSegmentDrawingNode : DrawingBaseNode
+    public class ParallelSegmentDrawingNode : SegmentDrawingNodeBase
     {
         /// <summary>
         /// Create an inctance of <see cref="ParallelSegmentDrawingNode"/>
@@ -31,8 +31,10 @@ namespace Drawing
             var rightTopCorner = new Point();
             var rightBottomCorner = new Point();
 
-            foreach (DrawingBaseNode node in Nodes)
+            foreach (SegmentDrawingNodeBase node in Nodes)
             {
+                node.CalculateCoordinates();
+
                 if (node.Index == 0)
                 {
                     leftTopCorner.X = startX;

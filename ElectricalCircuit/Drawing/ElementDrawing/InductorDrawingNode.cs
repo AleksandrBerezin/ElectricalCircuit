@@ -6,7 +6,7 @@ namespace Drawing
     /// <summary>
     /// <see cref="InductorDrawingNode"/> contains algorithm for drawing the inductor
     /// </summary>
-    public class InductorDrawingNode : ElementDrawingNode
+    public class InductorDrawingNode : ElementDrawingNodeBase
     {
         /// <summary>
         /// Standard inductor arc width

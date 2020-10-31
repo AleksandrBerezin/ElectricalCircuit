@@ -6,7 +6,7 @@ namespace Drawing
     /// <summary>
     /// <see cref="CapacitorDrawingNode"/> contains algorithm for drawing the inductor
     /// </summary>
-    public class CapacitorDrawingNode : ElementDrawingNode
+    public class CapacitorDrawingNode : ElementDrawingNodeBase
     {
         /// <summary>
         /// Standard capacitor height from center

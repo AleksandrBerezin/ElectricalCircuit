@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
+using Drawing.SegmentsDrawing;
 using ElectricalCircuit;
 
 namespace Drawing
@@ -13,30 +15,26 @@ namespace Drawing
         /// <summary>
         /// Standard element width
         /// </summary>
-        private const int ElementWidth = 60;
+        public const int ElementWidth = 60;
 
         /// <summary>
         /// Standart element height
         /// </summary>
-        private const int ElementHeight = 50;
+        public const int ElementHeight = 50;
 
         /// <summary>
         /// Standard distance between two elements
         /// </summary>
-        private const int ConnectionLength = 10;
+        public const int ConnectionLength = 10;
 
         /// <summary>
         /// Method for drawing circuit
         /// </summary>
-        public static void DrawCircuit(DrawingBaseNode node, PictureBox picture)
+        public static void DrawCircuit(ISegmentDrawing node, PictureBox picture)
         {
-            CalculateSegmentsCount(node);
-
-            var bitmap = new Bitmap((node.SerialSegmentsCount + 2) * ElementWidth,
-                (node.ParallelSegmentsCount + 3) * ElementHeight);
+            var bitmap = new Bitmap(node.GetSchemeWidth(), node.GetSchemeHeight());
             var graphics = Graphics.FromImage(bitmap);
 
-            CalculateCoordinates(node);
             node.Draw(graphics);
 
             picture.Image = bitmap;
@@ -47,7 +45,7 @@ namespace Drawing
         /// </summary>
         /// <param name="segment"></param>
         /// <returns></returns>
-        public static DrawingBaseNode CreateNode(ISegment segment)
+        public static SegmentDrawingNodeBase CreateNode(ISegment segment)
         {
             if (segment is Resistor)
             {
@@ -65,168 +63,18 @@ namespace Drawing
             {
                 return new ParallelSegmentDrawingNode(segment);
             }
-            else
+            else if (segment is SerialSegment)
             { //TODO: здесь тоже должно быть условие проверки типа, и должна быть еще одна ветка без условия, которая кидает исключения, если ни один тип не подошел
                 return new SerialSegmentDrawingNode(segment);
             }
-        }
-
-        /// <summary>
-        /// Calculating the count of parallel and serial segments for each node
-        /// </summary>
-        /// <param name="startNode"></param>
-        /// <returns></returns>
-        private static void CalculateSegmentsCount(DrawingBaseNode startNode)
-        {
-            while (startNode != null)
+            else if (segment is Circuit)
             {
-                if (startNode.Nodes.Count != 0)
-                {
-                    CalculateSegmentsCount((DrawingBaseNode)startNode.Nodes[0]);
-                }
-
-                var segment = startNode.Segment;
-                if (segment is IElement)
-                {
-                    startNode.SerialSegmentsCount = 1;
-                    startNode.ParallelSegmentsCount = 1;
-                }
-                else if (segment is ParallelSegment)
-                {
-                    var maxSerialCount = 0;
-                    foreach (DrawingBaseNode node in startNode.Nodes)
-                    {
-                        startNode.ParallelSegmentsCount += node.ParallelSegmentsCount;
-                        if (node.SerialSegmentsCount > maxSerialCount)
-                        {
-                            maxSerialCount = node.SerialSegmentsCount;
-                        }
-
-                        startNode.SerialSegmentsCount = maxSerialCount;
-                    }
-                }
-                else
-                {
-                    var maxParallelCount = 0;
-                    foreach (DrawingBaseNode node in startNode.Nodes)
-                    {
-                        startNode.SerialSegmentsCount += node.SerialSegmentsCount;
-                        if (node.ParallelSegmentsCount > maxParallelCount)
-                        {
-                            maxParallelCount = node.ParallelSegmentsCount;
-                        }
-
-                        startNode.ParallelSegmentsCount = maxParallelCount;
-                    }
-                }
-
-                startNode = startNode.NextNode as DrawingBaseNode;
+                return new CircuitDrawingNode(segment);
             }
-        }
-
-        /// <summary>
-        /// Calculating the coordinates for each node.
-        /// First, we calculate the coordinates for the parent, then go down to the level below
-        /// and calculate the coordinates for the child.
-        /// </summary>
-        /// <param name="startNode"></param>
-        /// <returns></returns>
-        private static void CalculateCoordinates(DrawingBaseNode startNode)
-        {
-            while (startNode != null)
+            else
             {
-                var parent = (DrawingBaseNode)startNode.Parent;
-                var prevNode = (DrawingBaseNode)startNode.PrevNode;
-
-                // startNode is Root
-                if (parent == null)
-                {
-                    //TODO: менеджер ничего не должен знать про количество параллельных или последовательных сегментов внутри сегмента...
-                    // ...Он должен забирать у отрисовщика конечные размеры и работать с ними.
-                    // Padding from border of the PictureBox
-                    startNode.StartPoint = new Point(ElementWidth, ElementHeight
-                        * (startNode.ParallelSegmentsCount / 2 + 1));
-                    startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
-                }
-                //TODO: опять - знания о конкретном типе родителя. Можно сделать так, чтобы менеджер ничего не знал о конкретных типах отрисовщиков
-                else if (parent.Segment is ParallelSegment)
-                {
-                    if (parent.Nodes.Count == 1)
-                    {
-                        startNode.StartPoint = parent.StartPoint;
-                        startNode.EndPoint = parent.EndPoint;
-                    }
-                    else
-                    {
-                        var startPoint = new Point
-                        {
-                            // Calculate the start X coordinate taking into account the alignment
-                            X = parent.StartPoint.X + (parent.EndPoint.X
-                            - parent.StartPoint.X - (startNode.SerialSegmentsCount
-                            * (ElementWidth + ConnectionLength) - ConnectionLength)) / 2,
-                            Y = startNode.ParallelSegmentsCount * ElementHeight / 2
-                        };
-
-                        if (startNode.Index == 0)
-                        {
-                            startPoint.Y += parent.StartPoint.Y - parent.ParallelSegmentsCount
-                                * ElementHeight / 2;
-                        }
-                        else
-                        {
-                            startPoint.Y += prevNode.StartPoint.Y + prevNode.ParallelSegmentsCount
-                                * ElementHeight / 2;
-                        }
-
-                        startNode.StartPoint = startPoint;
-                        startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
-                    }
-                }
-                else
-                {
-                    if (startNode.Index == 0)
-                    {
-                        startNode.StartPoint = new Point(parent.StartPoint.X,
-                            parent.StartPoint.Y);
-                    }
-                    else
-                    {
-                        startNode.StartPoint = new Point(prevNode.EndPoint.X + ConnectionLength,
-                            prevNode.EndPoint.Y);
-                    }
-
-                    if (startNode.Index == parent.Nodes.Count - 1)
-                    {
-                        startNode.EndPoint = new Point(parent.EndPoint.X,
-                            parent.EndPoint.Y);
-                    }
-                    else
-                    {
-                        startNode.EndPoint = new Point(GetEndX(startNode), startNode.StartPoint.Y);
-                    }
-                }
-
-                if (startNode.Nodes.Count != 0)
-                {
-                    CalculateCoordinates((DrawingBaseNode)startNode.Nodes[0]);
-                }
-
-                startNode = startNode.NextNode as DrawingBaseNode;
+                throw new ArgumentException();
             }
-        }
-
-        /// <summary>
-        /// Returns the end X coordinate of node
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        private static int GetEndX(DrawingBaseNode node)
-        {
-            //TODO: сделано куча классов, но менеджер все равно содержит специфические для конкретных сегментов методы...
-            // ... Менеджер должен просто связывать сегмент с его отрисовщиком, отдавать отрисовщику сегмент и вызывать ...
-            // ... у отрисовщика метод рисования. Вся магия рисования должна происходить внутри отрисовщика.
-            return node.StartPoint.X + node.SerialSegmentsCount
-                * (ElementWidth + ConnectionLength) - ConnectionLength;
         }
     }
 }

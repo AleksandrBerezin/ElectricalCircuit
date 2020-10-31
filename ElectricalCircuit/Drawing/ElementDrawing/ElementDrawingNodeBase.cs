@@ -5,9 +5,9 @@ namespace Drawing
 {
     //TODO: этот класс должен быть абстрактным
     /// <summary>
-    /// <see cref="ElementDrawingNode"/> contains algorithm for drawing the element
+    /// <see cref="ElementDrawingNodeBase"/> contains algorithm for drawing the element
     /// </summary>
-    public abstract class ElementDrawingNode : DrawingBaseNode
+    public abstract class ElementDrawingNodeBase : SegmentDrawingNodeBase
     {
         /// <summary>
         /// Standard text height
@@ -15,10 +15,10 @@ namespace Drawing
         private const int TextHeight = 15;
 
         /// <summary>
-        /// Create an inctance of <see cref="ElementDrawingNode"/>
+        /// Create an inctance of <see cref="ElementDrawingNodeBase"/>
         /// </summary>
         /// <param name="segment"></param>
-        protected ElementDrawingNode(ISegment segment) : base(segment)
+        protected ElementDrawingNodeBase(ISegment segment) : base(segment)
         {
         }
 
