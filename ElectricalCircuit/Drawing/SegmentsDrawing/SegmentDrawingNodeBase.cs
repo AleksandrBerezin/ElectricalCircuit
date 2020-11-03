@@ -4,10 +4,6 @@ using ElectricalCircuit;
 
 namespace Drawing
 {
-    //TODO: В C# различия между базовым классом и интерфейсом более существенные...
-    // ... Сделать интерфейс, а базовый класс должен его реализовывать...
-    // ... Менеджер отрисовки должен работать с отрисовщиками преимущественно через интерфейс.
-    //TODO: Base ставится в конце имени класса, не по середине
     /// <summary>
     /// Abstract class <see cref="SegmentDrawingNodeBase"/> contains info for drawing segments
     /// and provides a drawing method for implementation

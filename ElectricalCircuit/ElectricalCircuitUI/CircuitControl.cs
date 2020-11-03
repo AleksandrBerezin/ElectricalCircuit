@@ -73,7 +73,6 @@ namespace ElectricalCircuitUI
         /// </summary>
         private void FillCircuitsComboBox()
         {
-            //TODO: зачем null? А если сразу присвоить нужную коллекцию? - Тогда коллекция не обновится
             CircuitsComboBox.SelectedText = "";
             CircuitsComboBox.DataSource = null;
             CircuitsComboBox.DataSource = project.Circuits;

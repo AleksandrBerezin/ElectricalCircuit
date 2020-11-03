@@ -14,6 +14,7 @@ namespace ElectricalCircuit
         /// </summary>
         ObservableCollection<ISegment> SubSegments { get; }
 
+        //TODO: еще раз: интерфейс ничего не должен знать о дочерних классах. Свойства типа SerialSegmentsCount - это знание о том, как элементы соединены в дочерних классах. При этом оба Count-а взаимоисключающие - это неправильно
         /// <summary>
         /// Gets and sets count of serial segments for each node
         /// </summary>

@@ -10,8 +10,7 @@ namespace Drawing
     /// Services class <see cref="DrawingManager"/> for drawing circuit
     /// </summary>
     public static class DrawingManager
-    {
-        //TODO: второй раз указываются константы для элементов. Должны быть только в одном месте
+    { //TODO: размеры элементов правильнее было бы хранить в абстрактном базовом классе для элементов, а не в менеджере. Почему здесь?
         /// <summary>
         /// Standard element width
         /// </summary>
@@ -64,7 +63,7 @@ namespace Drawing
                 return new ParallelSegmentDrawingNode(segment);
             }
             else if (segment is SerialSegment)
-            { //TODO: здесь тоже должно быть условие проверки типа, и должна быть еще одна ветка без условия, которая кидает исключения, если ни один тип не подошел
+            {
                 return new SerialSegmentDrawingNode(segment);
             }
             else if (segment is Circuit)

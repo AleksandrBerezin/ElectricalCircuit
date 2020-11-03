@@ -214,7 +214,7 @@ namespace ElectricalCircuitUI
             }
 
             var indexInParent = selectedNode.Index;
-            var parentSegment = ((SegmentDrawingNodeBase)parentNode).Segment;
+            var parentSegment = ((DrawingBaseNode)parentNode).Segment;
 
             if (parentSegment.GetType() == segmentType)
             {
@@ -242,7 +242,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var parentNode = (SegmentDrawingNodeBase)selectedNode.Parent;
+            var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
             // Circuit selected
             if (parentNode == null)
@@ -319,7 +319,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var parentNode = (SegmentDrawingNodeBase)selectedNode.Parent;
+            var parentNode = (DrawingBaseNode)selectedNode.Parent;
 
             // Circuit selected
             if (parentNode == null)
@@ -342,7 +342,7 @@ namespace ElectricalCircuitUI
 
                 if (parentNode.Nodes.Count == 1)
                 {
-                    ((SegmentDrawingNodeBase)parentNode.Parent)?.Segment.SubSegments.RemoveAt
+                    ((DrawingBaseNode)parentNode.Parent)?.Segment.SubSegments.RemoveAt
                         (parentNode.Index);
                 }
 
@@ -374,7 +374,7 @@ namespace ElectricalCircuitUI
             var selectedNode = CircuitInfo.SelectedNode;
             NameTextBox.Text = selectedNode.Text;
 
-            var selectedSegment = ((SegmentDrawingNodeBase)selectedNode).Segment;
+            var selectedSegment = ((DrawingBaseNode)selectedNode).Segment;
 
             if (selectedSegment is IElement)
             {

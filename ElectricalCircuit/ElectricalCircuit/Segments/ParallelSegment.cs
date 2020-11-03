@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Numerics;
 using ElectricalCircuit.Segments;
-
+//TODO: неправильные пространства имен. Поправить везде!
 namespace ElectricalCircuit
 {
     /// <summary>
