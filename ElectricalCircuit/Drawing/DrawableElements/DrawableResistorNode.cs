@@ -34,7 +34,7 @@ namespace Drawing.DrawableElements
         {
             base.Draw(graphics);
 
-            var rectangle = new Rectangle(StartPoint.X + DrawingManager.ConnectionLength,
+            var rectangle = new Rectangle(StartPoint.X + ConnectionLength,
                 StartPoint.Y - Height / 2, Width, Height);
             graphics.DrawRectangle(pen, rectangle);
         }

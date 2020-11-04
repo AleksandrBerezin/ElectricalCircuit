@@ -31,7 +31,7 @@ namespace Drawing.DrawableElements
         {
             var element = (IElement)Segment;
             var contour = new Rectangle(StartPoint.X, StartPoint.Y
-                - DrawingManager.ElementHeight / 2, DrawingManager.ElementWidth, TextHeight);
+                - SegmentHeight / 2, SegmentWidth, TextHeight);
 
             var format = new StringFormat
             {
@@ -41,7 +41,7 @@ namespace Drawing.DrawableElements
             graphics.DrawString(element.Name, font, brush, contour, format);
             DrawConnection(StartPoint, graphics);
 
-            DrawConnection(new Point(EndPoint.X - DrawingManager.ConnectionLength,
+            DrawConnection(new Point(EndPoint.X - ConnectionLength,
                 EndPoint.Y), graphics);
         }
     }

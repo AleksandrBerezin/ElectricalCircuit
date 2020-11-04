@@ -12,22 +12,7 @@ namespace Drawing
     /// Services class <see cref="DrawingManager"/> for drawing circuit
     /// </summary>
     public static class DrawingManager
-    { //TODO: размеры элементов правильнее было бы хранить в абстрактном базовом классе для элементов, а не в менеджере. Почему здесь?
-        /// <summary>
-        /// Standard element width
-        /// </summary>
-        public const int ElementWidth = 60;
-
-        /// <summary>
-        /// Standart element height
-        /// </summary>
-        public const int ElementHeight = 50;
-
-        /// <summary>
-        /// Standard distance between two elements
-        /// </summary>
-        public const int ConnectionLength = 10;
-
+    {
         /// <summary>
         /// Method for drawing circuit
         /// </summary>

@@ -66,26 +66,6 @@ namespace ElectricalCircuit.Segments
         public abstract Complex CalculateZ(double frequency);
 
         /// <summary>
-        /// Calculating the count of parallel and serial segments
-        /// </summary>
-        protected virtual void CalculateSegmentsCount()
-        {
-            SerialSegmentsCount = 0;
-            var maxParallelCount = 0;
-
-            foreach (var segment in SubSegments)
-            {
-                SerialSegmentsCount += segment.SerialSegmentsCount;
-                if (segment.ParallelSegmentsCount > maxParallelCount)
-                {
-                    maxParallelCount = segment.ParallelSegmentsCount;
-                }
-
-                ParallelSegmentsCount = maxParallelCount;
-            }
-        }
-
-        /// <summary>
         /// Subscribes and unsubscribes elements to segment change event
         /// </summary>
         /// <param name="sender"></param>
@@ -116,7 +96,6 @@ namespace ElectricalCircuit.Segments
                 }
             }
 
-            CalculateSegmentsCount();
             _segmentChanged?.Invoke(sender, e);
         }
 

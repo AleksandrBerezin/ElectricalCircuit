@@ -39,7 +39,7 @@ namespace Drawing.DrawableElements
         {
             base.Draw(graphics);
 
-            var x = StartPoint.X + DrawingManager.ConnectionLength;
+            var x = StartPoint.X + ConnectionLength;
             var y = StartPoint.Y;
 
             DrawConnection(new Point(x, y), new Point(x + SideWidth, y),

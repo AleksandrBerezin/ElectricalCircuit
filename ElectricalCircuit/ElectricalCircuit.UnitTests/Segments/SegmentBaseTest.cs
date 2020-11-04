@@ -38,30 +38,6 @@ namespace ElectricalCircuit.UnitTests.Segments
             Assert.AreEqual(expected, actual, "Getter SubSegments returns the wrong value");
         }
 
-        [Test(Description = "Test CalculateSegmentsCount method for SerialSegmentsCount")]
-        public void TestCalculateSegmentsCount_CalculateSerialSegmentsCount()
-        {
-            var segment = GetExampleSerialSegment();
-
-            var expected = 3;
-            var actual = segment.SerialSegmentsCount;
-
-            Assert.AreEqual(expected, actual, "CalculateSegmentsCount method calculate " +
-                                              "count of serial segments wrong");
-        }
-
-        [Test(Description = "Test CalculateSegmentsCount method for ParallelSegmentsCount")]
-        public void TestCalculateSegmentsCount_CalculateParallelSegmentsCount()
-        {
-            var segment = GetExampleSerialSegment();
-
-            var expected = 1;
-            var actual = segment.ParallelSegmentsCount;
-
-            Assert.AreEqual(expected, actual, "CalculateSegmentsCount method calculate " +
-                                              "count of parallel segments wrong");
-        }
-
         [Test(Description = "Invoke SegmentChanged event when item added to a segment")]
         public void TestOnSegmentChanged_AddItem()
         {
