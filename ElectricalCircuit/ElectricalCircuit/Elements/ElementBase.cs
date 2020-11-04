@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Numerics;
 using System.Collections.ObjectModel;
+using System.Numerics;
+using ElectricalCircuit.Segments;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Elements
 {
     /// <summary>
     /// Abstract class <see cref="ElementBase"/> provides method for calculating

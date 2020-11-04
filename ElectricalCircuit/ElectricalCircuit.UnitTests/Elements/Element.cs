@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Numerics;
+using ElectricalCircuit.Elements;
 
 namespace ElectricalCircuit.UnitTests.Elements
 {

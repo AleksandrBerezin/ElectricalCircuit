@@ -1,4 +1,5 @@
 ﻿using System;
+using ElectricalCircuit.Elements;
 using NUnit.Framework;
 
 namespace ElectricalCircuit.UnitTests.Elements

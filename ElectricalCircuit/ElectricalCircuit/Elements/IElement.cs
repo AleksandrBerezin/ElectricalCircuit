@@ -1,4 +1,6 @@
-﻿namespace ElectricalCircuit
+﻿using ElectricalCircuit.Segments;
+
+namespace ElectricalCircuit.Elements
 {
     /// <summary>
     /// <see cref="IElement"/> defines fields and methods for working with elements

@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Numerics;
-using ElectricalCircuit.Segments;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Segments
 {
     /// <summary>
     /// <see cref="SerialSegment"/> stores info about serial segment of the circuit

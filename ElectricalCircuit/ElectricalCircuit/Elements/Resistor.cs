@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Elements
 {
     /// <summary>
     /// <see cref="Resistor"/> stores info about resistor

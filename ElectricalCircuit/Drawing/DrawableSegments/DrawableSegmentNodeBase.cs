@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableSegments
 {
     /// <summary>
-    /// Abstract class <see cref="SegmentDrawingNodeBase"/> contains info for drawing segments
+    /// Abstract class <see cref="DrawableSegmentNodeBase"/> contains info for drawing segments
     /// and provides a drawing method for implementation
     /// </summary>
-    public abstract class SegmentDrawingNodeBase : TreeNode, ISegmentDrawing
+    public abstract class DrawableSegmentNodeBase : TreeNode, IDrawableSegment
     {
         /// <summary>
         /// Standard pen for segment drawing
@@ -35,10 +35,10 @@ namespace Drawing
         public Point EndPoint { get; private set; } = Point.Empty;
 
         /// <summary>
-        /// Create an inctance of <see cref="SegmentDrawingNodeBase"/>
+        /// Create an inctance of <see cref="DrawableSegmentNodeBase"/>
         /// </summary>
         /// <param name="segment"></param>
-        protected SegmentDrawingNodeBase(ISegment segment)
+        protected DrawableSegmentNodeBase(ISegment segment)
         {
             Segment = segment;
             Text = segment.ToString();
@@ -52,8 +52,8 @@ namespace Drawing
         /// </summary>
         public void CalculateCoordinates()
         {
-            var parent = (SegmentDrawingNodeBase)Parent;
-            var prevNode = (SegmentDrawingNodeBase)PrevNode;
+            var parent = (DrawableSegmentNodeBase)Parent;
+            var prevNode = (DrawableSegmentNodeBase)PrevNode;
 
             // start is Root
             if (parent == null)

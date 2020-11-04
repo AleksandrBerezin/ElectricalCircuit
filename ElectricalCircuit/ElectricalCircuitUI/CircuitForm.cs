@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
 namespace ElectricalCircuitUI
 {

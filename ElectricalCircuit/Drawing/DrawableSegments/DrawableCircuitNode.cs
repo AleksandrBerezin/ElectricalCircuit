@@ -1,29 +1,30 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableSegments
 {
     /// <summary>
-    /// <see cref="SerialSegmentDrawingNode"/> contains algorithm for drawing the
-    /// serial segment
+    /// <see cref="DrawableCircuitNode"/> contains algorithm for drawing the circuit
     /// </summary>
-    public class SerialSegmentDrawingNode : SegmentDrawingNodeBase
+    public class DrawableCircuitNode : DrawableSegmentNodeBase
     {
         /// <summary>
-        /// Create an inctance of <see cref="SerialSegmentDrawingNode"/>
+        /// Create an inctance of <see cref="DrawableCircuitNode"/>
         /// </summary>
         /// <param name="segment"></param>
-        public SerialSegmentDrawingNode(ISegment segment) : base(segment)
+        public DrawableCircuitNode(ISegment segment) : base(segment)
         {
         }
 
         /// <summary>
-        /// Method for drawing the serial segment
+        /// Method for drawing the circuit
         /// </summary>
         /// <param name="graphics"></param>
         public override void Draw(Graphics graphics)
         {
-            foreach (SegmentDrawingNodeBase node in Nodes)
+            CalculateCoordinates();
+
+            foreach (DrawableSegmentNodeBase node in Nodes)
             {
                 node.CalculateCoordinates();
 
@@ -33,7 +34,7 @@ namespace Drawing
                 }
                 else
                 {
-                    DrawConnection(((SegmentDrawingNodeBase)node.PrevNode).EndPoint,
+                    DrawConnection(((DrawableSegmentNodeBase)node.PrevNode).EndPoint,
                         node.StartPoint, graphics);
                 }
 

@@ -1,12 +1,14 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using Drawing.DrawableSegments;
+using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableElements
 {
     /// <summary>
-    /// <see cref="ElementDrawingNodeBase"/> contains algorithm for drawing the element
+    /// <see cref="DrawableElementNodeBase"/> contains algorithm for drawing the element
     /// </summary>
-    public abstract class ElementDrawingNodeBase : SegmentDrawingNodeBase
+    public abstract class DrawableElementNodeBase : DrawableSegmentNodeBase
     {
         /// <summary>
         /// Standard text height
@@ -14,10 +16,10 @@ namespace Drawing
         private const int TextHeight = 15;
 
         /// <summary>
-        /// Create an inctance of <see cref="ElementDrawingNodeBase"/>
+        /// Create an inctance of <see cref="DrawableElementNodeBase"/>
         /// </summary>
         /// <param name="segment"></param>
-        protected ElementDrawingNodeBase(ISegment segment) : base(segment)
+        protected DrawableElementNodeBase(ISegment segment) : base(segment)
         {
         }
 

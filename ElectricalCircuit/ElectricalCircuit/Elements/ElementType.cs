@@ -1,4 +1,4 @@
-﻿namespace ElectricalCircuit
+﻿namespace ElectricalCircuit.Elements
 {
     /// <summary>
     /// Enum <see cref="ElementType"/> contains the element types

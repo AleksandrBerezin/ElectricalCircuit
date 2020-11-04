@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
 //TODO: пространства имен поправить во всем проекте во всех классах
-namespace Drawing
+namespace Drawing.DrawableSegments
 {
     //TODO: Drawing - это процесс, а не объект. Интерфейсы так не именуются, наречие или существительное с прилагательными. По аналогии переименовать все классы от этого интерфейса
     /// <summary>
-    /// <see cref="ISegmentDrawing"/> defines fields and methods for drawing segments
+    /// <see cref="IDrawableSegment"/> defines fields and methods for drawing segments
     /// </summary>
-    public interface ISegmentDrawing
+    public interface IDrawableSegment
     {
         /// <summary>
         /// Gets and sets segment

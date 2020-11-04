@@ -1,12 +1,12 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableElements
 {
     /// <summary>
-    /// <see cref="ResistorDrawingNode"/> contains algorithm for drawing the resistor
+    /// <see cref="DrawableResistorNode"/> contains algorithm for drawing the resistor
     /// </summary>
-    public class ResistorDrawingNode : ElementDrawingNodeBase
+    public class DrawableResistorNode : DrawableElementNodeBase
     {
         /// <summary>
         /// Standard resistor width
@@ -19,10 +19,10 @@ namespace Drawing
         private const int Height = 20;
 
         /// <summary>
-        /// Create an inctance of <see cref="ResistorDrawingNode"/>
+        /// Create an inctance of <see cref="DrawableResistorNode"/>
         /// </summary>
         /// <param name="segment"></param>
-        public ResistorDrawingNode(ISegment segment) : base(segment)
+        public DrawableResistorNode(ISegment segment) : base(segment)
         {
         }
 

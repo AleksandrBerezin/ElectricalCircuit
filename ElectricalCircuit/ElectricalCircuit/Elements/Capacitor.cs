@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Elements
 {
     /// <summary>
     /// <see cref="Capacitor"/> stores info about capacitor

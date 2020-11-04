@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
 
 namespace ElectricalCircuit
 {

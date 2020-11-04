@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Drawing.SegmentsDrawing;
-using ElectricalCircuit;
+using Drawing.DrawableElements;
+using Drawing.DrawableSegments;
+using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
 
 namespace Drawing
 {
@@ -29,7 +31,7 @@ namespace Drawing
         /// <summary>
         /// Method for drawing circuit
         /// </summary>
-        public static void DrawCircuit(ISegmentDrawing node, PictureBox picture)
+        public static void DrawCircuit(IDrawableSegment node, PictureBox picture)
         {
             var bitmap = new Bitmap(node.GetSchemeWidth(), node.GetSchemeHeight());
             var graphics = Graphics.FromImage(bitmap);
@@ -44,31 +46,31 @@ namespace Drawing
         /// </summary>
         /// <param name="segment"></param>
         /// <returns></returns>
-        public static SegmentDrawingNodeBase CreateNode(ISegment segment)
+        public static DrawableSegmentNodeBase CreateNode(ISegment segment)
         {
             if (segment is Resistor)
             {
-                return new ResistorDrawingNode(segment);
+                return new DrawableResistorNode(segment);
             }
             else if (segment is Inductor)
             {
-                return new InductorDrawingNode(segment);
+                return new DrawableInductorNode(segment);
             }
             else if (segment is Capacitor)
             {
-                return new CapacitorDrawingNode(segment);
+                return new DrawableCapacitorNode(segment);
             }
             else if (segment is ParallelSegment)
             {
-                return new ParallelSegmentDrawingNode(segment);
+                return new DrawableParallelSegmentNode(segment);
             }
             else if (segment is SerialSegment)
             {
-                return new SerialSegmentDrawingNode(segment);
+                return new DrawableSerialSegmentNode(segment);
             }
             else if (segment is Circuit)
             {
-                return new CircuitDrawingNode(segment);
+                return new DrawableCircuitNode(segment);
             }
             else
             {

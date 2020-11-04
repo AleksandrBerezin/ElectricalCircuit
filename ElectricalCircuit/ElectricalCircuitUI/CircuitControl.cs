@@ -2,7 +2,10 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Drawing;
+using Drawing.DrawableSegments;
 using ElectricalCircuit;
+using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
 
 namespace ElectricalCircuitUI
 {
@@ -14,12 +17,12 @@ namespace ElectricalCircuitUI
         /// <summary>
         /// Root node of tree view
         /// </summary>
-        private SegmentDrawingNodeBase _rootNode;
+        private DrawableSegmentNodeBase _rootNode;
 
         /// <summary>
         /// Dragged node
         /// </summary>
-        private SegmentDrawingNodeBase _draggedNode;
+        private DrawableSegmentNodeBase _draggedNode;
 
         /// <summary>
         /// Current project
@@ -34,7 +37,7 @@ namespace ElectricalCircuitUI
         /// <summary>
         /// Gets and sets selected node
         /// </summary>
-        public SegmentDrawingNodeBase SelectedNode { get; private set; }
+        public DrawableSegmentNodeBase SelectedNode { get; private set; }
 
         /// <summary>
         /// Picture box in which the circuit is drawn
@@ -92,7 +95,7 @@ namespace ElectricalCircuitUI
 
             var circuit = (Circuit)CircuitsComboBox.SelectedItem;
             WriteCircuitInTree(circuit);
-            _rootNode = (SegmentDrawingNodeBase)CircuitTreeView.Nodes[0];
+            _rootNode = (DrawableSegmentNodeBase)CircuitTreeView.Nodes[0];
             DrawCircuit();
         }
 
@@ -117,7 +120,7 @@ namespace ElectricalCircuitUI
         /// </summary>
         /// <param name="segment"></param>
         /// <param name="node"></param>
-        private void WriteAllSegmentsInTree(ISegment segment, SegmentDrawingNodeBase node)
+        private void WriteAllSegmentsInTree(ISegment segment, DrawableSegmentNodeBase node)
         {
             var newNode = DrawingManager.CreateNode(segment);
             node.Nodes.Add(newNode);
@@ -139,7 +142,7 @@ namespace ElectricalCircuitUI
         public void SelectNodeInTreeView(ISegment segment)
         {
             CircuitTreeView.SelectedNode = SearchNode(segment,
-                (SegmentDrawingNodeBase)CircuitTreeView.Nodes[0]);
+                (DrawableSegmentNodeBase)CircuitTreeView.Nodes[0]);
         }
 
         /// <summary>
@@ -148,9 +151,9 @@ namespace ElectricalCircuitUI
         /// <param name="segment"></param>
         /// <param name="startNode"></param>
         /// <returns></returns>
-        private SegmentDrawingNodeBase SearchNode(ISegment segment, SegmentDrawingNodeBase startNode)
+        private DrawableSegmentNodeBase SearchNode(ISegment segment, DrawableSegmentNodeBase startNode)
         {
-            SegmentDrawingNodeBase node = null;
+            DrawableSegmentNodeBase node = null;
             while (startNode != null)
             {
                 if (startNode.Segment.Equals(segment))
@@ -161,14 +164,14 @@ namespace ElectricalCircuitUI
 
                 if (startNode.Nodes.Count != 0)
                 {
-                    node = SearchNode(segment, (SegmentDrawingNodeBase)startNode.Nodes[0]);
+                    node = SearchNode(segment, (DrawableSegmentNodeBase)startNode.Nodes[0]);
                     if (node != null)
                     {
                         break;
                     }
                 }
 
-                startNode = startNode.NextNode as SegmentDrawingNodeBase;
+                startNode = startNode.NextNode as DrawableSegmentNodeBase;
             }
 
             return node;
@@ -177,18 +180,18 @@ namespace ElectricalCircuitUI
         private void CircuitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillCircuitTreeView();
-            _rootNode = (SegmentDrawingNodeBase)CircuitTreeView.Nodes[0];
+            _rootNode = (DrawableSegmentNodeBase)CircuitTreeView.Nodes[0];
             SelectedCircuit = (Circuit)CircuitsComboBox.SelectedItem;
         }
 
         private void CircuitTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            SelectedNode = (SegmentDrawingNodeBase)CircuitTreeView.SelectedNode;
+            SelectedNode = (DrawableSegmentNodeBase)CircuitTreeView.SelectedNode;
         }
 
         private void CircuitTreeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            _draggedNode = (SegmentDrawingNodeBase)e.Item;
+            _draggedNode = (DrawableSegmentNodeBase)e.Item;
             DoDragDrop(e.Item, DragDropEffects.All);
         }
 
@@ -206,7 +209,7 @@ namespace ElectricalCircuitUI
         private void CircuitTreeView_DragDrop(object sender, DragEventArgs e)
         {
             var targetPoint = CircuitTreeView.PointToClient(new Point(e.X, e.Y));
-            var targetNode = (SegmentDrawingNodeBase)CircuitTreeView.GetNodeAt(targetPoint);
+            var targetNode = (DrawableSegmentNodeBase)CircuitTreeView.GetNodeAt(targetPoint);
             var draggedNode = _draggedNode;
 
             // Confirm that the node at the drop location is not 
@@ -215,28 +218,28 @@ namespace ElectricalCircuitUI
             {
                 if (targetNode.Segment is IElement == false)
                 {
-                    ((SegmentDrawingNodeBase)draggedNode.Parent).Segment.SubSegments.Remove
+                    ((DrawableSegmentNodeBase)draggedNode.Parent).Segment.SubSegments.Remove
                         (draggedNode.Segment);
                     targetNode.Segment.SubSegments.Add(draggedNode.Segment);
                 }
                 else
                 {
-                    ((SegmentDrawingNodeBase)draggedNode.Parent).Segment.SubSegments.Remove
+                    ((DrawableSegmentNodeBase)draggedNode.Parent).Segment.SubSegments.Remove
                         (draggedNode.Segment);
 
                     var serialSegment = new SerialSegment();
                     serialSegment.SubSegments.Add(targetNode.Segment);
                     serialSegment.SubSegments.Add(draggedNode.Segment);
-                    ((SegmentDrawingNodeBase)targetNode.Parent).Segment.SubSegments[targetNode.Index] =
+                    ((DrawableSegmentNodeBase)targetNode.Parent).Segment.SubSegments[targetNode.Index] =
                         serialSegment;
                 }
 
-                var parent = (SegmentDrawingNodeBase)draggedNode.Parent;
+                var parent = (DrawableSegmentNodeBase)draggedNode.Parent;
 
                 // Delete empty segment
                 if (parent.Nodes.Count == 1)
                 {
-                    ((SegmentDrawingNodeBase)parent.Parent)?.Segment.SubSegments.RemoveAt(parent.Index);
+                    ((DrawableSegmentNodeBase)parent.Parent)?.Segment.SubSegments.RemoveAt(parent.Index);
                 }
 
                 FillCircuitTreeView();

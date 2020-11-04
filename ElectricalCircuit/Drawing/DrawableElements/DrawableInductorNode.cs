@@ -1,12 +1,12 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableElements
 {
     /// <summary>
-    /// <see cref="InductorDrawingNode"/> contains algorithm for drawing the inductor
+    /// <see cref="DrawableInductorNode"/> contains algorithm for drawing the inductor
     /// </summary>
-    public class InductorDrawingNode : ElementDrawingNodeBase
+    public class DrawableInductorNode : DrawableElementNodeBase
     {
         /// <summary>
         /// Standard inductor arc width
@@ -24,10 +24,10 @@ namespace Drawing
         private const int ArcsCount = 4;
 
         /// <summary>
-        /// Create an inctance of <see cref="InductorDrawingNode"/>
+        /// Create an inctance of <see cref="DrawableInductorNode"/>
         /// </summary>
         /// <param name="segment"></param>
-        public InductorDrawingNode(ISegment segment) : base(segment)
+        public DrawableInductorNode(ISegment segment) : base(segment)
         {
         }
 

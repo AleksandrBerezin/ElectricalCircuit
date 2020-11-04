@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Numerics;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Segments
 {
     /// <summary>
     /// <see cref="ISegment"/> defines fields and methods for working with circuit segments

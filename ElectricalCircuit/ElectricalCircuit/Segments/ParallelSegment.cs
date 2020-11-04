@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Numerics;
-using ElectricalCircuit.Segments;
+
 //TODO: неправильные пространства имен. Поправить везде!
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Segments
 {
     /// <summary>
     /// <see cref="ParallelSegment"/> stores info about parallel segment of the circuit

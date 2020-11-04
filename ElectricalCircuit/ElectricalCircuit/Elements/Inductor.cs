@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Elements
 {
     /// <summary>
     /// <see cref="Inductor"/> stores info about inductor

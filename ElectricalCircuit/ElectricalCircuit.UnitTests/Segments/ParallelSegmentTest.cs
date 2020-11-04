@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
+using NUnit.Framework;
 
 namespace ElectricalCircuit.UnitTests.Segments
 {

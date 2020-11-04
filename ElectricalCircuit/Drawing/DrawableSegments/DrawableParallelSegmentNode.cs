@@ -1,19 +1,19 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableSegments
 {
     /// <summary>
-    /// <see cref="ParallelSegmentDrawingNode"/> contains algorithm for drawing the
+    /// <see cref="DrawableParallelSegmentNode"/> contains algorithm for drawing the
     /// serial segment
     /// </summary>
-    public class ParallelSegmentDrawingNode : SegmentDrawingNodeBase
+    public class DrawableParallelSegmentNode : DrawableSegmentNodeBase
     {
         /// <summary>
-        /// Create an inctance of <see cref="ParallelSegmentDrawingNode"/>
+        /// Create an inctance of <see cref="DrawableParallelSegmentNode"/>
         /// </summary>
         /// <param name="segment"></param>
-        public ParallelSegmentDrawingNode(ISegment segment) : base(segment)
+        public DrawableParallelSegmentNode(ISegment segment) : base(segment)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Drawing
             var rightTopCorner = new Point();
             var rightBottomCorner = new Point();
 
-            foreach (SegmentDrawingNodeBase node in Nodes)
+            foreach (DrawableSegmentNodeBase node in Nodes)
             {
                 node.CalculateCoordinates();
 

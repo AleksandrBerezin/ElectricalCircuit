@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
 using NUnit.Framework;
 
-namespace ElectricalCircuit.UnitTests
+namespace ElectricalCircuit.UnitTests.Segments
 {
     [TestFixture]
     public class CircuitTest

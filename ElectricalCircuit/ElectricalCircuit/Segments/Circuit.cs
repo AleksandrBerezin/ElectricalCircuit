@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
-using ElectricalCircuit.Segments;
 
-namespace ElectricalCircuit
+namespace ElectricalCircuit.Segments
 {
     /// <summary>
     /// <see cref="Circuit"/> stores list of the circuit segments

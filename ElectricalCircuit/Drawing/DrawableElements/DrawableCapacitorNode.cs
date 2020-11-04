@@ -1,12 +1,12 @@
 ﻿using System.Drawing;
-using ElectricalCircuit;
+using ElectricalCircuit.Segments;
 
-namespace Drawing
+namespace Drawing.DrawableElements
 {
     /// <summary>
-    /// <see cref="CapacitorDrawingNode"/> contains algorithm for drawing the inductor
+    /// <see cref="DrawableCapacitorNode"/> contains algorithm for drawing the inductor
     /// </summary>
-    public class CapacitorDrawingNode : ElementDrawingNodeBase
+    public class DrawableCapacitorNode : DrawableElementNodeBase
     {
         /// <summary>
         /// Standard capacitor height from center
@@ -24,10 +24,10 @@ namespace Drawing
         private const int CenterSpace = 6;
 
         /// <summary>
-        /// Create an inctance of <see cref="CapacitorDrawingNode"/>
+        /// Create an inctance of <see cref="DrawableCapacitorNode"/>
         /// </summary>
         /// <param name="segment"></param>
-        public CapacitorDrawingNode(ISegment segment) : base(segment)
+        public DrawableCapacitorNode(ISegment segment) : base(segment)
         {
         }
 

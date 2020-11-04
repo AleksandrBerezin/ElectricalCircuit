@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ElectricalCircuit.Segments;
 using NUnit.Framework;
 
 namespace ElectricalCircuit.UnitTests

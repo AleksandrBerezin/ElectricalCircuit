@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Drawing;
-using ElectricalCircuit;
+using Drawing.DrawableSegments;
+using ElectricalCircuit.Elements;
+using ElectricalCircuit.Segments;
 
 namespace ElectricalCircuitUI
 {
@@ -214,7 +215,7 @@ namespace ElectricalCircuitUI
             }
 
             var indexInParent = selectedNode.Index;
-            var parentSegment = ((DrawingBaseNode)parentNode).Segment;
+            var parentSegment = ((DrawableSegmentNodeBase)parentNode).Segment;
 
             if (parentSegment.GetType() == segmentType)
             {
@@ -242,7 +243,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var parentNode = (DrawingBaseNode)selectedNode.Parent;
+            var parentNode = (DrawableSegmentNodeBase)selectedNode.Parent;
 
             // Circuit selected
             if (parentNode == null)
@@ -319,7 +320,7 @@ namespace ElectricalCircuitUI
                 return;
             }
 
-            var parentNode = (DrawingBaseNode)selectedNode.Parent;
+            var parentNode = (DrawableSegmentNodeBase)selectedNode.Parent;
 
             // Circuit selected
             if (parentNode == null)
@@ -342,7 +343,7 @@ namespace ElectricalCircuitUI
 
                 if (parentNode.Nodes.Count == 1)
                 {
-                    ((DrawingBaseNode)parentNode.Parent)?.Segment.SubSegments.RemoveAt
+                    ((DrawableSegmentNodeBase)parentNode.Parent)?.Segment.SubSegments.RemoveAt
                         (parentNode.Index);
                 }
 
@@ -374,7 +375,7 @@ namespace ElectricalCircuitUI
             var selectedNode = CircuitInfo.SelectedNode;
             NameTextBox.Text = selectedNode.Text;
 
-            var selectedSegment = ((DrawingBaseNode)selectedNode).Segment;
+            var selectedSegment = ((DrawableSegmentNodeBase)selectedNode).Segment;
 
             if (selectedSegment is IElement)
             {
