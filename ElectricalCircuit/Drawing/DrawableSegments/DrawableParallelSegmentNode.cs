@@ -79,19 +79,19 @@ namespace Drawing.DrawableSegments
             {
                 foreach (DrawableSegmentNodeBase node in Nodes)
                 {
-                    var startY = CalculateElementsCountInHeight(node.Segment)
+                    var startY = node.CalculateElementsCountInHeight()
                         * SegmentHeight / 2;
                     var prevNode = (DrawableSegmentNodeBase)node.PrevNode;
 
                     if (node.Index == 0)
                     {
-                        startY += StartPoint.Y - CalculateElementsCountInHeight(Segment)
+                        startY += StartPoint.Y - CalculateElementsCountInHeight()
                             * SegmentHeight / 2;
                     }
                     else
                     {
                         startY += prevNode.StartPoint.Y 
-                            + CalculateElementsCountInHeight(prevNode.Segment)
+                            + prevNode.CalculateElementsCountInHeight()
                             * SegmentHeight / 2;
                     }
 
@@ -101,55 +101,32 @@ namespace Drawing.DrawableSegments
             }
         }
 
-        /// <summary>
-        /// Calculating count of the elements in height
-        /// </summary>
-        /// <param name="startSegment"></param>
-        /// <returns></returns>
-        private int CalculateElementsCountInHeight(ISegment startSegment)
-        {
-            var elementsCount = 0;
-
-            if (startSegment is IElement)
-            {
-                elementsCount = 1;
-            }
-            else if (startSegment is SerialSegment || startSegment is Circuit)
-            {
-                var maxCount = 0;
-
-                foreach (var segment in startSegment.SubSegments)
-                {
-                    var count = CalculateElementsCountInHeight(segment);
-                    if (count > maxCount)
-                    {
-                        maxCount = count;
-                    }
-                }
-
-                elementsCount = maxCount;
-            }
-            else if (startSegment is ParallelSegment)
-            {
-                foreach (var segment in startSegment.SubSegments)
-                {
-                    elementsCount += CalculateElementsCountInHeight(segment);
-                }
-            }
-
-            return elementsCount;
-        }
-
         /// <inheritdoc/>
         public override int GetSchemeWidth()
         {
-            return SegmentWidth * 2;
+            var maxWidth = SegmentWidth;
+            foreach (DrawableSegmentNodeBase node in Nodes)
+            {
+                var currentHeight = node.GetSchemeWidth();
+                if (currentHeight > maxWidth)
+                {
+                    maxWidth = currentHeight;
+                }
+            }
+
+            return maxWidth;
         }
 
         /// <inheritdoc/>
         public override int GetSchemeHeight()
         {
-            return (CalculateElementsCountInHeight(Segment) + 3) * SegmentHeight;
+            var height = 0;
+            foreach (DrawableSegmentNodeBase node in Nodes)
+            {
+                height += node.GetSchemeHeight();
+            }
+
+            return height;
         }
     }
 }

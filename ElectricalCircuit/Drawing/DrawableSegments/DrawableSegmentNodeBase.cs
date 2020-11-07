@@ -75,6 +75,24 @@ namespace Drawing.DrawableSegments
         public abstract int GetSchemeHeight();
 
         /// <summary>
+        /// Calculating count of the elements in width
+        /// </summary>
+        /// <returns></returns>
+        public virtual int CalculateElementsCountInWidth()
+        {
+            return GetSchemeWidth() / SegmentWidth;
+        }
+
+        /// <summary>
+        /// Calculating count of the elements in height
+        /// </summary>
+        /// <returns></returns>
+        public virtual int CalculateElementsCountInHeight()
+        {
+            return GetSchemeHeight() / SegmentHeight;
+        }
+
+        /// <summary>
         /// Method for drawing a standard connection line
         /// </summary>
         /// <param name="startPoint"></param>

@@ -67,13 +67,13 @@ namespace Drawing.DrawableElements
         /// <inheritdoc/>
         public override int GetSchemeWidth()
         {
-            return SegmentWidth * 2;
+            return SegmentWidth;
         }
 
         /// <inheritdoc/>
         public override int GetSchemeHeight()
         {
-            return SegmentHeight * 3;
+            return SegmentHeight;
         }
     }
 }
