@@ -44,5 +44,36 @@ namespace Drawing.DrawableElements
             DrawConnection(new Point(EndPoint.X - ConnectionLength,
                 EndPoint.Y), graphics);
         }
+
+        /// <inheritdoc/>
+        public override void CalculateCoordinates()
+        {
+            if (EndPoint.X - StartPoint.X > SegmentWidth)
+            {
+                StartPoint = new Point
+                {
+                    X = StartPoint.X + (EndPoint.X - StartPoint.X - SegmentWidth) / 2,
+                    Y = StartPoint.Y
+                };
+
+                EndPoint = new Point
+                {
+                    X = StartPoint.X + SegmentWidth,
+                    Y = StartPoint.Y
+                };
+            }
+        }
+
+        /// <inheritdoc/>
+        public override int GetSchemeWidth()
+        {
+            return SegmentWidth * 2;
+        }
+
+        /// <inheritdoc/>
+        public override int GetSchemeHeight()
+        {
+            return SegmentHeight * 3;
+        }
     }
 }

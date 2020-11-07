@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using ElectricalCircuit.Elements;
 using ElectricalCircuit.Segments;
 
 namespace Drawing.DrawableSegments
@@ -63,6 +64,92 @@ namespace Drawing.DrawableSegments
                 DrawConnection(leftTopCorner, leftBottomCorner, graphics);
                 DrawConnection(rightTopCorner, rightBottomCorner, graphics);
             }
+        }
+
+        /// <inheritdoc/>
+        public override void CalculateCoordinates()
+        {
+            if (Nodes.Count == 1)
+            {
+                var node = (DrawableSegmentNodeBase)Nodes[0];
+                node.StartPoint = StartPoint;
+                node.EndPoint = EndPoint;
+            }
+            else
+            {
+                foreach (DrawableSegmentNodeBase node in Nodes)
+                {
+                    var startY = CalculateElementsCountInHeight(node.Segment)
+                        * SegmentHeight / 2;
+                    var prevNode = (DrawableSegmentNodeBase)node.PrevNode;
+
+                    if (node.Index == 0)
+                    {
+                        startY += StartPoint.Y - CalculateElementsCountInHeight(Segment)
+                            * SegmentHeight / 2;
+                    }
+                    else
+                    {
+                        startY += prevNode.StartPoint.Y 
+                            + CalculateElementsCountInHeight(prevNode.Segment)
+                            * SegmentHeight / 2;
+                    }
+
+                    node.StartPoint = new Point(StartPoint.X, startY);
+                    node.EndPoint = new Point(EndPoint.X, startY);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calculating count of the elements in height
+        /// </summary>
+        /// <param name="startSegment"></param>
+        /// <returns></returns>
+        private int CalculateElementsCountInHeight(ISegment startSegment)
+        {
+            var elementsCount = 0;
+
+            if (startSegment is IElement)
+            {
+                elementsCount = 1;
+            }
+            else if (startSegment is SerialSegment || startSegment is Circuit)
+            {
+                var maxCount = 0;
+
+                foreach (var segment in startSegment.SubSegments)
+                {
+                    var count = CalculateElementsCountInHeight(segment);
+                    if (count > maxCount)
+                    {
+                        maxCount = count;
+                    }
+                }
+
+                elementsCount = maxCount;
+            }
+            else if (startSegment is ParallelSegment)
+            {
+                foreach (var segment in startSegment.SubSegments)
+                {
+                    elementsCount += CalculateElementsCountInHeight(segment);
+                }
+            }
+
+            return elementsCount;
+        }
+
+        /// <inheritdoc/>
+        public override int GetSchemeWidth()
+        {
+            return SegmentWidth * 2;
+        }
+
+        /// <inheritdoc/>
+        public override int GetSchemeHeight()
+        {
+            return (CalculateElementsCountInHeight(Segment) + 3) * SegmentHeight;
         }
     }
 }
